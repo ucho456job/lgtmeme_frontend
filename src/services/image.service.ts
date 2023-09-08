@@ -1,5 +1,4 @@
 import { GET_IMAGES_ENDPOINT } from "@/constants/endpoints";
-import { RequestOptions } from "https";
 
 type Method = 'GET'
 
@@ -26,7 +25,8 @@ export class ImageService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = process.env.APP_URL
+    const protocol = process.env.VERCEL_ENV === "development" ? "http://" : "https://"
+    this.baseUrl = protocol + process.env.VERCEL_URL
   }
 
   private createConfig(method: Method, cache: Cache): Config {
