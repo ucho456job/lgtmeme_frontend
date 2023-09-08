@@ -15,7 +15,9 @@
     "release:major": "bash ./shells/release.sh major",
     "release:minor": "bash ./shells/release.sh minor",
     "release:patch": "bash ./shells/release.sh patch",
-    "delete:branch": "git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
+    "delete:branch": "git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",
@@ -30,11 +32,21 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^7.4.0",
+    "@storybook/addon-interactions": "^7.4.0",
+    "@storybook/addon-links": "^7.4.0",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.4.0",
+    "@storybook/nextjs": "^7.4.0",
+    "@storybook/react": "^7.4.0",
+    "@storybook/testing-library": "^0.2.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "eslint-plugin-storybook": "^0.6.13",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
-    "prisma": "^5.2.0"
+    "prisma": "^5.2.0",
+    "storybook": "^7.4.0"
   },
   "husky": {
     "hooks": {
