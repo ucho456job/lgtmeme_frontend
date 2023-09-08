@@ -5,6 +5,9 @@
   "scripts": {
     "prepare": "panda codegen",
     "dev": "rm -rf .next && next dev",
+    "start:dev": "bash ./shells/start_development.sh",
+    "docker:start": "docker compose up -d",
+    "docker:stop": "docker compose down",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
