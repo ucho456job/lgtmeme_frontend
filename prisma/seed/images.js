@@ -1,11 +1,9 @@
-const imagesData = [
+const images = [
   {
-    id: "1b2fa70d-8416-42c3-a789-9",
+    categoryId: 1,
     title: "image A",
-    categoryId: "ee47388b-a891-4772-83c0-b2",
-    tags: [],
-    path: "image path",
+    url: "image path",
   },
 ];
 
-module.exports = { imagesData };
+module.exports = { images };

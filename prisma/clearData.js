@@ -7,6 +7,7 @@ const clearData = async () => {
   try {
     await prisma.$connect();
     await prisma.image.deleteMany();
+    await prisma.category.deleteMany();
     console.log("Success!");
   } catch (e) {
     throw e;
