@@ -1,16 +1,16 @@
 import { GET_IMAGES_ENDPOINT } from "@/constants/endpoints";
 
-type Method = 'GET'
+type Method = "GET";
 
-type Cache = 'no-store'
+type Cache = "no-store";
 
 type Config = {
-  method: Method
+  method: Method;
   cache: Cache;
   headers: {
     "Content-Type": string;
-  }
-}
+  };
+};
 
 type ImageType = {
   id: string;
@@ -19,14 +19,14 @@ type ImageType = {
   tags: string[];
   path: string;
   createdAt: Date;
-}
+};
 
 export class ImageService {
   private baseUrl: string;
 
   constructor() {
-    const protocol = process.env.VERCEL_ENV === "development" ? "http://" : "https://"
-    this.baseUrl = protocol + process.env.VERCEL_URL
+    const protocol = process.env.VERCEL_ENV === "development" ? "http://" : "https://";
+    this.baseUrl = protocol + process.env.VERCEL_URL;
   }
 
   private createConfig(method: Method, cache: Cache): Config {
@@ -34,20 +34,23 @@ export class ImageService {
       method,
       cache,
       headers: {
-        "Content-Type": "application/json"
-      }
-    }
+        "Content-Type": "application/json",
+      },
+    };
   }
 
   private async sendRequest<T>(path: string, config: Config) {
-    const res = await fetch(path, config)
+    const res = await fetch(path, config);
     const data: T = await res.json();
-    return data
+    return data;
   }
 
   async fetchImages(): Promise<ImageType[]> {
-    const config = this.createConfig('GET', 'no-store');
-    const res = await this.sendRequest<{ images: ImageType[] }>(this.baseUrl + GET_IMAGES_ENDPOINT, config)
-    return res.images
+    const config = this.createConfig("GET", "no-store");
+    const res = await this.sendRequest<{ images: ImageType[] }>(
+      this.baseUrl + GET_IMAGES_ENDPOINT,
+      config,
+    );
+    return res.images;
   }
 }

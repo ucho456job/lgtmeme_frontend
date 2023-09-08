@@ -7,6 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "npm run lint && prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
     "release:major": "bash ./shells/release.sh major",
     "release:minor": "bash ./shells/release.sh minor",
     "release:patch": "bash ./shells/release.sh patch"
@@ -24,6 +25,8 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "prettier": "^3.0.3",
     "prisma": "^5.2.0"
   }
 }

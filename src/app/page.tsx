@@ -1,5 +1,5 @@
-import { ImageService } from '@/services/image.service';
-import packageJson from '../../package.json';
+import packageJson from "../../package.json";
+import { ImageService } from "@/services/image.service";
 
 export default async function Home() {
   const service = new ImageService();
@@ -9,10 +9,10 @@ export default async function Home() {
       <div>Hello, World</div>
       <div>ver. {packageJson.version}</div>
       {images.map((i) => {
-        return <div key={i.id}>{i.title}</div>
+        return <div key={i.id}>{i.title}</div>;
       })}
     </>
-  )
+  );
 }
 
 /*

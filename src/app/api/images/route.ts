@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -7,9 +7,9 @@ const initPrisma = async () => {
   try {
     await prisma.$connect();
   } catch (err) {
-    return Error("Failed: DB connection")
+    return Error("Failed: DB connection");
   }
-}
+};
 
 export const GET = async (req: Request, res: NextResponse) => {
   try {
@@ -21,4 +21,4 @@ export const GET = async (req: Request, res: NextResponse) => {
   } finally {
     await prisma.$disconnect();
   }
-}
+};
