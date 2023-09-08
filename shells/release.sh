@@ -44,11 +44,9 @@ new_version="$major.$minor.$patch"
 
 sed -i "s/\"version\": \"$current_version\"/\"version\": \"$new_version\"/" package.json
 
-git add package.json
+npm i
 
-git commit -m "Release version $new_version"
-
-git add package.json
+git add .
 
 git commit -m "Release version $new_version"
 
