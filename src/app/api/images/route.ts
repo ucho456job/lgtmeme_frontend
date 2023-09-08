@@ -3,17 +3,9 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const initPrisma = async () => {
-  try {
-    await prisma.$connect();
-  } catch (err) {
-    return Error("Failed: DB connection");
-  }
-};
-
 export const GET = async (req: Request, res: NextResponse) => {
   try {
-    await initPrisma();
+    await prisma.$connect();
     const images = await prisma.image.findMany();
     return NextResponse.json({ message: "Success", images }, { status: 200 });
   } catch (err) {

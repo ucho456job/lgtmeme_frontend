@@ -10,7 +10,8 @@
     "format": "prettier --write --ignore-path .gitignore 'src/**/*.{js,jsx,ts,tsx,json}'",
     "release:major": "bash ./shells/release.sh major",
     "release:minor": "bash ./shells/release.sh minor",
-    "release:patch": "bash ./shells/release.sh patch"
+    "release:patch": "bash ./shells/release.sh patch",
+    "delete:branch": "git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",
