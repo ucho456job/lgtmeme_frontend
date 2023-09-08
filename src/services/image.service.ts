@@ -25,8 +25,8 @@ export class ImageService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = process.env.VERCEL_URL
-    console.log("console.log this.baseUrl", this.baseUrl)
+    const protocol = process.env.VERCEL_ENV === "development" ? "http://" : "https://"
+    this.baseUrl = protocol + process.env.VERCEL_URL
   }
 
   private createConfig(method: Method, cache: Cache): Config {
