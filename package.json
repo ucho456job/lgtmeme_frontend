@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "release:major": "bash ./shells/release.sh major",
+    "release:minor": "bash ./shells/release.sh minor",
+    "release:patch": "bash ./shells/release.sh patch"
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",
