@@ -18,5 +18,6 @@ module.exports = {
     "^@/hooks",
     "^@/types",
     "^@/utils",
+    "^@@/",
   ]
 }

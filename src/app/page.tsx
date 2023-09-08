@@ -1,12 +1,13 @@
-import packageJson from "../../package.json";
 import { ImageService } from "@/services/image.service";
+import packageJson from "@@/package.json";
+import { css } from "@@/styled-system/css";
 
 export default async function Home() {
   const service = new ImageService();
   const images = await service.fetchImages();
   return (
     <>
-      <div>Hello, World</div>
+      <div className={css({ fontSize: "2xl", fontWeight: "bold" })}>Hello, World</div>
       <div>ver. {packageJson.version}</div>
       {images.map((i) => {
         return <div key={i.id}>{i.title}</div>;
