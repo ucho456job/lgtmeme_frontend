@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
-const { imagesData } = require("./seed/images");
+const { categories } = require("./seed/categories");
+const { images } = require("./seed/images");
 
 const prisma = new PrismaClient();
 
@@ -7,7 +8,8 @@ const createData = async () => {
   console.log("Start create seed data...");
   try {
     await prisma.$connect();
-    await prisma.image.createMany({ data: imagesData });
+    await prisma.category.createMany({ data: categories });
+    await prisma.image.createMany({ data: images });
     console.log("Success!");
   } catch (e) {
     throw e;
