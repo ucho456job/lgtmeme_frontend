@@ -26,6 +26,7 @@ export class ImageService {
 
   constructor() {
     this.baseUrl = process.env.VERCEL_URL
+    console.log("console.log this.baseUrl", this.baseUrl)
   }
 
   private createConfig(method: Method, cache: Cache): Config {
