@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "npm run lint && prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
+    "format": "prettier --write --ignore-path .gitignore 'src/**/*.{js,jsx,ts,tsx,json}'",
     "release:major": "bash ./shells/release.sh major",
     "release:minor": "bash ./shells/release.sh minor",
     "release:patch": "bash ./shells/release.sh patch"
@@ -26,7 +26,19 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
     "prisma": "^5.2.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,css,scss,md}": [
+      "npm run format"
+    ]
   }
 }
