@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "prepare": "panda codegen",
+    "dev": "rm -rf .next && next dev",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
@@ -32,6 +33,7 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "@pandacss/dev": "^0.14.0",
     "@storybook/addon-essentials": "^7.4.0",
     "@storybook/addon-interactions": "^7.4.0",
     "@storybook/addon-links": "^7.4.0",
