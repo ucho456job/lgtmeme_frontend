@@ -1,5 +1,4 @@
 import { GET_IMAGES_ENDPOINT } from "@/constants/endpoints";
-import { RequestOptions } from "https";
 
 type Method = 'GET'
 
@@ -40,7 +39,9 @@ export class ImageService {
   }
 
   private async sendRequest<T>(path: string, config: Config) {
+    console.log("DATABASE_URL: ", process.env.DATABASE_URL);
     const res = await fetch(path, config)
+    console.log("console response", { res })
     const data: T = await res.json();
     return data
   }
