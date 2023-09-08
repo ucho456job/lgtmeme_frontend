@@ -25,7 +25,7 @@ export class ImageService {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = process.env.APP_URL
+    this.baseUrl = process.env.VERCEL_URL
   }
 
   private createConfig(method: Method, cache: Cache): Config {
@@ -39,9 +39,7 @@ export class ImageService {
   }
 
   private async sendRequest<T>(path: string, config: Config) {
-    console.log("DATABASE_URL: ", process.env.DATABASE_URL);
     const res = await fetch(path, config)
-    console.log("console response", { res })
     const data: T = await res.json();
     return data
   }

@@ -4,7 +4,7 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      APP_URL: string;
+      VERCEL_URL: string;
       DATABASE_URL: string;
     }
   }
