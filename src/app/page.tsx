@@ -12,3 +12,11 @@ export default async function Home() {
     </>
   )
 }
+
+/*
+  I encountered a 'fetch failed' error during the build process.
+  As a solution, I have written the following code.
+  You can find the issue URL below.
+  https://github.com/vercel/next.js/issues/49578
+*/
+export const runtime = "edge";

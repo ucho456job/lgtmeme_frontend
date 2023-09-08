@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export const initPrisma = async () => {
+const initPrisma = async () => {
   try {
     await prisma.$connect();
   } catch (err) {
