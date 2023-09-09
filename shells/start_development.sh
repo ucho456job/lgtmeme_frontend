@@ -14,9 +14,7 @@ npm install
 
 docker compose up -d
 
-countdown 3
-
-npm run prisma:generate
+countdown 10
 
 npm run prisma:migrate:dev
 
