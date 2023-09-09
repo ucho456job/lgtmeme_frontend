@@ -13,11 +13,12 @@ type Config = {
 };
 
 type ImageType = {
-  id: string;
+  id: number;
+  categoryId: number;
   title: string;
-  categoryId: string;
-  tags: string[];
-  path: string;
+  url: string;
+  usedCount: number;
+  reported: boolean;
   createdAt: Date;
 };
 

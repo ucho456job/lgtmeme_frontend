@@ -12,8 +12,8 @@ describe("Button", () => {
   afterEach(() => {
     onClickMock.mockReset();
   });
-  describe("render tests", () => {
-    it("renders with default props", () => {
+  describe("Render tests", () => {
+    test("Renders with default props", () => {
       render(<Button onClick={onClickMock}>{text}</Button>);
       const button = screen.getByRole("button", { name: text });
       expect(button).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe("Button", () => {
     });
   });
   describe("Event tests", () => {
-    it("calls the onClick handler when clicked", async () => {
+    test("Calls the onClick handler when clicked", async () => {
       render(<Button onClick={onClickMock}>{text}</Button>);
       const button = screen.getByRole("button", { name: text });
       await userEvent.click(button);
