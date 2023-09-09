@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "prepare": "panda codegen",
+    "prepare": "panda codegen && npm run prisma:generate",
     "dev": "rm -rf .next && next dev",
     "start:dev": "bash ./shells/start_development.sh",
     "docker:start": "docker compose up -d",
