@@ -1,52 +1,74 @@
-import React from "react";
-import "./button.css";
+import { MouseEventHandler, ReactNode } from "react";
+import { BLACK, RED, WHITE } from "@/constants/styles";
+import { cva } from "@@/styled-system/css";
 
-interface ButtonProps {
-  /**
-   * Is this the principal call to action on the page?
-   */
-  primary?: boolean;
-  /**
-   * What background color to use
-   */
-  backgroundColor?: string;
-  /**
-   * How large should the button be?
-   */
-  size?: "small" | "medium" | "large";
-  /**
-   * Button contents
-   */
-  label: string;
-  /**
-   * Optional click handler
-   */
-  onClick?: () => void;
-}
+type Props = {
+  variant?: "contained" | "text";
+  color?: "black" | "red";
+  size?: "xs" | "sm" | "md" | "lg";
+  disabled?: boolean;
+  children: ReactNode;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+};
 
-/**
- * Primary UI component for user interaction
- */
-export const Button = ({
-  primary = false,
-  size = "medium",
-  backgroundColor,
-  label,
-  ...props
-}: ButtonProps) => {
-  const mode = primary ? "storybook-button--primary" : "storybook-button--secondary";
+const Button = ({ variant, color, size, disabled, children, onClick }: Props) => {
   return (
     <button
-      type="button"
-      className={["storybook-button", `storybook-button--${size}`, mode].join(" ")}
-      {...props}
+      className={recipe({ variant, size, color, disabled })}
+      disabled={disabled}
+      onClick={onClick}
     >
-      {label}
-      <style jsx>{`
-        button {
-          background-color: ${backgroundColor};
-        }
-      `}</style>
+      {children}
     </button>
   );
 };
+
+const recipe = cva({
+  base: {
+    cursor: "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    padding: "4",
+    borderRadius: "lg",
+    border: "none",
+    outline: "none",
+    textDecoration: "none",
+    fontWeight: "bold",
+    _hover: { opacity: 0.8 },
+    _active: { opacity: 1 },
+  },
+  variants: {
+    variant: {
+      contained: {},
+      text: {},
+    },
+    color: {
+      black: { color: BLACK },
+      red: { color: RED },
+    },
+    size: {
+      xs: { padding: "1", fontSize: "xs" },
+      sm: { padding: "2", fontSize: "sm" },
+      md: { padding: "3", fontSize: "md" },
+      lg: { padding: "4", fontSize: "lg" },
+    },
+    disabled: {
+      true: { opacity: 0.5, cursor: "not-allowed" },
+    },
+  },
+  compoundVariants: [
+    {
+      variant: "contained",
+      color: "black",
+      css: { bgColor: BLACK, color: WHITE },
+    },
+    {
+      variant: "contained",
+      color: "red",
+      css: { bgColor: RED, color: WHITE },
+    },
+  ],
+  defaultVariants: { variant: "contained", color: "black", size: "md", disabled: false },
+});
+
+export default Button;
