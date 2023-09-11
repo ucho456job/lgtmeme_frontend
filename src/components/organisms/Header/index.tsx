@@ -9,7 +9,7 @@ const Header = () => {
 };
 
 const headerRecipe = cva({
-  base: { bgColor: "BLACK", color: "WHITE", display: "flex", width: "100vw" },
+  base: { bgColor: "BLACK", color: "WHITE", display: "flex", maxWidth: "100vw", height: "60px" },
 });
 
 const h1Recipe = cva({
