@@ -46,10 +46,10 @@ const recipe = cva({
       red: { color: "RED" },
     },
     size: {
-      xs: { padding: "1", fontSize: "xs" },
-      sm: { padding: "2", fontSize: "sm" },
-      md: { padding: "3", fontSize: "md" },
-      lg: { padding: "4", fontSize: "lg" },
+      xs: { padding: "1", fontSize: "xs", minWidth: "12" },
+      sm: { padding: "2", fontSize: "sm", minWidth: "15" },
+      md: { padding: "3", fontSize: "md", minWidth: "18" },
+      lg: { padding: "4", fontSize: "lg", minWidth: "21" },
     },
     disabled: {
       true: { opacity: 0.5, cursor: "not-allowed" },
