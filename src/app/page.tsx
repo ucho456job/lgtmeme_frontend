@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { ImageService } from "@/services/image.service";
+import Button from "@/components/atoms/Button";
 import packageJson from "@@/package.json";
 import { css } from "@@/styled-system/css";
 
@@ -12,6 +14,9 @@ export default async function Home() {
       {images.map((i) => {
         return <div key={i.id}>{i.title}</div>;
       })}
+      <Link href="/add">
+        <Button>Add button</Button>
+      </Link>
     </>
   );
 }
