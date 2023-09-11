@@ -14,7 +14,16 @@ export default defineConfig({
 
   // Useful for theme customization
   theme: {
-    extend: {},
+    extend: {
+      tokens: {
+        colors: {
+          BLACK: { value: "#292524" },
+          WHITE: { value: "#fff" },
+          GHOUST_WHITE: { value: "#fafafa" },
+          RED: { value: "#ef4444" },
+        },
+      },
+    },
   },
 
   // The output directory for your css system

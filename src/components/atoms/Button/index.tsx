@@ -1,5 +1,4 @@
 import { MouseEventHandler, ReactNode } from "react";
-import { BLACK, RED, WHITE } from "@/constants/styles";
 import { cva } from "@@/styled-system/css";
 
 type Props = {
@@ -43,8 +42,8 @@ const recipe = cva({
       text: {},
     },
     color: {
-      black: { color: BLACK },
-      red: { color: RED },
+      black: { color: "BLACK" },
+      red: { color: "RED" },
     },
     size: {
       xs: { padding: "1", fontSize: "xs" },
@@ -60,12 +59,12 @@ const recipe = cva({
     {
       variant: "contained",
       color: "black",
-      css: { bgColor: BLACK, color: WHITE },
+      css: { bgColor: "BLACK", color: "WHITE" },
     },
     {
       variant: "contained",
       color: "red",
-      css: { bgColor: RED, color: WHITE },
+      css: { bgColor: "RED", color: "WHITE" },
     },
   ],
   defaultVariants: { variant: "contained", color: "black", size: "md", disabled: false },
