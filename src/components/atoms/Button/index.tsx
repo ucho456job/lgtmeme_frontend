@@ -7,7 +7,7 @@ type Props = {
   size?: "xs" | "sm" | "md" | "lg";
   disabled?: boolean;
   children: ReactNode;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 const Button = ({ variant, color, size, disabled, children, onClick }: Props) => {
