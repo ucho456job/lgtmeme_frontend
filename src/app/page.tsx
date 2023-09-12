@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ImageService } from "@/services/image.service";
+import Client from "@/app/client";
 import Button from "@/components/atoms/Button";
 import packageJson from "@@/package.json";
 import { css } from "@@/styled-system/css";
@@ -17,6 +18,7 @@ export default async function Home() {
       <Link href="/add">
         <Button>Add button</Button>
       </Link>
+      <Client />
     </>
   );
 }
