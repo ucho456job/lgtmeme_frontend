@@ -2,16 +2,16 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Button from "@/components/atoms/Button";
 
 const meta = {
-  title: "Button",
+  title: "atoms/Button",
   component: Button,
 } satisfies Meta<typeof Button>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Solid: Story = {
   args: {
-    visual: "contained",
+    visual: "solid",
     color: "black",
     size: "md",
     disabled: false,
@@ -20,7 +20,7 @@ export const Default: Story = {
   },
 };
 
-export const DefaultWithIcon: Story = {
+export const WithIcon: Story = {
   args: {
     iconPath: "/images/upload.svg",
     children: "Upload",
@@ -28,7 +28,7 @@ export const DefaultWithIcon: Story = {
   },
 };
 
-export const Text: Story = {
+export const OnlyText: Story = {
   args: {
     visual: "text",
     children: "Upload",
@@ -36,7 +36,7 @@ export const Text: Story = {
   },
 };
 
-export const Icon: Story = {
+export const OnlyIcon: Story = {
   args: {
     iconPath: "/images/upload.svg",
     onClick: () => alert("Click!"),

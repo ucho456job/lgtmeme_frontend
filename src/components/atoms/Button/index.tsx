@@ -2,7 +2,7 @@ import { MouseEventHandler } from "react";
 import { cva } from "@@/styled-system/css";
 
 type Props = {
-  visual?: "contained" | "text";
+  visual?: "solid" | "text";
   color?: "black" | "red" | "yellow" | "lightPink";
   size?: "xs" | "sm" | "md" | "lg";
   radius?: boolean;
@@ -46,7 +46,7 @@ const buttonRecipe = cva({
   },
   variants: {
     visual: {
-      contained: {},
+      solid: {},
       text: {},
     },
     color: {
@@ -70,18 +70,18 @@ const buttonRecipe = cva({
   },
   compoundVariants: [
     {
-      visual: "contained",
+      visual: "solid",
       color: "black",
       css: { bgColor: "BLACK", color: "WHITE" },
     },
     {
-      visual: "contained",
+      visual: "solid",
       color: "red",
       css: { bgColor: "RED", color: "WHITE" },
     },
   ],
   defaultVariants: {
-    visual: "contained",
+    visual: "solid",
     color: "black",
     size: "md",
     radius: true,
