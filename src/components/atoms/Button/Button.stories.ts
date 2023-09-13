@@ -11,11 +11,34 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    variant: "contained",
+    visual: "contained",
     color: "black",
     size: "md",
     disabled: false,
-    children: "Button",
+    children: "Upload",
+    onClick: () => alert("Click!"),
+  },
+};
+
+export const DefaultWithIcon: Story = {
+  args: {
+    iconPath: "/images/upload.svg",
+    children: "Upload",
+    onClick: () => alert("Click!"),
+  },
+};
+
+export const Text: Story = {
+  args: {
+    visual: "text",
+    children: "Upload",
+    onClick: () => alert("Click!"),
+  },
+};
+
+export const Icon: Story = {
+  args: {
+    iconPath: "/images/upload.svg",
     onClick: () => alert("Click!"),
   },
 };

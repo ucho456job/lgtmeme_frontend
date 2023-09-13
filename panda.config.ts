@@ -19,8 +19,12 @@ export default defineConfig({
         colors: {
           BLACK: { value: "#292524" },
           WHITE: { value: "#fff" },
-          GHOUST_WHITE: { value: "#fafafa" },
+          GHOUST_WHITE: { value: "#f5f5f5" },
           RED: { value: "#ef4444" },
+          PINK: { value: "#f472b6" },
+          LIGHT_PINK: { value: "#fdf2f8" },
+          YELLOW: { value: "#facc15" },
+          GRAY: { value: "#e5e5e5" },
         },
       },
     },
