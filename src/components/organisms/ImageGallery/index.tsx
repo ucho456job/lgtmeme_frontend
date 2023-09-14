@@ -35,9 +35,9 @@ const ImageGallery = ({ css, initImages }: Props) => {
   return (
     <div className={css}>
       <Tabs css={tabCss} tabs={tabs} activeTabId={activeTabId} setActiveTabId={setActiveTabId} />
-      <div className={imagesWrapCss}>
+      <div className={imageCardsCss}>
         {images.map((i) => (
-          <ImageCard key={i.id} image={i} />
+          <ImageCard css={imageCardCss} key={i.id} image={i} />
         ))}
       </div>
       <Button css={buttonCss} size="lg">
@@ -47,8 +47,15 @@ const ImageGallery = ({ css, initImages }: Props) => {
   );
 };
 
-const tabCss = css({ paddingY: "8" });
-const imagesWrapCss = css({ display: "flex", flexWrap: "wrap", gap: "10px", paddingX: "10px" });
+const tabCss = css({ paddingY: "8", paddingX: "10px" });
+const imageCardsCss = css({
+  display: "grid",
+  gap: "10px",
+  lg: { gridTemplateColumns: "1fr 1fr 1fr" },
+  md: { gridTemplateColumns: "1fr 1fr" },
+  sm: { gridTemplateColumns: "1fr" },
+});
+const imageCardCss = css({ marginX: "auto" });
 const buttonCss = css({ paddingY: "30px", textAlign: "center" });
 
 export default ImageGallery;

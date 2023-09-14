@@ -27,6 +27,10 @@ export default defineConfig({
           GRAY: { value: "#e5e5e5" },
         },
       },
+      breakpoints: {
+        md: "720px",
+        lg: "1090px",
+      },
     },
   },
 
