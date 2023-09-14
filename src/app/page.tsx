@@ -1,27 +1,91 @@
 import Link from "next/link";
 import { ImageService } from "@/services/image.service";
-import Client from "@/app/client";
 import Button from "@/components/atoms/Button";
-import packageJson from "@@/package.json";
+import ImageGallery from "@/components/organisms/ImageGallery";
 import { css } from "@@/styled-system/css";
 
 export default async function Home() {
   const service = new ImageService();
-  const images = await service.fetchImages();
+  // const images = await service.fetchImages();
+  const images = [
+    {
+      id: 1,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+    {
+      id: 2,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+    {
+      id: 3,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+    {
+      id: 4,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+    {
+      id: 5,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+    {
+      id: 6,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+    {
+      id: 7,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+    {
+      id: 8,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+    {
+      id: 9,
+      title: "Square",
+      url: "https://placehold.jp/300x300.png",
+      width: 300,
+      height: 300,
+    },
+  ];
   return (
     <>
-      <div className={css({ fontSize: "2xl", fontWeight: "bold" })}>Hello, World</div>
-      <div>ver. {packageJson.version}</div>
-      {images.map((i) => {
-        return <div key={i.id}>{i.title}</div>;
-      })}
+      <ImageGallery css={imageGalleryCss} initImages={images} />
       <Link href="/add">
-        <Button>Add button</Button>
+        <Button css={buttonCss} iconPath="/images/plus.svg">
+          Create image
+        </Button>
       </Link>
-      <Client />
     </>
   );
 }
+
+const imageGalleryCss = css({ maxWidth: "1090px", margin: "auto" });
+const buttonCss = css({ position: "fixed", bottom: "10", right: "5" });
 
 /*
   I encountered a 'fetch failed' error during the build process.
