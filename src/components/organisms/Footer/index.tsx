@@ -14,8 +14,7 @@ const Footer = () => {
           <Button visual="text">Privacy policy</Button>
         </Link>
       </div>
-      <div className={copyrightCss}>©2023 LGTMeme </div>
-      <span>version {packageJson.version}</span>
+      <div className={copyrightCss}>©2023 LGTMeme version {packageJson.version}</div>
     </footer>
   );
 };
