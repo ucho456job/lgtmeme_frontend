@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { cva } from "@@/styled-system/css";
 
 type Props = {
+  css?: string;
   tabs: {
     id: string;
     label: string;
@@ -10,21 +11,23 @@ type Props = {
   setActiveTabId: Dispatch<SetStateAction<string>>;
 };
 
-const Tabs = ({ tabs, activeTabId, setActiveTabId }: Props) => {
+const Tabs = ({ css, tabs, activeTabId, setActiveTabId }: Props) => {
   const handleClickTab = (id: string) => {
     setActiveTabId(id);
   };
   return (
-    <div className={tabsRecipe()}>
-      {tabs.map((tab) => (
-        <div
-          key={tab.id}
-          className={tabRecipe({ active: tab.id === activeTabId })}
-          onClick={() => handleClickTab(tab.id)}
-        >
-          {tab.label}
-        </div>
-      ))}
+    <div className={css}>
+      <div className={tabsRecipe()}>
+        {tabs.map((tab) => (
+          <div
+            key={tab.id}
+            className={tabRecipe({ active: tab.id === activeTabId })}
+            onClick={() => handleClickTab(tab.id)}
+          >
+            {tab.label}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
