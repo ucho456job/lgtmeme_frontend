@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import Footer from "@/components/organisms/Footer";
+import packageJson from "@@/package.json";
 
 describe("Footer", () => {
   describe("Render tests", () => {
@@ -9,7 +10,7 @@ describe("Footer", () => {
       const termsOfServiceLink = termsOfServiceButton.closest("a");
       const privacyPolicyButton = screen.getByRole("button", { name: "Privacy policy" });
       const privacyPolicyLink = privacyPolicyButton.closest("a");
-      const copyrightText = screen.getByText("©2023 LGTMeme");
+      const copyrightText = screen.getByText(`©2023 LGTMeme version ${packageJson.version}`);
       expect(termsOfServiceButton).toBeInTheDocument();
       expect(termsOfServiceLink).toHaveAttribute("href", "/terms-of-service");
       expect(privacyPolicyButton).toBeInTheDocument();

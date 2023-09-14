@@ -1,33 +1,31 @@
 import Link from "next/link";
 import Button from "@/components/atoms/Button";
-import { cva } from "@@/styled-system/css";
+import packageJson from "@@/package.json";
+import { css } from "@@/styled-system/css";
 
 const Footer = () => {
   return (
-    <footer className={footerRecipe()}>
-      <div className={buttonsRecipe()}>
+    <footer className={footerCss}>
+      <div className={buttonsCss}>
         <Link href="/terms-of-service">
-          <Button>Terms of service</Button>
+          <Button visual="text">Terms of service</Button>
         </Link>
         <Link href="/privacy-policy">
-          <Button>Privacy policy</Button>
+          <Button visual="text">Privacy policy</Button>
         </Link>
       </div>
-      <div className={copyrightRecipe()}>©2023 LGTMeme</div>
+      <div className={copyrightCss}>©2023 LGTMeme version {packageJson.version}</div>
     </footer>
   );
 };
 
-const footerRecipe = cva({
-  base: { bgColor: "BLACK", color: "WHITE", maxWidth: "100vw", height: "140px" },
+const footerCss = css({
+  bgColor: "GHOUST_WHITE",
+  color: "BLACK",
+  maxWidth: "100vw",
+  height: "140px",
 });
-
-const copyrightRecipe = cva({
-  base: { textAlign: "center" },
-});
-
-const buttonsRecipe = cva({
-  base: { textAlign: "center", paddingTop: "8" },
-});
+const copyrightCss = css({ textAlign: "center" });
+const buttonsCss = css({ display: "flex", justifyContent: "center", paddingTop: "8" });
 
 export default Footer;
