@@ -9,7 +9,7 @@ describe("Footer", () => {
       const termsOfServiceLink = termsOfServiceButton.closest("a");
       const privacyPolicyButton = screen.getByRole("button", { name: "Privacy policy" });
       const privacyPolicyLink = privacyPolicyButton.closest("a");
-      const copyrightText = screen.getByText("©2023 LGTMeme");
+      const copyrightText = screen.queryByText("©2023 LGTMeme");
       expect(termsOfServiceButton).toBeInTheDocument();
       expect(termsOfServiceLink).toHaveAttribute("href", "/terms-of-service");
       expect(privacyPolicyButton).toBeInTheDocument();
