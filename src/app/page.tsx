@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ImageService } from "@/services/image.service";
 import Button from "@/components/atoms/Button";
 import ImageGallery from "@/components/organisms/ImageGallery";
+import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
 export default async function Home() {
