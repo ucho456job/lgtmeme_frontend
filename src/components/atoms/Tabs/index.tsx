@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { cva } from "@@/styled-system/css";
+import { css, cva } from "@@/styled-system/css";
 
 type Props = {
   css?: string;
@@ -17,7 +17,7 @@ const Tabs = ({ css, tabs, activeTabId, setActiveTabId }: Props) => {
   };
   return (
     <div className={css}>
-      <div className={tabsRecipe()}>
+      <div className={tabsCss}>
         {tabs.map((tab) => (
           <div
             key={tab.id}
@@ -32,10 +32,7 @@ const Tabs = ({ css, tabs, activeTabId, setActiveTabId }: Props) => {
   );
 };
 
-const tabsRecipe = cva({
-  base: { display: "flex", width: "100%", boxShadow: "lg" },
-});
-
+const tabsCss = css({ display: "flex", width: "100%", boxShadow: "lg" });
 const tabRecipe = cva({
   base: {
     flex: 1,

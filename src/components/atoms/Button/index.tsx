@@ -101,7 +101,6 @@ const buttonRecipe = cva({
     disabled: false,
   },
 });
-
 const iconRecipe = cva({
   variants: {
     size: {
