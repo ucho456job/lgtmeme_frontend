@@ -41,25 +41,32 @@ const ImageCard = ({ css, image }: Props) => {
             height={image.height}
             width={image.width}
             alt="LGTM"
+            priority
           />
         </div>
         <p className={titleCss}>{image.title}</p>
         <div className={buttonsCss}>
-          <Button size="lg" radius={false} iconPath="/images/copy.svg" onClick={handleCopy} />
+          <Button css={buttonCss} size="sm" iconPath="/images/copy.svg" onClick={handleCopy}>
+            Copy
+          </Button>
           <Button
-            size="lg"
+            css={buttonCss}
+            size="sm"
             color="lightPink"
-            radius={false}
             iconPath={isFavarite ? "/images/heart-solid.svg" : "/images/heart-outline.svg"}
             onClick={handleToggleFavarite}
-          />
+          >
+            Favorite
+          </Button>
           <Button
-            size="lg"
+            css={buttonCss}
+            size="sm"
             color="yellow"
-            radius={false}
             iconPath="/images/flag.svg"
             onClick={handleReport}
-          />
+          >
+            Report
+          </Button>
         </div>
       </div>
     </div>
@@ -88,5 +95,6 @@ const imageCss = css({
 });
 const titleCss = css({ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" });
 const buttonsCss = css({ display: "flex", marginTop: "3", justifyContent: "center" });
+const buttonCss = css({ marginX: "1" });
 
 export default ImageCard;
