@@ -2,6 +2,7 @@ import { MouseEventHandler } from "react";
 import { cva } from "@@/styled-system/css";
 
 type Props = {
+  css?: string;
   visual?: "solid" | "text";
   color?: "black" | "red" | "yellow" | "lightPink";
   size?: "xs" | "sm" | "md" | "lg";
@@ -12,22 +13,34 @@ type Props = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
-const Button = ({ visual, color, size, radius, disabled, iconPath, children, onClick }: Props) => {
+const Button = ({
+  css,
+  visual,
+  color,
+  size,
+  radius,
+  disabled,
+  iconPath,
+  children,
+  onClick,
+}: Props) => {
   return (
-    <button
-      className={buttonRecipe({ visual, color, size, radius, disabled })}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {iconPath && (
-        <img
-          src={iconPath}
-          className={iconRecipe({ size, children: children ? true : false })}
-          alt="icon"
-        />
-      )}
-      {children}
-    </button>
+    <div className={css}>
+      <button
+        className={buttonRecipe({ visual, color, size, radius, disabled })}
+        disabled={disabled}
+        onClick={onClick}
+      >
+        {iconPath && (
+          <img
+            src={iconPath}
+            className={iconRecipe({ size, children: children ? true : false })}
+            alt="icon"
+          />
+        )}
+        {children}
+      </button>
+    </div>
   );
 };
 
