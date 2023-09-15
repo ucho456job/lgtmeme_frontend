@@ -1,4 +1,5 @@
 import { MouseEventHandler } from "react";
+import Image from "next/image";
 import { cva } from "@@/styled-system/css";
 
 type Props = {
@@ -24,6 +25,7 @@ const Button = ({
   children,
   onClick,
 }: Props) => {
+  const iconSize = size === "xs" || size === "sm" ? 15 : size === "md" ? 20 : 23;
   return (
     <div className={css}>
       <button
@@ -32,9 +34,11 @@ const Button = ({
         onClick={onClick}
       >
         {iconPath && (
-          <img
+          <Image
             src={iconPath}
-            className={iconRecipe({ size, children: children ? true : false })}
+            className={iconRecipe({ children: children ? true : false })}
+            width={iconSize}
+            height={iconSize}
             alt="icon"
           />
         )}
@@ -103,18 +107,12 @@ const buttonRecipe = cva({
 });
 const iconRecipe = cva({
   variants: {
-    size: {
-      xs: { height: "15px", width: "15px" },
-      sm: { height: "15px", width: "15px" },
-      md: { height: "20px", width: "20px" },
-      lg: { height: "23px", width: "23px" },
-    },
     children: {
       true: { marginRight: "1" },
       false: { marginRight: "0" },
     },
   },
-  defaultVariants: { size: "md", children: false },
+  defaultVariants: { children: false },
 });
 
 export default Button;

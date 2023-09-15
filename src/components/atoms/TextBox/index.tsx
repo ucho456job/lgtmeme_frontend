@@ -1,5 +1,6 @@
 import { KeyboardEvent, useRef } from "react";
 import { Dispatch, SetStateAction } from "react";
+import Image from "next/image";
 import { css, cva } from "@@/styled-system/css";
 
 type Props = {
@@ -35,7 +36,7 @@ const TextBox = ({ css, value, placeholder, iconPath, onChange, onEnterPress }: 
           onCompositionStart={() => inputRef.current?.setAttribute("composition", "true")}
           onCompositionEnd={() => inputRef.current?.removeAttribute("composition")}
         />
-        {iconPath && <img src={iconPath} className={iconCss} alt="icon" />}
+        {iconPath && <Image src={iconPath} className={iconCss} width={25} height={25} alt="icon" />}
       </div>
     </div>
   );
@@ -61,6 +62,6 @@ const textBoxCss = cva({
     },
   },
 });
-const iconCss = css({ position: "absolute", top: "2", left: 2, width: "25px", height: "25px" });
+const iconCss = css({ position: "absolute", top: "2", left: 2 });
 
 export default TextBox;

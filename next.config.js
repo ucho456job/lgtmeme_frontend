@@ -4,6 +4,9 @@ const nextConfig = {
   images: {
     domains: ["placehold.jp"],
   },
+  typescript: {
+    tsconfigPath: "tsconfig.build.json",
+  },
 };
 
 module.exports = nextConfig;
