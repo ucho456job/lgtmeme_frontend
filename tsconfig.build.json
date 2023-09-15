@@ -6,5 +6,8 @@
     "**/*.spec.ts",
     "**/*.stories.tsx",
     "**/*.stories.tx"
-  ]
+  ],
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }]
+  }
 }

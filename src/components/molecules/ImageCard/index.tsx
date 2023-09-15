@@ -85,6 +85,8 @@ const imageCss = css({
   transform: "translate(-50%, -50%)",
   maxWidth: "100%",
   maxHeight: "100%",
+  width: "auto",
+  height: "auto",
 });
 const buttonsCss = css({ display: "flex", marginTop: "3", justifyContent: "center" });
 const buttonCss = css({ marginX: "1" });
