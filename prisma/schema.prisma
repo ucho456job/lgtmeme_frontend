@@ -11,23 +11,14 @@ datasource db {
 }
 
 model Image {
-  id         Int      @id @default(autoincrement())
-  categoryId Int      @default(1) @map("category_id")
-  title      String   @default("") @db.VarChar(50)
-  url        String
-  usedCount  Int      @default(0) @map("used_count")
-  reported   Boolean  @default(false)
-  createdAt  DateTime @default(now()) @map("created_at")
-  category   Category @relation(fields: [categoryId], references: [id])
+  id        Int      @id @default(autoincrement())
+  url       String
+  width     Int      @default(0)
+  height    Int      @default(0)
+  keyword   String   @default("") @db.VarChar(50)
+  usedCount Int      @default(0) @map("used_count")
+  reported  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@map("images")
-}
-
-model Category {
-  id     Int     @id @default(autoincrement())
-  jaName String  @db.VarChar(20) @map("ja_name")
-  enName String  @db.VarChar(20) @map("en_name")
-  Image  Image[]
-
-  @@map("categories")
 }

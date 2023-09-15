@@ -7,21 +7,13 @@ import TextBox from "@/components/atoms/TextBox";
 import ImageCard from "@/components/molecules/ImageCard";
 import { css } from "@@/styled-system/css";
 
-type Image = {
-  id: number;
-  title: string;
-  url: string;
-  width: number;
-  height: number;
-};
-
 type Props = {
   css?: string;
-  initImages: Image[];
+  initImages: FetchImage[];
 };
 
 const ImageGallery = ({ css, initImages }: Props) => {
-  const [images, setImages] = useState<Image[]>([]);
+  const [images, setImages] = useState<FetchImage[]>([]);
   useEffect(() => {
     setImages(initImages);
   }, [initImages]);

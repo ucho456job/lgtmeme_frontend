@@ -5,7 +5,6 @@ import ImageCard from "@/components/molecules/ImageCard";
 describe("ImageCard", () => {
   const imageData = {
     id: 1,
-    title: "Square",
     url: "https://placehold.jp/300x300.png",
     width: 300,
     height: 300,
@@ -14,12 +13,10 @@ describe("ImageCard", () => {
     test("Renders with default props", () => {
       render(<ImageCard image={imageData} />);
       const image = screen.getByAltText("LGTM");
-      const imageTitle = screen.getByText("Square");
       const copyButton = screen.getAllByRole("button")[0];
       const favariteButton = screen.getAllByRole("button")[1];
       const reportButton = screen.getAllByRole("button")[2];
       expect(image).toBeInTheDocument();
-      expect(imageTitle).toBeInTheDocument();
       expect(copyButton).toBeInTheDocument();
       expect(favariteButton).toBeInTheDocument();
       expect(reportButton).toBeInTheDocument();
