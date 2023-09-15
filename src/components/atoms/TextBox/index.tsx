@@ -47,10 +47,13 @@ const textBoxCss = cva({
     width: "100%",
     paddingY: "2",
     paddingX: "2.5",
-    border: "1px solid",
+    border: "1px solid #e5e5e5",
     borderRadius: "lg",
     color: "BLACK",
     position: "relative",
+    _focus: {
+      outline: "solid 1px #e0e7ff",
+    },
   },
   variants: {
     iconPath: {

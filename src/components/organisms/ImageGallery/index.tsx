@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Button from "@/components/atoms/Button";
 import Tabs from "@/components/atoms/Tabs";
+import TextBox from "@/components/atoms/TextBox";
 import ImageCard from "@/components/molecules/ImageCard";
 import { css } from "@@/styled-system/css";
 
@@ -32,9 +33,20 @@ const ImageGallery = ({ css, initImages }: Props) => {
   ];
   const [activeTabId, setActiveTabId] = useState("timeLine");
 
+  const [keyword, setKeyword] = useState("");
+  const handleSearch = () => {};
+
   return (
     <div className={css}>
       <Tabs css={tabCss} tabs={tabs} activeTabId={activeTabId} setActiveTabId={setActiveTabId} />
+      <TextBox
+        css={textBoxCss}
+        value={keyword}
+        placeholder="Keyword"
+        iconPath="/images/search.svg"
+        onChange={setKeyword}
+        onEnterPress={handleSearch}
+      />
       <div className={imageCardsCss}>
         {images.map((i) => (
           <ImageCard css={imageCardCss} key={i.id} image={i} />
@@ -47,7 +59,8 @@ const ImageGallery = ({ css, initImages }: Props) => {
   );
 };
 
-const tabCss = css({ paddingY: "8", paddingX: "10px" });
+const tabCss = css({ paddingTop: "8", paddingBottom: "4", paddingX: "3" });
+const textBoxCss = css({ paddingX: "3", paddingBottom: "8" });
 const imageCardsCss = css({
   display: "grid",
   gap: "10px",

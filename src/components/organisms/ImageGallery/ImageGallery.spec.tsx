@@ -15,9 +15,11 @@ describe("ImageGallery", () => {
     test("Renders with default props", () => {
       render(<ImageGallery initImages={images} />);
       const tabsComp = screen.getByText("Time line");
+      const textBoxComp = screen.getByPlaceholderText("Keyword");
       const imageCardComp = screen.getByAltText("LGTM");
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       expect(tabsComp).toBeInTheDocument();
+      expect(textBoxComp).toBeInTheDocument();
       expect(imageCardComp).toBeInTheDocument();
       expect(seeMoreButton).toBeInTheDocument();
     });
