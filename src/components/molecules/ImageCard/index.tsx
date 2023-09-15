@@ -7,13 +7,7 @@ import { css } from "@@/styled-system/css";
 
 type Props = {
   css?: string;
-  image: {
-    id: number;
-    title: string;
-    url: string;
-    width: number;
-    height: number;
-  };
+  image: FetchImage;
 };
 
 const ImageCard = ({ css, image }: Props) => {
@@ -44,7 +38,6 @@ const ImageCard = ({ css, image }: Props) => {
             priority
           />
         </div>
-        <p className={titleCss}>{image.title}</p>
         <div className={buttonsCss}>
           <Button css={buttonCss} size="sm" iconPath="/images/copy.svg" onClick={handleCopy}>
             Copy
@@ -93,7 +86,6 @@ const imageCss = css({
   maxWidth: "100%",
   maxHeight: "100%",
 });
-const titleCss = css({ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" });
 const buttonsCss = css({ display: "flex", marginTop: "3", justifyContent: "center" });
 const buttonCss = css({ marginX: "1" });
 

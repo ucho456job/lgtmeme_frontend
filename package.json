@@ -11,7 +11,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write --ignore-path .gitignore '**/*.{js,jsx,ts,tsx,json}'",
+    "format": "prettier --write --ignore-path .gitignore '**/*.{js,jsx,ts,tsx,json}' && prisma format",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "db:seed": "node ./prisma/createData.js",

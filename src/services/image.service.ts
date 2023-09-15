@@ -12,16 +12,6 @@ type Config = {
   };
 };
 
-type ImageType = {
-  id: number;
-  categoryId: number;
-  title: string;
-  url: string;
-  usedCount: number;
-  reported: boolean;
-  createdAt: Date;
-};
-
 export class ImageService {
   private baseUrl: string;
 
@@ -40,17 +30,30 @@ export class ImageService {
     };
   }
 
-  private async sendRequest<T>(path: string, config: Config) {
-    const res = await fetch(path, config);
+  private async sendRequest<T>(
+    path: string,
+    config: Config,
+    query?: Record<string, string | number>,
+  ) {
+    const url = new URL(path, this.baseUrl);
+    if (query) {
+      Object.entries(query).forEach(([key, value]) => {
+        url.searchParams.append(key, String(value));
+      });
+    }
+    const res = await fetch(url.toString(), config);
     const data: T = await res.json();
     return data;
   }
 
-  async fetchImages(): Promise<ImageType[]> {
+  async fetchImages(queryOption: { page?: number }): Promise<FetchImage[]> {
+    const { page = 0 } = queryOption;
+    const query = { page };
     const config = this.createConfig("GET", "no-store");
-    const res = await this.sendRequest<{ images: ImageType[] }>(
-      this.baseUrl + GET_IMAGES_ENDPOINT,
+    const res = await this.sendRequest<{ images: FetchImage[] }>(
+      GET_IMAGES_ENDPOINT,
       config,
+      query,
     );
     return res.images;
   }

@@ -6,72 +6,7 @@ import { css } from "@@/styled-system/css";
 
 export default async function Home() {
   const service = new ImageService();
-  // const images = await service.fetchImages();
-  const images = [
-    {
-      id: 1,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-    {
-      id: 2,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-    {
-      id: 3,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-    {
-      id: 4,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-    {
-      id: 5,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-    {
-      id: 6,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-    {
-      id: 7,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-    {
-      id: 8,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-    {
-      id: 9,
-      title: "Square",
-      url: "https://placehold.jp/300x300.png",
-      width: 300,
-      height: 300,
-    },
-  ];
+  const images = await service.fetchImages({ page: 0 });
   return (
     <>
       <ImageGallery css={imageGalleryCss} initImages={images} />
