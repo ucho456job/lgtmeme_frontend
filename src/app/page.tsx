@@ -19,7 +19,13 @@ export default async function Home() {
   );
 }
 
-const imageGalleryCss = css({ maxWidth: "1090px", margin: "auto" });
+const imageGalleryCss = css({
+  margin: "auto",
+  paddingX: "3",
+  lg: { maxWidth: "1090px" },
+  md: { maxWidth: "730px" },
+  sm: { maxWidth: "370px" },
+});
 const buttonCss = css({ position: "fixed", bottom: "10", right: "5" });
 
 /*

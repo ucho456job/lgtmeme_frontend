@@ -51,8 +51,8 @@ const ImageGallery = ({ css, initImages }: Props) => {
   );
 };
 
-const tabCss = css({ paddingTop: "8", paddingBottom: "4", paddingX: "3" });
-const textBoxCss = css({ paddingX: "3", paddingBottom: "8" });
+const tabCss = css({ paddingTop: "8", paddingBottom: "4" });
+const textBoxCss = css({ paddingBottom: "8" });
 const imageCardsCss = css({
   display: "grid",
   gap: "10px",
