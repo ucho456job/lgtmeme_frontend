@@ -8,10 +8,6 @@
     "**/*.stories.tx"
   ],
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{ "name": "next" }]
   }
 }
