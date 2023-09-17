@@ -26,7 +26,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@prisma/client": "^5.2.0",
+    "@prisma/client": "^5.3.1",
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
@@ -58,7 +58,7 @@
     "jest-environment-jsdom": "^29.6.4",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
-    "prisma": "^5.2.0",
+    "prisma": "^5.3.1",
     "storybook": "^7.4.0"
   },
   "husky": {
