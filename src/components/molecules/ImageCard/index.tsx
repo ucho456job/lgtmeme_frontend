@@ -82,7 +82,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
 
 const cardCss = css({
   width: "350px",
-  height: "450px",
+  height: "400px",
   padding: "25px",
   boxShadow: "lg",
   bgColor: "WHITE",

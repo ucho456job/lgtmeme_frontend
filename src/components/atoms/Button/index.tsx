@@ -69,8 +69,8 @@ const buttonRecipe = cva({
     color: {
       black: { color: "BLACK" },
       red: { color: "RED" },
-      yellow: { bgColor: "YELLOW" },
-      lightPink: { bgColor: "LIGHT_PINK" },
+      yellow: { bgColor: "YELLOW", color: "BLACK" },
+      lightPink: { bgColor: "LIGHT_PINK", color: "BLACK" },
     },
     size: {
       xs: { padding: "1", fontSize: "xs", minWidth: "12" },
