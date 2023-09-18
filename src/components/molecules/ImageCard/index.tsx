@@ -103,10 +103,6 @@ const imageCss = css({
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  maxWidth: "100%",
-  maxHeight: "100%",
-  width: "auto",
-  height: "auto",
   objectFit: "cover",
 });
 const buttonsCss = css({ display: "flex", marginTop: "3", justifyContent: "center" });

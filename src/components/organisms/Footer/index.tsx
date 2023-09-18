@@ -7,6 +7,9 @@ const Footer = () => {
   return (
     <footer className={footerCss}>
       <div className={buttonsCss}>
+        <Link href="/">
+          <Button visual="text">Home</Button>
+        </Link>
         <Link href="/terms-of-service">
           <Button visual="text">Terms of service</Button>
         </Link>
@@ -23,7 +26,7 @@ const footerCss = css({
   bgColor: "GHOUST_WHITE",
   color: "BLACK",
   maxWidth: "100vw",
-  height: "140px",
+  height: "190px",
 });
 const copyrightCss = css({ textAlign: "center" });
 const buttonsCss = css({ display: "flex", justifyContent: "center", paddingTop: "8" });
