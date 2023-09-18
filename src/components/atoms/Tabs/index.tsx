@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
 import { css, cva } from "@@/styled-system/css";
 
 type Props = {
@@ -8,13 +7,10 @@ type Props = {
     label: string;
   }[];
   activeTabId: string;
-  setActiveTabId: Dispatch<SetStateAction<string>>;
+  setActiveTabId: Function;
 };
 
 const Tabs = ({ css, tabs, activeTabId, setActiveTabId }: Props) => {
-  const handleClickTab = (id: string) => {
-    setActiveTabId(id);
-  };
   return (
     <div className={css}>
       <div className={tabsCss}>
@@ -22,7 +18,7 @@ const Tabs = ({ css, tabs, activeTabId, setActiveTabId }: Props) => {
           <div
             key={tab.id}
             className={tabRecipe({ active: tab.id === activeTabId })}
-            onClick={() => handleClickTab(tab.id)}
+            onClick={() => setActiveTabId(tab.id)}
           >
             {tab.label}
           </div>

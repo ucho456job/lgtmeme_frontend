@@ -6,7 +6,7 @@ import { css } from "@@/styled-system/css";
 
 export default async function Home() {
   const service = new ImageService();
-  const images = await service.fetchImages({ page: 0 });
+  const images = (await service.fetchImages({ page: 0 })) || [];
   return (
     <>
       <ImageGallery css={imageGalleryCss} initImages={images} />

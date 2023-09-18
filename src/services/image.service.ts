@@ -1,3 +1,4 @@
+import { ActiveTabId } from "@/components/organisms/ImageGallery";
 import { GET_IMAGES_ENDPOINT } from "@/constants/endpoints";
 
 type Method = "GET";
@@ -16,8 +17,8 @@ export class ImageService {
   private baseUrl: string;
 
   constructor() {
-    const protocol = process.env.VERCEL_ENV === "development" ? "http://" : "https://";
-    this.baseUrl = protocol + process.env.VERCEL_URL;
+    const protocol = process.env.NEXT_PUBLIC_VERCEL_ENV === "development" ? "http://" : "https://";
+    this.baseUrl = protocol + process.env.NEXT_PUBLIC_VERCEL_URL;
   }
 
   private createConfig(method: Method, cache: Cache): Config {
@@ -33,7 +34,7 @@ export class ImageService {
   private async sendRequest<T>(
     path: string,
     config: Config,
-    query?: Record<string, string | number>,
+    query?: Record<string, string | number | number[]>,
   ) {
     const url = new URL(path, this.baseUrl);
     if (query) {
@@ -46,9 +47,14 @@ export class ImageService {
     return data;
   }
 
-  async fetchImages(queryOption: { page?: number }): Promise<FetchImage[]> {
-    const { page = 0 } = queryOption;
-    const query = { page };
+  async fetchImages(queryOption: {
+    page?: number;
+    keyword?: string;
+    activeTabId?: ActiveTabId;
+    favariteImageIds?: number[];
+  }): Promise<FetchImage[]> {
+    const { page = 0, keyword = "", activeTabId = "timeLine", favariteImageIds = [] } = queryOption;
+    const query = { page, keyword, activeTabId, favariteImageIds };
     const config = this.createConfig("GET", "no-store");
     const res = await this.sendRequest<{ images: FetchImage[] }>(
       GET_IMAGES_ENDPOINT,
