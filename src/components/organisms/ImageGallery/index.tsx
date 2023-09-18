@@ -5,6 +5,7 @@ import Button from "@/components/atoms/Button";
 import Tabs from "@/components/atoms/Tabs";
 import TextBox from "@/components/atoms/TextBox";
 import ImageCard from "@/components/molecules/ImageCard";
+import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
 type Props = {
@@ -12,10 +13,22 @@ type Props = {
   initImages: FetchImage[];
 };
 
+export type ActiveTabId = "timeLine" | "popular" | "favorite";
+
 const ImageGallery = ({ css, initImages }: Props) => {
   const [images, setImages] = useState<FetchImage[]>([]);
+  const [favariteImageIds, setFavariteImageIds] = useState<number[]>([]);
+  const [activeTabId, setActiveTabId] = useState("timeLine");
+  const [keyword, setKeyword] = useState("");
+  const [page, setPage] = useState(0);
+  const [isFull, setIsFull] = useState(false);
+
   useEffect(() => {
     setImages(initImages);
+    const favariteImageIds = JSON.parse(
+      localStorage.getItem("favariteImageIds") || "[]",
+    ) as number[];
+    setFavariteImageIds(favariteImageIds);
   }, [initImages]);
 
   const tabs = [
@@ -23,28 +36,76 @@ const ImageGallery = ({ css, initImages }: Props) => {
     { id: "popular", label: "Popular" },
     { id: "favorite", label: "Favorite" },
   ];
-  const [activeTabId, setActiveTabId] = useState("timeLine");
 
-  const [keyword, setKeyword] = useState("");
-  const handleSearch = () => {};
+  const handleFetchImages = async (
+    images: FetchImage[],
+    page: number,
+    keyword: string,
+    activeTabId: ActiveTabId,
+    favariteImageIds: number[],
+  ) => {
+    try {
+      // Show loader
+      setPage(page);
+      setActiveTabId(activeTabId);
+      const service = new ImageService();
+      const resImages = await service.fetchImages({ page, keyword, activeTabId, favariteImageIds });
+      if (page === 0) {
+        setImages(resImages);
+      } else {
+        const imageMap = new Map();
+        images.forEach((image) => imageMap.set(image.id, image));
+        resImages.forEach((image) => imageMap.set(image.id, image));
+        setImages(Array.from(imageMap.values()));
+      }
+      if (resImages.length < 9) setIsFull(true);
+    } catch (error) {
+      // Make snackbar and display error message.
+    } finally {
+      // Hide loader
+    }
+  };
 
   return (
     <div className={css}>
-      <Tabs css={tabCss} tabs={tabs} activeTabId={activeTabId} setActiveTabId={setActiveTabId} />
+      <Tabs
+        css={tabCss}
+        tabs={tabs}
+        activeTabId={activeTabId}
+        setActiveTabId={(id: string) => {
+          setIsFull(false);
+          handleFetchImages(images, 0, keyword, id as ActiveTabId, favariteImageIds);
+        }}
+      />
       <TextBox
         css={textBoxCss}
         value={keyword}
         placeholder="Keyword"
         iconPath="/images/search.svg"
         onChange={setKeyword}
-        onEnterPress={handleSearch}
+        onEnterPress={() =>
+          handleFetchImages(images, 0, keyword, activeTabId as ActiveTabId, favariteImageIds)
+        }
       />
       <div className={imageCardsCss}>
         {images.map((i) => (
-          <ImageCard css={imageCardCss} key={i.id} image={i} />
+          <ImageCard
+            css={imageCardCss}
+            key={i.id}
+            image={i}
+            favariteImageIds={favariteImageIds}
+            setFavariteImageIds={setFavariteImageIds}
+          />
         ))}
       </div>
-      <Button css={buttonCss} size="lg">
+      <Button
+        css={buttonCss}
+        size="lg"
+        disabled={isFull}
+        onClick={() =>
+          handleFetchImages(images, page + 1, keyword, activeTabId as ActiveTabId, favariteImageIds)
+        }
+      >
         See more
       </Button>
     </div>

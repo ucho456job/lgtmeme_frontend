@@ -1,5 +1,4 @@
-import { KeyboardEvent, useRef } from "react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, KeyboardEvent, SetStateAction, useRef } from "react";
 import Image from "next/image";
 import { css, cva } from "@@/styled-system/css";
 
@@ -9,7 +8,7 @@ type Props = {
   placeholder?: string;
   iconPath?: string;
   onChange: Dispatch<SetStateAction<string>>;
-  onEnterPress?: () => void;
+  onEnterPress?: Function;
 };
 
 const TextBox = ({ css, value, placeholder, iconPath, onChange, onEnterPress }: Props) => {

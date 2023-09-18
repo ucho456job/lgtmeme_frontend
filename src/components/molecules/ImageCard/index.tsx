@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/atoms/Button";
 import { css } from "@@/styled-system/css";
@@ -8,16 +8,30 @@ import { css } from "@@/styled-system/css";
 type Props = {
   css?: string;
   image: FetchImage;
+  favariteImageIds: number[];
+  setFavariteImageIds: Dispatch<SetStateAction<number[]>>;
 };
 
-const ImageCard = ({ css, image }: Props) => {
+const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props) => {
+  const [isFavarite, setIsFavarite] = useState(false);
+
+  useEffect(() => {
+    const isFavarite = favariteImageIds.find((id) => id === image.id);
+    if (isFavarite) setIsFavarite(true);
+  }, [image, favariteImageIds]);
+
   const handleCopy = () => {
     console.log("copy");
   };
 
-  const [isFavarite, setIsFavarite] = useState(false);
   const handleToggleFavarite = () => {
-    setIsFavarite(!isFavarite);
+    const newIsFavarite = !isFavarite;
+    const newFavariteImageIds = newIsFavarite
+      ? [...favariteImageIds, image.id]
+      : favariteImageIds.filter((id) => id !== image.id);
+    localStorage.setItem("favariteImageIds", JSON.stringify(newFavariteImageIds));
+    setFavariteImageIds(newFavariteImageIds);
+    setIsFavarite(newIsFavarite);
   };
 
   const handleReport = () => {
@@ -66,7 +80,13 @@ const ImageCard = ({ css, image }: Props) => {
   );
 };
 
-const cardCss = css({ width: "350px", height: "450px", padding: "25px", boxShadow: "lg" });
+const cardCss = css({
+  width: "350px",
+  height: "450px",
+  padding: "25px",
+  boxShadow: "lg",
+  bgColor: "WHITE",
+});
 const imageContainerCss = css({
   position: "relative",
   width: "300px",
@@ -87,6 +107,7 @@ const imageCss = css({
   maxHeight: "100%",
   width: "auto",
   height: "auto",
+  objectFit: "cover",
 });
 const buttonsCss = css({ display: "flex", marginTop: "3", justifyContent: "center" });
 const buttonCss = css({ marginX: "1" });
