@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ImageGallery from "@/components/organisms/ImageGallery";
 import { ImageService } from "@/services/image.service";
@@ -71,9 +71,11 @@ describe("ImageGallery", () => {
 
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       await userEvent.click(seeMoreButton);
-      const imageCardComps = screen.getAllByAltText("LGTM");
-      expect(imageCardComps.length).toBe(10);
-      expect(seeMoreButton).not.toHaveAttribute("disabled");
+
+      const afterImageCardComps = screen.getAllByAltText("LGTM");
+      expect(afterImageCardComps.length).toBe(10);
+      const afterSeeMoreButton = screen.getByRole("button", { name: "See more" });
+      expect(afterSeeMoreButton).not.toHaveAttribute("disabled");
     });
     test("When clicked see more button, fetch 8 or less images, button is disabled", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
@@ -90,12 +92,14 @@ describe("ImageGallery", () => {
 
       const beforeImageCardComps = screen.getAllByAltText("LGTM");
       expect(beforeImageCardComps.length).toBe(1);
+
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       await userEvent.click(seeMoreButton);
 
-      const imageCardComps = screen.getAllByAltText("LGTM");
-      expect(imageCardComps.length).toBe(9);
-      expect(seeMoreButton).toHaveAttribute("disabled");
+      const afterImageCardComps = screen.getAllByAltText("LGTM");
+      expect(afterImageCardComps.length).toBe(9);
+      const afterSeeMoreButton = screen.getByRole("button", { name: "See more" });
+      expect(afterSeeMoreButton).toHaveAttribute("disabled");
     });
   });
 });

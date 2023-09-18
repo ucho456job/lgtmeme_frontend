@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "@/components/atoms/Button";
+import Loading from "@/components/atoms/Loading";
 import Tabs from "@/components/atoms/Tabs";
 import TextBox from "@/components/atoms/TextBox";
 import ImageCard from "@/components/molecules/ImageCard";
@@ -22,6 +23,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
   const [keyword, setKeyword] = useState("");
   const [page, setPage] = useState(0);
   const [isFull, setIsFull] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setImages(initImages);
@@ -29,6 +31,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
       localStorage.getItem("favariteImageIds") || "[]",
     ) as number[];
     setFavariteImageIds(favariteImageIds);
+    setIsLoading(false);
   }, [initImages]);
 
   const tabs = [
@@ -45,7 +48,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
     favariteImageIds: number[],
   ) => {
     try {
-      // Show loader
+      setIsLoading(true);
       setPage(page);
       setActiveTabId(activeTabId);
       const service = new ImageService();
@@ -62,7 +65,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
     } catch (error) {
       // Make snackbar and display error message.
     } finally {
-      // Hide loader
+      setIsLoading(false);
     }
   };
 
@@ -98,16 +101,26 @@ const ImageGallery = ({ css, initImages }: Props) => {
           />
         ))}
       </div>
-      <Button
-        css={buttonCss}
-        size="lg"
-        disabled={isFull}
-        onClick={() =>
-          handleFetchImages(images, page + 1, keyword, activeTabId as ActiveTabId, favariteImageIds)
-        }
-      >
-        See more
-      </Button>
+      {isLoading ? (
+        <Loading css={loadingCss} />
+      ) : (
+        <Button
+          css={buttonCss}
+          size="lg"
+          disabled={isFull}
+          onClick={() =>
+            handleFetchImages(
+              images,
+              page + 1,
+              keyword,
+              activeTabId as ActiveTabId,
+              favariteImageIds,
+            )
+          }
+        >
+          See more
+        </Button>
+      )}
     </div>
   );
 };
@@ -123,5 +136,6 @@ const imageCardsCss = css({
 });
 const imageCardCss = css({ marginX: "auto" });
 const buttonCss = css({ paddingY: "30px", textAlign: "center" });
+const loadingCss = css({ marginTop: "30px", marginX: "auto" });
 
 export default ImageGallery;
