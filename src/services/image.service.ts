@@ -1,5 +1,6 @@
 import { ActiveTabId } from "@/components/organisms/ImageGallery";
-import { GET_IMAGES_ENDPOINT } from "@/constants/endpoints";
+
+const IMAGES_ENDPOINT = "/api/images";
 
 type Method = "GET";
 
@@ -55,11 +56,7 @@ export class ImageService {
     const { page = 0, keyword = "", activeTabId = "timeLine", favariteImageIds = [] } = queryOption;
     const query = { page, keyword, activeTabId, favariteImageIds };
     const config = this.createConfig("GET", "no-store");
-    const res = await this.sendRequest<{ images: FetchImage[] }>(
-      GET_IMAGES_ENDPOINT,
-      config,
-      query,
-    );
+    const res = await this.sendRequest<{ images: FetchImage[] }>(IMAGES_ENDPOINT, config, query);
     return res.images;
   }
 }
