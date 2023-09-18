@@ -4,8 +4,7 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      NEXT_PUBLIC_VERCEL_ENV: "production" | "preview" | "development";
-      NEXT_PUBLIC_VERCEL_URL: string;
+      NEXT_PUBLIC_APP_URL: string;
       DATABASE_URL: string;
     }
   }
