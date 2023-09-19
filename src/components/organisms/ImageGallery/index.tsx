@@ -77,6 +77,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
         activeTabId={activeTabId}
         setActiveTabId={(id: string) => {
           setIsFull(false);
+          setImages([]);
           handleFetchImages(images, 0, keyword, id as ActiveTabId, favariteImageIds);
         }}
       />
@@ -86,9 +87,11 @@ const ImageGallery = ({ css, initImages }: Props) => {
         placeholder="Keyword"
         iconPath="/images/search.svg"
         onChange={setKeyword}
-        onEnterPress={() =>
-          handleFetchImages(images, 0, keyword, activeTabId as ActiveTabId, favariteImageIds)
-        }
+        onEnterPress={() => {
+          setIsFull(false);
+          setImages([]);
+          handleFetchImages(images, 0, keyword, activeTabId as ActiveTabId, favariteImageIds);
+        }}
       />
       <div className={imageCardsCss}>
         {images.map((i) => (
