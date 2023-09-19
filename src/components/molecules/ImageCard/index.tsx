@@ -20,8 +20,13 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
     if (isFavarite) setIsFavarite(true);
   }, [image, favariteImageIds]);
 
-  const handleCopy = () => {
-    console.log("copy");
+  const handleCopyToClipboard = async (imageUrl: string) => {
+    try {
+      await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
+      alert("Success! Copied to clipboard");
+    } catch (error) {
+      alert("Failed to copy to clipboard");
+    }
   };
 
   const handleToggleFavarite = () => {
@@ -53,7 +58,12 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
           />
         </div>
         <div className={buttonsCss}>
-          <Button css={buttonCss} size="sm" iconPath="/images/copy.svg" onClick={handleCopy}>
+          <Button
+            css={buttonCss}
+            size="sm"
+            iconPath="/images/copy.svg"
+            onClick={() => handleCopyToClipboard(image.url)}
+          >
             Copy
           </Button>
           <Button
