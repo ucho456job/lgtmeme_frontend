@@ -37,11 +37,53 @@ describe("ImageCard", () => {
     });
   });
   describe("Event tests", () => {
-    // test("Calls the onClick handler when clicked copy button", async () => {
-    //   render(<ImageCard image={imageData} />);
-    //   const copyButton = screen.getAllByRole("button")[0]
-    //   await userEvent.click(copyButton);
-    // });
+    let alertMock: jest.SpyInstance<void, [message?: any], any>;
+    beforeEach(() => {
+      alertMock = jest.spyOn(window, "alert").mockImplementation(() => {});
+    });
+    afterEach(() => {
+      alertMock.mockClear();
+    });
+    test("When copying to clipboard succeeds, it should show a success alert", async () => {
+      const clipboardWriteTextMock = jest.fn();
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: clipboardWriteTextMock,
+        },
+      });
+      render(
+        <ImageCard
+          image={imageData}
+          favariteImageIds={favariteImageIds}
+          setFavariteImageIds={setFavariteImageIdsMock}
+        />,
+      );
+
+      const copyButton = screen.getAllByRole("button")[0];
+      await userEvent.click(copyButton);
+
+      expect(clipboardWriteTextMock).toHaveBeenCalledWith(`![LGTM](${imageData.url})`);
+      expect(alertMock).toHaveBeenCalledWith("Success! Copied to clipboard");
+    });
+    test("When copying to clipboard fails, it should show a failure alert", async () => {
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: jest.fn(() => Promise.reject(new Error("Failed to copy"))),
+        },
+      });
+      render(
+        <ImageCard
+          image={imageData}
+          favariteImageIds={favariteImageIds}
+          setFavariteImageIds={setFavariteImageIdsMock}
+        />,
+      );
+
+      const copyButton = screen.getAllByRole("button")[0];
+      await userEvent.click(copyButton);
+
+      expect(alertMock).toHaveBeenCalledWith("Failed to copy to clipboard");
+    });
     test("When press favarite button, it will be added to favorites", async () => {
       render(
         <ImageCard
@@ -72,10 +114,5 @@ describe("ImageCard", () => {
       expect(setFavariteImageIdsMock).toBeCalledWith([]);
       expect(favariteIcon).toHaveAttribute("src", "/images/heart-outline.svg");
     });
-    // test("Calls the onClick handler when clicked report button", async () => {
-    //   render(<ImageCard image={imageData} />);
-    //   const reportButton = screen.getAllByRole("button")[2]
-    //   await userEvent.click(reportButton);
-    // });
   });
 });
