@@ -8,7 +8,12 @@ const ImageEditor: React.FC = () => {
   const [textSize, setTextSize] = useState<number>(36);
   const [textColor, setTextColor] = useState<string>("#ffffff");
   const [textBorderColor, setTextBorderColor] = useState<string>("#000000");
-  const [fontFamily, setFontFamily] = useState<string>("Arial"); // デフォルトのフォントファミリー
+  const [fontFamily, setFontFamily] = useState<string>("Arial");
+  const [textPosition, setTextPosition] = useState<{ x: number; y: number }>({
+    x: 100,
+    y: 160,
+  });
+  const [isDragging, setIsDragging] = useState<boolean>(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -26,16 +31,13 @@ const ImageEditor: React.FC = () => {
         img.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-          // Calculate the position to center the image
           const centerX = (canvas.width - img.width) / 2;
           const centerY = (canvas.height - img.height) / 2;
 
-          // Draw the image in the center
           ctx.drawImage(img, centerX, centerY);
 
-          // Set text properties
           ctx.fillStyle = textColor;
-          ctx.font = `${textSize}px ${fontFamily}`; // フォントファミリーを適用
+          ctx.font = `${textSize}px ${fontFamily}`;
           ctx.strokeStyle = textBorderColor;
           ctx.lineWidth = 3;
 
@@ -43,15 +45,15 @@ const ImageEditor: React.FC = () => {
           const textWidth = ctx.measureText(text).width;
           const textHeight = textSize;
 
-          const textX = (canvas.width - textWidth) / 2;
-          const textY = centerY + img.height / 2 + textHeight / 2;
+          const textX = textPosition.x; // ドラッグされた位置に適用
+          const textY = textPosition.y; // ドラッグされた位置に適用
 
           ctx.strokeText(text, textX, textY);
           ctx.fillText(text, textX, textY);
         };
       }
     }
-  }, [image, textSize, textColor, textBorderColor, fontFamily]); // fontFamilyもウォッチリストに追加
+  }, [image, textSize, textColor, textBorderColor, fontFamily, textPosition]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -81,10 +83,36 @@ const ImageEditor: React.FC = () => {
     setTextBorderColor(newBorderColor);
   };
 
-  // フォントファミリーを変更するハンドラ
   const handleFontFamilyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newFontFamily = event.target.value;
     setFontFamily(newFontFamily);
+  };
+
+  // テキストの位置をドラッグアンドドロップするハンドラ
+  const handleTextDrag = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    if (isDragging) {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const offsetY = event.clientY - rect.top;
+        setTextPosition({ x: offsetX, y: offsetY });
+      }
+    }
+  };
+
+  // ドラッグを開始するハンドラ
+  const handleDragStart = () => {
+    setIsDragging(true);
+    // ドラッグ中はカーソルを'grabbing'に設定
+    document.body.style.cursor = "grabbing";
+  };
+
+  // ドラッグを終了するハンドラ
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    // ドラッグ終了後はカーソルを元に戻す
+    document.body.style.cursor = "auto";
   };
 
   return (
@@ -96,7 +124,6 @@ const ImageEditor: React.FC = () => {
           <option value="24">24</option>
           <option value="36">36</option>
           <option value="48">48</option>
-          {/* 他の選択肢を追加 */}
         </select>
       </div>
       <div>
@@ -112,18 +139,21 @@ const ImageEditor: React.FC = () => {
           onChange={handleTextBorderColorChange}
         />
       </div>
-      {/* フォントファミリーのセレクトボックス */}
       <div>
         <label htmlFor="fontFamily">Font Family: </label>
         <select id="fontFamily" value={fontFamily} onChange={handleFontFamilyChange}>
           <option value="Arial">Arial</option>
           <option value="Verdana">Verdana</option>
           <option value="Times New Roman">Times New Roman</option>
-          {/* 他のフォントファミリーを追加 */}
         </select>
       </div>
       <div className={borderCss}>
-        <canvas ref={canvasRef}></canvas>
+        <canvas
+          ref={canvasRef}
+          onMouseDown={handleDragStart}
+          onMouseMove={handleTextDrag}
+          onMouseUp={handleDragEnd}
+        ></canvas>
       </div>
     </div>
   );
@@ -133,6 +163,7 @@ const borderCss = css({
   border: "2px dashed #737373",
   height: "304px",
   width: "304px",
+  position: "relative", // 絶対位置指定のために親要素を相対位置指定にする
 });
 
 export default ImageEditor;
