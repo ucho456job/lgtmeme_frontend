@@ -1,5 +1,11 @@
+import ImageEditor from "@/components/molecules/ImageEditor";
+
 const Add = () => {
-  return <>add</>;
+  return (
+    <>
+      <ImageEditor />
+    </>
+  );
 };
 
 export default Add;
