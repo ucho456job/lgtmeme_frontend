@@ -1,4 +1,4 @@
-import ImageEditor from "@/components/molecules/ImageEditor";
+import ImageEditor from "@/app/add/ImageEditor";
 
 const Add = () => {
   return (
