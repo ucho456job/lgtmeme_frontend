@@ -3,12 +3,31 @@
 import { useState, useEffect, useRef } from "react";
 import { css } from "@@/styled-system/css";
 
+type TextStyle = {
+  position: "absolute" | "relative";
+  left: number;
+  top: number;
+  color: string;
+  textStroke: string;
+  "-webkit-text-stroke": string;
+  textBorderColor: string;
+  fontSize: number;
+  fontFamily: string;
+};
+
 const ImageEditor: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
-  const [textSize, setTextSize] = useState<number>(36);
-  const [textColor, setTextColor] = useState<string>("#ffffff");
-  const [textBorderColor, setTextBorderColor] = useState<string>("#000000");
-  const [fontFamily, setFontFamily] = useState<string>("Arial");
+  const [textStyle, setTextStyle] = useState<TextStyle>({
+    position: "absolute",
+    left: 100,
+    top: 125,
+    color: "#ffffff",
+    textStroke: "1px #000000",
+    "-webkit-text-stroke": "1px #000000",
+    textBorderColor: "#000000",
+    fontSize: 36,
+    fontFamily: "Arial",
+  });
   const [textPosition, setTextPosition] = useState<{ x: number; y: number }>({
     x: 100,
     y: 160,
@@ -35,29 +54,13 @@ const ImageEditor: React.FC = () => {
           const centerY = (canvas.height - img.height) / 2;
 
           ctx.drawImage(img, centerX, centerY);
-
-          ctx.fillStyle = textColor;
-          ctx.font = `${textSize}px ${fontFamily}`;
-          ctx.strokeStyle = textBorderColor;
-          ctx.lineWidth = 3;
-
-          const text = "LGTM";
-          const textWidth = ctx.measureText(text).width;
-          const textHeight = textSize;
-
-          const textX = textPosition.x; // ドラッグされた位置に適用
-          const textY = textPosition.y; // ドラッグされた位置に適用
-
-          ctx.strokeText(text, textX, textY);
-          ctx.fillText(text, textX, textY);
         };
       }
     }
-  }, [image, textSize, textColor, textBorderColor, fontFamily, textPosition]);
+  }, [image]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -68,24 +71,32 @@ const ImageEditor: React.FC = () => {
     }
   };
 
-  const handleTextSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSize = parseInt(event.target.value);
-    setTextSize(newSize);
+  const handleTextSizeChange = (e: React.ChangeEvent<HTMLSelectElement>, textStyle: TextStyle) => {
+    setTextStyle({ ...textStyle, fontSize: parseInt(e.target.value) });
   };
 
-  const handleTextColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = event.target.value;
-    setTextColor(newColor);
+  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>, textStyle: TextStyle) => {
+    setTextStyle({ ...textStyle, color: e.target.value });
   };
 
-  const handleTextBorderColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newBorderColor = event.target.value;
-    setTextBorderColor(newBorderColor);
+  const handleTextBorderColorChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    textStyle: TextStyle,
+  ) => {
+    const newColor = e.target.value;
+    setTextStyle({
+      ...textStyle,
+      textStroke: `1px ${newColor}`,
+      "-webkit-text-stroke": `1px ${newColor}`,
+      textBorderColor: newColor,
+    });
   };
 
-  const handleFontFamilyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newFontFamily = event.target.value;
-    setFontFamily(newFontFamily);
+  const handleFontFamilyChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    textStyle: TextStyle,
+  ) => {
+    setTextStyle({ ...textStyle, fontFamily: e.target.value });
   };
 
   // テキストの位置をドラッグアンドドロップするハンドラ
@@ -119,6 +130,18 @@ const ImageEditor: React.FC = () => {
     if (canvasRef.current) {
       // CanvasからDataURLを取得
       const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.fillStyle = textStyle.color;
+      ctx.font = `${textStyle.fontSize}px ${textStyle.fontFamily}`;
+      ctx.strokeStyle = textStyle.textBorderColor;
+      ctx.lineWidth = 3;
+      const text = "LGTM";
+      const textX = textPosition.x;
+      const textY = textPosition.y;
+      ctx.strokeText(text, textX, textY);
+      ctx.fillText(text, textX, textY);
+
       const dataURL = canvas.toDataURL("image/webp");
 
       // ダウンロード用のリンクを生成
@@ -134,7 +157,11 @@ const ImageEditor: React.FC = () => {
       <input type="file" accept="image/*" ref={inputRef} onChange={handleImageUpload} />
       <div>
         <label htmlFor="textSize">Text Size: </label>
-        <select id="textSize" value={textSize} onChange={handleTextSizeChange}>
+        <select
+          id="textSize"
+          value={textStyle.fontSize}
+          onChange={(e) => handleTextSizeChange(e, textStyle)}
+        >
           <option value="24">24</option>
           <option value="36">36</option>
           <option value="48">48</option>
@@ -142,20 +169,29 @@ const ImageEditor: React.FC = () => {
       </div>
       <div>
         <label htmlFor="textColor">Text Color: </label>
-        <input type="color" id="textColor" value={textColor} onChange={handleTextColorChange} />
+        <input
+          type="color"
+          id="textColor"
+          value={textStyle.color}
+          onChange={(e) => handleTextColorChange(e, textStyle)}
+        />
       </div>
       <div>
         <label htmlFor="textBorderColor">Text Border Color: </label>
         <input
           type="color"
           id="textBorderColor"
-          value={textBorderColor}
-          onChange={handleTextBorderColorChange}
+          value={textStyle.textBorderColor}
+          onChange={(e) => handleTextBorderColorChange(e, textStyle)}
         />
       </div>
       <div>
         <label htmlFor="fontFamily">Font Family: </label>
-        <select id="fontFamily" value={fontFamily} onChange={handleFontFamilyChange}>
+        <select
+          id="fontFamily"
+          value={textStyle.fontFamily}
+          onChange={(e) => handleFontFamilyChange(e, textStyle)}
+        >
           <option value="Arial">Arial</option>
           <option value="Verdana">Verdana</option>
           <option value="Times New Roman">Times New Roman</option>
@@ -168,6 +204,7 @@ const ImageEditor: React.FC = () => {
           onMouseMove={handleTextDrag}
           onMouseUp={handleDragEnd}
         ></canvas>
+        {image && <div style={textStyle}>LGTM</div>}
       </div>
       <button onClick={downloadWebPImage}>Download WebP</button>
     </div>
