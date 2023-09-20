@@ -21,7 +21,29 @@ const ImageEditor: React.FC = () => {
 
         img.onload = () => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0);
+
+          // Calculate the position to center the image
+          const centerX = (canvas.width - img.width) / 2;
+          const centerY = (canvas.height - img.height) / 2;
+
+          // Draw the image in the center
+          ctx.drawImage(img, centerX, centerY);
+
+          // Set text properties
+          ctx.fillStyle = "#ffffff"; // Text color (white)
+          ctx.font = "64px Arial"; // Font size and style
+          ctx.strokeStyle = "#000000"; // Text border color (black)
+          ctx.lineWidth = 3; // Text border width
+
+          const text = "LGTM";
+          const textWidth = ctx.measureText(text).width;
+          const textHeight = parseInt(ctx.font, 10);
+
+          const textX = (canvas.width - textWidth) / 2;
+          const textY = centerY + img.height / 2 + textHeight / 2;
+
+          ctx.strokeText(text, textX, textY);
+          ctx.fillText(text, textX, textY);
         };
       }
     }
@@ -50,6 +72,13 @@ const ImageEditor: React.FC = () => {
   );
 };
 
-const borderCss = css({ border: "2px dashed #737373", height: "304px", width: "304px" });
+const borderCss = css({
+  border: "2px dashed #737373",
+  height: "304px",
+  width: "304px",
+  // display: "flex",
+  // justifyContent: "center",
+  // alignItems: "center",
+});
 
 export default ImageEditor;
