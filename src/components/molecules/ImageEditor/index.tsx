@@ -115,6 +115,20 @@ const ImageEditor: React.FC = () => {
     document.body.style.cursor = "auto";
   };
 
+  const downloadWebPImage = () => {
+    if (canvasRef.current) {
+      // CanvasからDataURLを取得
+      const canvas = canvasRef.current;
+      const dataURL = canvas.toDataURL("image/webp");
+
+      // ダウンロード用のリンクを生成
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "image.webp";
+      a.click();
+    }
+  };
+
   return (
     <div>
       <input type="file" accept="image/*" ref={inputRef} onChange={handleImageUpload} />
@@ -155,6 +169,7 @@ const ImageEditor: React.FC = () => {
           onMouseUp={handleDragEnd}
         ></canvas>
       </div>
+      <button onClick={downloadWebPImage}>Download WebP</button>
     </div>
   );
 };
