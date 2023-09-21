@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Header from "@/components/organisms/Header";
+import Header from "@/components/organisms/Header/Header";
 
 describe("Header", () => {
   describe("Render tests", () => {

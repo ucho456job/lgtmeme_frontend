@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Footer from "@/components/organisms/Footer";
-import Header from "@/components/organisms/Header";
+import Footer from "@/components/organisms/Footer/Footer";
+import Header from "@/components/organisms/Header/Header";
 import "@/styles/globals.css";
 import { cva } from "@@/styled-system/css";
 
