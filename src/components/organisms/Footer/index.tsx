@@ -26,7 +26,7 @@ const footerCss = css({
   bgColor: "GHOUST_WHITE",
   color: "BLACK",
   maxWidth: "100vw",
-  height: "190px",
+  height: "140px",
 });
 const copyrightCss = css({ textAlign: "center" });
 const buttonsCss = css({ display: "flex", justifyContent: "center", paddingTop: "8" });

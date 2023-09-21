@@ -1,8 +1,11 @@
 "use client";
 
 import { ChangeEvent, useState, useEffect, useRef } from "react";
+import Button from "@/components/atoms/Button";
+import ColorInput from "@/components/atoms/ColorInput/ColorInput";
 import FileInput from "@/components/atoms/FileInput/FileInput";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
+import Form from "@/components/molecules/Form/Form";
 import { css } from "@@/styled-system/css";
 
 type TextStyle = {
@@ -28,12 +31,16 @@ type SizeMap = Map<
   }
 >;
 
-const ImageEditor = () => {
+type Props = {
+  css?: string;
+};
+
+const ImageEditor = ({ css }: Props) => {
   const [image, setImage] = useState<string | null>(null);
   const [textStyle, setTextStyle] = useState<TextStyle>({
     left: 66,
     top: 120,
-    color: "#000000",
+    color: "#ffffff",
     fontSize: 60,
     width: 169,
     height: 60,
@@ -43,6 +50,7 @@ const ImageEditor = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartY, setDragStartY] = useState(0);
+  const [isUpload, setIsUpload] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -136,7 +144,8 @@ const ImageEditor = () => {
     setIsDragging(false);
   };
 
-  const downloadWebPImage = (size: SizeMapKey, sizeMap: SizeMap) => {
+  const downloadWebPImage = (size: SizeMapKey) => {
+    setIsUpload(true);
     const diff = sizeMap.get(size)?.diff;
     if (canvasRef.current && diff) {
       const canvas = canvasRef.current;
@@ -158,31 +167,11 @@ const ImageEditor = () => {
   };
 
   return (
-    <div>
-      <SelectBox
-        value={textStyle.fontSize}
-        options={textSizeOptions}
-        onChange={handleTextSizeChange}
-      />
-      <SelectBox
-        value={textStyle.fontFamily}
-        options={fontFamilyOptions}
-        onChange={handleFontFamilyChange}
-      />
+    <div className={css}>
       <br />
-      <FileInput onChange={handleImageUpload} />
-      <div>
-        <label htmlFor="textColor">Text Color: </label>
-        <input
-          type="color"
-          id="textColor"
-          value={textStyle.color}
-          onChange={(e) => handleTextColorChange(e)}
-        />
-      </div>
       <div className={borderCss} id="canvas-border">
         <canvas ref={canvasRef}></canvas>
-        {image && (
+        {image && !isUpload && (
           <div
             className={lgtmCss}
             style={textStyle}
@@ -194,9 +183,32 @@ const ImageEditor = () => {
           </div>
         )}
       </div>
-      <button onClick={() => downloadWebPImage(textStyle.fontSize as SizeMapKey, sizeMap)}>
-        Download WebP
-      </button>
+      <FileInput css={fileInputCss} onChange={handleImageUpload} />
+      <Form css={formCss} label="Size">
+        <SelectBox
+          value={textStyle.fontSize}
+          options={textSizeOptions}
+          onChange={handleTextSizeChange}
+        />
+      </Form>
+      <Form label="Font family">
+        <SelectBox
+          value={textStyle.fontFamily}
+          options={fontFamilyOptions}
+          onChange={handleFontFamilyChange}
+        />
+      </Form>
+      <Form label="Color" isUnderLine>
+        <ColorInput value={textStyle.color} onChange={handleTextColorChange} />
+      </Form>
+      <Button
+        css={uploadButton}
+        iconPath="/images/upload.svg"
+        size="lg"
+        onClick={() => downloadWebPImage(textStyle.fontSize as SizeMapKey)}
+      >
+        Create LGTM image
+      </Button>
     </div>
   );
 };
@@ -206,6 +218,7 @@ const borderCss = css({
   height: "304px",
   width: "304px",
   marginX: "auto",
+  marginBottom: "3",
   position: "relative",
 });
 const lgtmCss = css({
@@ -214,5 +227,8 @@ const lgtmCss = css({
   _hover: { cursor: "grab" },
   _active: { cursor: "grabbing" },
 });
+const fileInputCss = css({ textAlign: "center" });
+const formCss = css({ marginTop: "3" });
+const uploadButton = css({ marginTop: "5", textAlign: "center" });
 
 export default ImageEditor;

@@ -31,6 +31,7 @@ const labelCss = css({
   bgColor: "BLACK",
   cursor: "pointer",
   borderRadius: "sm",
+  _hover: { opacity: "0.8" },
 });
 const inputCss = css({ display: "none" });
 
