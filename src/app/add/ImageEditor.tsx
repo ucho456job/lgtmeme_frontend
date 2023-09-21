@@ -94,8 +94,8 @@ const ImageEditor = ({ css }: Props) => {
     [60, { size: 60, width: 169, height: 60, diff: 50 }],
     [84, { size: 84, width: 235, height: 84, diff: 71 }],
   ]);
-  const handleTextSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const map = sizeMap.get(Number(e.target.value) as SizeMapKey)!;
+  const handleTextSizeChange = (value: string) => {
+    const map = sizeMap.get(Number(value) as SizeMapKey)!;
     setTextStyle((prev) => ({
       ...prev,
       fontSize: map.size,
@@ -114,8 +114,8 @@ const ImageEditor = ({ css }: Props) => {
     { value: "Verdana", label: "Verdana" },
     { value: "Times New Roman", label: "Times New Roman" },
   ];
-  const handleFontFamilyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTextStyle((prev) => ({ ...prev, fontFamily: e.target.value }));
+  const handleFontFamilyChange = (value: string) => {
+    setTextStyle((prev) => ({ ...prev, fontFamily: value }));
   };
 
   const handleTextDrag = (e: React.MouseEvent<HTMLDivElement>) => {

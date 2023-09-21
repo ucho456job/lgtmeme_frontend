@@ -8,11 +8,13 @@ type Props = {
     value: string | number;
     label: string;
   }[];
-  onChange: Function;
+  onChange: (value: string) => void;
 };
 
 const SelectBox = ({ css, value, options, onChange }: Props) => {
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => onChange(e);
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    onChange(e.target.value);
+  };
   return (
     <div className={css}>
       <label className={labelCss}>
@@ -32,16 +34,6 @@ const labelCss = css({
   display: "inline-flex",
   alignItems: "center",
   position: "relative",
-  _after: {
-    position: "absolute",
-    right: "4",
-    width: "3",
-    height: "2",
-    bgColor: "BLACK",
-    clipPath: "polygon(0, 0, 100%, 0, 50% 100%)",
-    content: "",
-    pointerEvents: "none",
-  },
 });
 
 const selectBoxCss = css({
