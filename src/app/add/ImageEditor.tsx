@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Button from "@/components/atoms/Button/Button";
-import FileInput from "@/components/atoms/FileInput/FileInput";
 import InputColor from "@/components/atoms/InputColor/InputColor";
+import InputFile from "@/components/atoms/InputFile/InputFile";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import Form from "@/components/molecules/Form/Form";
 import { css } from "@@/styled-system/css";
@@ -72,16 +72,13 @@ const ImageEditor = ({ css }: Props) => {
     }
   }, [image]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataURL = e.target?.result as string;
-        setImage(dataURL);
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleImageUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataURL = e.target?.result as string;
+      setImage(dataURL);
+    };
+    reader.readAsDataURL(file);
   };
 
   const textSizeOptions = [
@@ -183,7 +180,7 @@ const ImageEditor = ({ css }: Props) => {
           </div>
         )}
       </div>
-      <FileInput css={fileInputCss} onChange={handleImageUpload} />
+      <InputFile css={fileInputCss} onChange={handleImageUpload} />
       <Form css={formCss} label="Size">
         <SelectBox
           value={textStyle.fontSize}

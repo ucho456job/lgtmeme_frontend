@@ -3,11 +3,15 @@ import { css } from "@@/styled-system/css";
 
 type Props = {
   css?: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (file: File) => void;
 };
 
 const FileInput = ({ css, onChange }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) onChange(file);
+  };
   return (
     <div className={css}>
       <label className={labelCss}>
@@ -17,7 +21,7 @@ const FileInput = ({ css, onChange }: Props) => {
           type="file"
           accept="image/*"
           ref={inputRef}
-          onChange={onChange}
+          onChange={handleChange}
         />
       </label>
     </div>
