@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Loading from "@/components/atoms/Loading";
+import Loading from "@/components/atoms/Loading/Loading";
 
 describe("Loading", () => {
   describe("Render tests", () => {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "@/components/atoms/Button/Button";
-import Loading from "@/components/atoms/Loading";
+import Loading from "@/components/atoms/Loading/Loading";
 import Tabs from "@/components/atoms/Tabs";
 import TextBox from "@/components/atoms/TextBox";
 import ImageCard from "@/components/molecules/ImageCard";
