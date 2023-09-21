@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import TextBox from "@/components/atoms/TextBox";
+import InputText from "@/components/atoms/InputText/InputText";
 
 const meta = {
-  title: "atoms/TextBox",
-  component: TextBox,
-} satisfies Meta<typeof TextBox>;
+  title: "atoms/InputText",
+  component: InputText,
+} satisfies Meta<typeof InputText>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
