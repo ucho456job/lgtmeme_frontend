@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import FileInput from "@/components/atoms/FileInput/FileInput";
+import InputFile from "@/components/atoms/InputFile/InputFile";
 
 const meta = {
-  title: "atoms/FileInput",
-  component: FileInput,
-} satisfies Meta<typeof FileInput>;
+  title: "atoms/InputFile",
+  component: InputFile,
+} satisfies Meta<typeof InputFile>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

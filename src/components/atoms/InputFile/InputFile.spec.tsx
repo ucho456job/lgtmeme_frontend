@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import FileInput from "@/components/atoms/FileInput/FileInput";
+import InputFile from "@/components/atoms/InputFile/InputFile";
 
-describe("FileInput component", () => {
+describe("InputFile component", () => {
   let onChangeMock: jest.Mock<any, any, any>;
   beforeEach(() => {
     onChangeMock = jest.fn();
@@ -11,18 +11,18 @@ describe("FileInput component", () => {
   });
   describe("Render tests", () => {
     test("Renders with default props", () => {
-      render(<FileInput onChange={onChangeMock} />);
+      render(<InputFile onChange={onChangeMock} />);
       const fileInput = screen.getByLabelText("Select file");
       expect(fileInput).toBeInTheDocument();
     });
   });
   describe("Event tests", () => {
-    test("Calls onChange when a file is selected", () => {
-      render(<FileInput onChange={onChangeMock} />);
+    test("Calls onChange", () => {
+      render(<InputFile onChange={onChangeMock} />);
       const fileInput = screen.getByLabelText("Select file");
       const file = new File(["file content"], "file.png", { type: "image/png" });
       fireEvent.change(fileInput, { target: { files: [file] } });
-      expect(onChangeMock).toHaveBeenCalledTimes(1);
+      expect(onChangeMock).toBeCalledWith(file);
     });
   });
 });
