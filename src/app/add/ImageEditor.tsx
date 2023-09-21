@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { ChangeEvent, useState, useEffect, useRef } from "react";
+import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import { css } from "@@/styled-system/css";
 
 type TextStyle = {
@@ -75,12 +76,17 @@ const ImageEditor = () => {
     }
   };
 
+  const textSizeOptions = [
+    { value: 36, label: "Small" },
+    { value: 60, label: "Medium" },
+    { value: 84, label: "Large" },
+  ];
   const sizeMap: SizeMap = new Map([
     [36, { size: 36, width: 102, height: 36, diff: 30 }],
     [60, { size: 60, width: 169, height: 60, diff: 50 }],
     [84, { size: 84, width: 235, height: 84, diff: 71 }],
   ]);
-  const handleTextSizeChange = (e: React.ChangeEvent<HTMLSelectElement>, sizeMap: SizeMap) => {
+  const handleTextSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const map = sizeMap.get(Number(e.target.value) as SizeMapKey)!;
     setTextStyle((prev) => ({
       ...prev,
@@ -95,6 +101,11 @@ const ImageEditor = () => {
     setTextStyle((prev) => ({ ...prev, color: e.target.value }));
   };
 
+  const fontFamilyOptions = [
+    { value: "Arial", label: "Arial" },
+    { value: "Verdana", label: "Verdana" },
+    { value: "Times New Roman", label: "Times New Roman" },
+  ];
   const handleFontFamilyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setTextStyle((prev) => ({ ...prev, fontFamily: e.target.value }));
   };
@@ -148,19 +159,17 @@ const ImageEditor = () => {
 
   return (
     <div>
+      <SelectBox
+        value={textStyle.fontSize}
+        options={textSizeOptions}
+        onChange={handleTextSizeChange}
+      />
+      <SelectBox
+        value={textStyle.fontFamily}
+        options={fontFamilyOptions}
+        onChange={handleFontFamilyChange}
+      />
       <input type="file" accept="image/*" ref={inputRef} onChange={handleImageUpload} />
-      <div>
-        <label htmlFor="textSize">Text Size: </label>
-        <select
-          id="textSize"
-          value={textStyle.fontSize}
-          onChange={(e) => handleTextSizeChange(e, sizeMap)}
-        >
-          <option value="36">Small</option>
-          <option value="60">Medium</option>
-          <option value="84">Large</option>
-        </select>
-      </div>
       <div>
         <label htmlFor="textColor">Text Color: </label>
         <input
@@ -169,19 +178,6 @@ const ImageEditor = () => {
           value={textStyle.color}
           onChange={(e) => handleTextColorChange(e)}
         />
-      </div>
-
-      <div>
-        <label htmlFor="fontFamily">Font Family: </label>
-        <select
-          id="fontFamily"
-          value={textStyle.fontFamily}
-          onChange={(e) => handleFontFamilyChange(e)}
-        >
-          <option value="Arial">Arial</option>
-          <option value="Verdana">Verdana</option>
-          <option value="Times New Roman">Times New Roman</option>
-        </select>
       </div>
       <div className={borderCss} id="canvas-border">
         <canvas ref={canvasRef}></canvas>
