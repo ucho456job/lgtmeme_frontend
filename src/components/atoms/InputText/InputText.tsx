@@ -1,4 +1,4 @@
-import { Dispatch, KeyboardEvent, SetStateAction, useRef } from "react";
+import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction, useRef } from "react";
 import Image from "next/image";
 import { css, cva } from "@@/styled-system/css";
 
@@ -7,20 +7,21 @@ type Props = {
   value?: string;
   placeholder?: string;
   iconPath?: string;
-  onChange: Dispatch<SetStateAction<string>>;
+  onChange: (value: string) => void;
   onEnterPress?: Function;
 };
 
 const TextBox = ({ css, value, placeholder, iconPath, onChange, onEnterPress }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && inputRef.current) {
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputRef.current) {
       const isIMEActive = inputRef.current.getAttribute("composition") === "true";
       if (!isIMEActive && onEnterPress) onEnterPress();
     }
   };
-
   return (
     <div className={css}>
       <div className={textBoxWrapCss}>
@@ -30,7 +31,7 @@ const TextBox = ({ css, value, placeholder, iconPath, onChange, onEnterPress }: 
           value={value}
           className={textBoxCss({ iconPath: iconPath ? true : false })}
           placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleOnChange}
           onKeyDown={handleKeyDown}
           onCompositionStart={() => inputRef.current?.setAttribute("composition", "true")}
           onCompositionEnd={() => inputRef.current?.removeAttribute("composition")}
@@ -47,7 +48,7 @@ const textBoxCss = cva({
     width: "100%",
     paddingY: "2",
     paddingX: "2.5",
-    border: "1px solid #e5e5e5",
+    border: "1px solid #cccccc",
     borderRadius: "lg",
     color: "BLACK",
     position: "relative",
