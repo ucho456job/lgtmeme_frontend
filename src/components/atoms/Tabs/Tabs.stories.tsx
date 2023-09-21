@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import Tabs from "@/components/atoms/Tabs";
+import Tabs from "@/components/atoms/Tabs/Tabs";
 
 const meta = {
   title: "atoms/Tabs",
@@ -17,10 +17,10 @@ export const Default: Story = {
       { id: "popular", label: "Popular" },
       { id: "favorite", label: "Favorite" },
     ],
-    activeTabId: "",
+    value: "",
   },
   render: function Component({ ...args }) {
-    const [activeTabId, setActiveTabId] = useState("timeLine");
-    return <meta.component {...args} activeTabId={activeTabId} setActiveTabId={setActiveTabId} />;
+    const [value, setValue] = useState("timeLine");
+    return <meta.component {...args} value={value} onClick={setValue} />;
   },
 };

@@ -6,19 +6,20 @@ type Props = {
     id: string;
     label: string;
   }[];
-  activeTabId: string;
-  setActiveTabId: Function;
+  value: string;
+  onClick: (value: string) => void;
 };
 
-const Tabs = ({ css, tabs, activeTabId, setActiveTabId }: Props) => {
+const Tabs = ({ css, tabs, value, onClick }: Props) => {
+  const handleClick = (value: string) => onClick(value);
   return (
     <div className={css}>
       <div className={tabsCss}>
         {tabs.map((tab) => (
           <div
             key={tab.id}
-            className={tabRecipe({ active: tab.id === activeTabId })}
-            onClick={() => setActiveTabId(tab.id)}
+            className={tabRecipe({ active: tab.id === value })}
+            onClick={() => handleClick(tab.id)}
           >
             {tab.label}
           </div>
@@ -37,8 +38,6 @@ const tabRecipe = cva({
     bgColor: "WHITE",
     color: "BLACK",
     textAlign: "center",
-    borderBottom: "orange",
-    borderBottomColor: "blue",
     opacity: "0.8",
   },
   variants: {

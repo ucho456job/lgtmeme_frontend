@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Tabs from "@/components/atoms/Tabs";
+import Tabs from "@/components/atoms/Tabs/Tabs";
 
 describe("Tabs", () => {
   const tabs = [
@@ -8,17 +8,17 @@ describe("Tabs", () => {
     { id: "popular", label: "Popular" },
     { id: "favorite", label: "Favorite" },
   ];
-  const activeTabId = "timeLine";
-  let setActiveTabId: jest.Mock<any, any, any>;
+  const id = "timeLine";
+  let onClickMock: jest.Mock<any, any, any>;
   beforeEach(() => {
-    setActiveTabId = jest.fn();
+    onClickMock = jest.fn();
   });
   afterEach(() => {
-    setActiveTabId.mockReset();
+    onClickMock.mockReset();
   });
   describe("Render tests", () => {
     test("Renders with default props", () => {
-      render(<Tabs tabs={tabs} activeTabId={activeTabId} setActiveTabId={setActiveTabId} />);
+      render(<Tabs tabs={tabs} value={id} onClick={onClickMock} />);
       const timeLine = screen.getByText("Time line");
       const popular = screen.getByText("Popular");
       const favorite = screen.getByText("Favorite");
@@ -29,10 +29,10 @@ describe("Tabs", () => {
   });
   describe("Event tests", () => {
     test("Calls the onClick handler when clicked", async () => {
-      render(<Tabs tabs={tabs} activeTabId={activeTabId} setActiveTabId={setActiveTabId} />);
+      render(<Tabs tabs={tabs} value={id} onClick={onClickMock} />);
       const popular = screen.getByText("Popular");
       await userEvent.click(popular);
-      expect(setActiveTabId).toHaveBeenCalledWith("popular");
+      expect(onClickMock).toHaveBeenCalledWith("popular");
     });
   });
 });
