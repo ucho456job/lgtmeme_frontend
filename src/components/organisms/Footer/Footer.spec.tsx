@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Footer from "@/components/organisms/Footer";
+import Footer from "@/components/organisms/Footer/Footer";
 import packageJson from "@@/package.json";
 
 describe("Footer", () => {
