@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import InputText from "@/components/atoms/InputText/InputText";
+import SearchSvg from "@/components/svgs/SearchSvg";
 
 const meta = {
   title: "atoms/InputText",
@@ -19,6 +20,6 @@ export const Default: Story = {
 export const WithIcon: Story = {
   args: {
     placeholder: "Placeholder",
-    iconPath: "/images/search.svg",
+    icon: <SearchSvg />,
   },
 };
