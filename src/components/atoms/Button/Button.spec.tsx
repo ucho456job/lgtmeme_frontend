@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Button from "@/components/atoms/Button";
+import Button from "@/components/atoms/Button/Button";
 
 describe("Button", () => {
   let onClickMock: jest.Mock<any, any, any>;
@@ -20,7 +20,7 @@ describe("Button", () => {
     });
   });
   describe("Event tests", () => {
-    test("Calls the onClick handler when clicked", async () => {
+    test("Calls onClick", async () => {
       render(<Button onClick={onClickMock}>{text}</Button>);
       const button = screen.getByRole("button", { name: text });
       await userEvent.click(button);
