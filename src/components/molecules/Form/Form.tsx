@@ -33,7 +33,7 @@ const formCss = cva({
       true: { borderBottom: "1px solid #e5e5e5" },
     },
     size: {
-      sm: { width: "350px" },
+      sm: { width: "350px", height: "50px" },
       md: { width: "500px" },
       lg: { width: "650px" },
     },
