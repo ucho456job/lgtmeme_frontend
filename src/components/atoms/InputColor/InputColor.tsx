@@ -4,13 +4,22 @@ import { css } from "@@/styled-system/css";
 type Props = {
   css?: string;
   value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: string) => void;
 };
 
 const ColorInput = ({ css, value, onChange }: Props) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
   return (
     <div className={css}>
-      <input className={inputCss} type="color" list="datalist" value={value} onChange={onChange} />
+      <input
+        className={inputCss}
+        type="color"
+        list="datalist"
+        value={value}
+        onChange={handleChange}
+      />
       <datalist id="datalist">
         <option value="#ffffff"></option>
         <option value="#f43f5e"></option>

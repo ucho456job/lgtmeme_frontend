@@ -1,9 +1,9 @@
 "use client";
 
-import { ChangeEvent, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "@/components/atoms/Button/Button";
-import ColorInput from "@/components/atoms/ColorInput/ColorInput";
 import FileInput from "@/components/atoms/FileInput/FileInput";
+import InputColor from "@/components/atoms/InputColor/InputColor";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import Form from "@/components/molecules/Form/Form";
 import { css } from "@@/styled-system/css";
@@ -105,8 +105,8 @@ const ImageEditor = ({ css }: Props) => {
     }));
   };
 
-  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTextStyle((prev) => ({ ...prev, color: e.target.value }));
+  const handleTextColorChange = (value: string) => {
+    setTextStyle((prev) => ({ ...prev, color: value }));
   };
 
   const fontFamilyOptions = [
@@ -199,7 +199,7 @@ const ImageEditor = ({ css }: Props) => {
         />
       </Form>
       <Form label="Color" isUnderLine>
-        <ColorInput value={textStyle.color} onChange={handleTextColorChange} />
+        <InputColor value={textStyle.color} onChange={handleTextColorChange} />
       </Form>
       <Button
         css={uploadButton}
