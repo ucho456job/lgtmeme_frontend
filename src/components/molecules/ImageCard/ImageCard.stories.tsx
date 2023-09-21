@@ -17,6 +17,7 @@ export const Square: Story = {
       width: 300,
       height: 300,
     },
+    favariteImageIds: [],
   },
 };
 
@@ -28,6 +29,7 @@ export const Horizontal: Story = {
       width: 350,
       height: 250,
     },
+    favariteImageIds: [],
   },
 };
 
@@ -39,6 +41,7 @@ export const Vertical: Story = {
       width: 250,
       height: 350,
     },
+    favariteImageIds: [],
   },
 };
 
@@ -50,5 +53,6 @@ export const Mini: Story = {
       width: 200,
       height: 200,
     },
+    favariteImageIds: [],
   },
 };
