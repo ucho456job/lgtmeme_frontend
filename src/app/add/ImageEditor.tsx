@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useState, useEffect, useRef } from "react";
-import Button from "@/components/atoms/Button";
+import Button from "@/components/atoms/Button/Button";
 import ColorInput from "@/components/atoms/ColorInput/ColorInput";
 import FileInput from "@/components/atoms/FileInput/FileInput";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";

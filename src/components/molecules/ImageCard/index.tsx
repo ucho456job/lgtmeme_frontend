@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
-import Button from "@/components/atoms/Button";
+import Button from "@/components/atoms/Button/Button";
 import { css } from "@@/styled-system/css";
 
 type Props = {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Button from "@/components/atoms/Button";
+import Button from "@/components/atoms/Button/Button";
 import Loading from "@/components/atoms/Loading";
 import Tabs from "@/components/atoms/Tabs";
 import TextBox from "@/components/atoms/TextBox";
