@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ImageGallery from "@/components/organisms/ImageGallery";
+import ImageGallery from "@/app/ImageGallery";
 import { css } from "@@/styled-system/css";
 
 const meta = {
-  title: "organisms/ImageGallery",
+  title: "app/ImageGallery",
   component: ImageGallery,
 } satisfies Meta<typeof ImageGallery>;
 
