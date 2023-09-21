@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, useState, useEffect, useRef } from "react";
+import FileInput from "@/components/atoms/FileInput/FileInput";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import { css } from "@@/styled-system/css";
 
@@ -43,7 +44,6 @@ const ImageEditor = () => {
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartY, setDragStartY] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (image && canvasRef.current) {
@@ -169,7 +169,8 @@ const ImageEditor = () => {
         options={fontFamilyOptions}
         onChange={handleFontFamilyChange}
       />
-      <input type="file" accept="image/*" ref={inputRef} onChange={handleImageUpload} />
+      <br />
+      <FileInput onChange={handleImageUpload} />
       <div>
         <label htmlFor="textColor">Text Color: </label>
         <input

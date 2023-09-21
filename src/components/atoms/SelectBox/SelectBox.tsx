@@ -48,7 +48,7 @@ const selectBoxCss = css({
   minWidth: "40",
   height: "8",
   border: "1px solid #cccccc",
-  borderRadius: "2",
+  borderRadius: "sm",
   bgColor: "WHITE",
   color: "BLACK",
   cursor: "pointer",
