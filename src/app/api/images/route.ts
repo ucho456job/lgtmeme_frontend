@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ActiveTabId } from "@/components/organisms/ImageGallery";
+import { ActiveTabId } from "@/app/ImageGallery";
 import prisma from "@/utils/client";
 
 const LIMIT = 9;
