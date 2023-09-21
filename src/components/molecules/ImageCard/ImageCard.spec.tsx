@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ImageCard from "@/components/molecules/ImageCard";
+import ImageCard from "@/components/molecules/ImageCard/ImageCard";
 
 describe("ImageCard", () => {
   const imageData = {
