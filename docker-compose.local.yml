@@ -1,6 +1,7 @@
 version: '3'
 services:
   postgres:
+    container_name: lgtmeme-postgres
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: postgres

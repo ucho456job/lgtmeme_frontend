@@ -16,7 +16,7 @@ describe("Image API", () => {
     test("When called with initial query, it shoule return images", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
-        url: "http://localhost:3000/api/images?page=0&keyword=&activeTabId=timeLine&favariteImageIds=",
+        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favariteImageIds=",
       } as Request;
       const result = await GET(req);
       const { images } = await result.json();
@@ -25,7 +25,7 @@ describe("Image API", () => {
     test("When called with page, keyword, and activeTagId set in the query, it should return images", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
-        url: "http://localhost:3000/api/images?page=1&keyword=test&activeTabId=popular&favariteImageIds=",
+        url: "http://localhost:3002/api/images?page=1&keyword=test&activeTabId=popular&favariteImageIds=",
       } as Request;
       const result = await GET(req);
       const { images } = await result.json();
@@ -34,7 +34,7 @@ describe("Image API", () => {
     test("When called with favariteImageIds set in the query, it should return images", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
-        url: "http://localhost:3000/api/images?page=0&keyword=&activeTabId=favarite&favariteImageIds=1",
+        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=favarite&favariteImageIds=1",
       } as Request;
       const result = await GET(req);
       const { images } = await result.json();
@@ -43,7 +43,7 @@ describe("Image API", () => {
     test("When an error occurs, return 500", async () => {
       prismaMock.image.findMany.mockRejectedValue(new Error());
       const req = {
-        url: "http://localhost:3000/api/images?page=0&keyword=&activeTabId=timeLine&favariteImageIds=",
+        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favariteImageIds=",
       } as Request;
       const result = await GET(req);
       const status = await result.status;
