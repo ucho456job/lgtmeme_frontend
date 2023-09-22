@@ -3,7 +3,7 @@ import { decode } from "base64-arraybuffer";
 import { v4 as uuid } from "uuid";
 import { ActiveTabId } from "@/app/ImageGallery";
 import prisma from "@/utils/client";
-import supabase from "@/utils/supabase";
+import { uploadStorage } from "@/utils/supabase";
 
 const LIMIT = 9;
 
@@ -35,7 +35,8 @@ export const GET = async (req: Request) => {
 
     return NextResponse.json({ images }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "GET request failed";
+    return NextResponse.json({ errorMessage }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
@@ -51,10 +52,10 @@ export const POST = async (req: Request) => {
     const payload: Payload = await req.json();
     const base64 = payload.image.split(",")[1];
     const id = uuid();
-    const { data, error } = await supabase.storage.from("images").upload(id, decode(base64), {
+    const { error } = await uploadStorage.upload(id, decode(base64), {
       contentType: "image/webp",
     });
-    if (error) throw new Error("Failed image upload.");
+    if (error) throw new Error("Image upload failed");
     await prisma.image.create({
       data: {
         url: `${process.env.SUPABASE_URL}/storage/v1/object/public/images/${id}`,
@@ -65,7 +66,8 @@ export const POST = async (req: Request) => {
     });
     return NextResponse.json({}, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : "POST request failed";
+    return NextResponse.json({ errorMessage }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
