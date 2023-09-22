@@ -1,6 +1,6 @@
 {
   "name": "lgtmeme",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "private": true,
   "scripts": {
     "prepare": "panda codegen && npm run prisma:generate",
@@ -12,6 +12,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write --ignore-path .gitignore '**/*.{js,jsx,ts,tsx,json}' && prisma format",
+    "type-check": "tsc --noEmit -p ./tsconfig.json",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "db:seed": "node ./prisma/createData.js",
