@@ -12,6 +12,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write --ignore-path .gitignore '**/*.{js,jsx,ts,tsx,json}' && prisma format",
+    "type-check": "tsc --noEmit -p ./tsconfig.json",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "db:seed": "node ./prisma/createData.js",

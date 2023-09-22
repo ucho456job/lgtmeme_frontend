@@ -1,4 +1,4 @@
-import { ActiveTabId } from "@/components/organisms/ImageGallery";
+import { ActiveTabId } from "@/app/ImageGallery";
 
 const IMAGES_ENDPOINT = "/api/images";
 

@@ -18,6 +18,11 @@ git checkout dev
 
 git pull origin dev
 
+if ! npm run type-check; then
+  echo "TypeScript type checking failed. Aborting the process."
+  exit 1
+fi
+
 current_version=$(get_current_version)
 
 IFS='.' read -ra version_parts <<< "$current_version"
