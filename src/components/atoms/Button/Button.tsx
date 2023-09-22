@@ -1,6 +1,6 @@
 import { MouseEventHandler } from "react";
 import Image from "next/image";
-import { cva } from "@@/styled-system/css";
+import { css, cva } from "@@/styled-system/css";
 
 type Props = {
   css?: string;
@@ -9,23 +9,12 @@ type Props = {
   size?: "xs" | "sm" | "md" | "lg";
   radius?: boolean;
   disabled?: boolean;
-  iconPath?: string;
+  icon?: JSX.Element;
   children?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
-const Button = ({
-  css,
-  visual,
-  color,
-  size,
-  radius,
-  disabled,
-  iconPath,
-  children,
-  onClick,
-}: Props) => {
-  const iconSize = size === "xs" || size === "sm" ? 15 : size === "md" ? 20 : 23;
+const Button = ({ css, visual, color, size, radius, disabled, icon, children, onClick }: Props) => {
   return (
     <div className={css}>
       <button
@@ -33,15 +22,8 @@ const Button = ({
         disabled={disabled}
         onClick={onClick}
       >
-        {iconPath && (
-          <Image
-            src={iconPath}
-            className={iconRecipe({ children: children ? true : false })}
-            width={iconSize}
-            height={iconSize}
-            alt="icon"
-          />
-        )}
+        {icon}
+        {icon && <div className={iconCss} />}
         {children}
       </button>
     </div>
@@ -105,14 +87,6 @@ const buttonRecipe = cva({
     disabled: false,
   },
 });
-const iconRecipe = cva({
-  variants: {
-    children: {
-      true: { marginRight: "1" },
-      false: { marginRight: "0" },
-    },
-  },
-  defaultVariants: { children: false },
-});
+const iconCss = css({ width: "1" });
 
 export default Button;

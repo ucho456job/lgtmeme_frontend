@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/atoms/Button/Button";
+import Svg from "@/components/atoms/Svg/Svg";
 import { css } from "@@/styled-system/css";
 
 type Props = {
@@ -61,7 +62,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
           <Button
             css={buttonCss}
             size="sm"
-            iconPath="/images/copy.svg"
+            icon={<Svg icon="copy" color="white" size="md" />}
             onClick={() => handleCopyToClipboard(image.url)}
           >
             Copy
@@ -70,7 +71,14 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
             css={buttonCss}
             size="sm"
             color="lightPink"
-            iconPath={isFavarite ? "/images/heart-solid.svg" : "/images/heart-outline.svg"}
+            icon={
+              <Svg
+                icon="heart"
+                color="pink"
+                size="md"
+                fillStyle={isFavarite ? "solid" : "outline"}
+              />
+            }
             onClick={handleToggleFavarite}
           >
             Favorite
@@ -79,7 +87,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
             css={buttonCss}
             size="sm"
             color="yellow"
-            iconPath="/images/flag.svg"
+            icon={<Svg icon="flag" size="md" />}
             onClick={handleReport}
           >
             Report

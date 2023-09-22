@@ -93,11 +93,12 @@ describe("ImageCard", () => {
         />,
       );
       const favariteButton = screen.getAllByRole("button")[1];
-      const favariteIcon = screen.getAllByAltText("icon")[1];
-      expect(favariteIcon).toHaveAttribute("src", "/images/heart-outline.svg");
+      const icons = await screen.findAllByTestId("icon");
+      const favariteIcon = icons[1];
+      expect(favariteIcon).toHaveAttribute("fill", "none");
       await userEvent.click(favariteButton);
       expect(setFavariteImageIdsMock).toBeCalledWith([1]);
-      expect(favariteIcon).toHaveAttribute("src", "/images/heart-solid.svg");
+      expect(favariteIcon).toHaveAttribute("fill", "currentColor");
     });
     test("When press favarite button when it's already a favorite, it will be removed from favorites", async () => {
       render(
@@ -108,11 +109,12 @@ describe("ImageCard", () => {
         />,
       );
       const favariteButton = screen.getAllByRole("button")[1];
-      const favariteIcon = screen.getAllByAltText("icon")[1];
-      expect(favariteIcon).toHaveAttribute("src", "/images/heart-solid.svg");
+      const icons = await screen.findAllByTestId("icon");
+      const favariteIcon = icons[1];
+      expect(favariteIcon).toHaveAttribute("fill", "currentColor");
       await userEvent.click(favariteButton);
       expect(setFavariteImageIdsMock).toBeCalledWith([]);
-      expect(favariteIcon).toHaveAttribute("src", "/images/heart-outline.svg");
+      expect(favariteIcon).toHaveAttribute("fill", "none");
     });
   });
 });

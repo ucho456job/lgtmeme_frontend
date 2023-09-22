@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ImageGallery from "@/app/ImageGallery";
 import Button from "@/components/atoms/Button/Button";
+import Svg from "@/components/atoms/Svg/Svg";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
@@ -11,7 +12,7 @@ export default async function Home() {
     <>
       <ImageGallery css={imageGalleryCss} initImages={images} />
       <Link href="/add">
-        <Button css={buttonCss} iconPath="/images/plus.svg">
+        <Button css={buttonCss} icon={<Svg icon="plus" color="white" />}>
           Create image
         </Button>
       </Link>

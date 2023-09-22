@@ -1,17 +1,16 @@
-import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction, useRef } from "react";
-import Image from "next/image";
+import { ChangeEvent, KeyboardEvent, useRef } from "react";
 import { css, cva } from "@@/styled-system/css";
 
 type Props = {
   css?: string;
   value?: string;
   placeholder?: string;
-  iconPath?: string;
+  icon?: JSX.Element;
   onChange: (value: string) => void;
   onEnterPress?: Function;
 };
 
-const TextBox = ({ css, value, placeholder, iconPath, onChange, onEnterPress }: Props) => {
+const TextBox = ({ css, value, placeholder, icon, onChange, onEnterPress }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -29,14 +28,14 @@ const TextBox = ({ css, value, placeholder, iconPath, onChange, onEnterPress }: 
           ref={inputRef}
           type="text"
           value={value}
-          className={textBoxCss({ iconPath: iconPath ? true : false })}
+          className={textBoxCss({ icon: icon ? true : false })}
           placeholder={placeholder}
           onChange={handleOnChange}
           onKeyDown={handleKeyDown}
           onCompositionStart={() => inputRef.current?.setAttribute("composition", "true")}
           onCompositionEnd={() => inputRef.current?.removeAttribute("composition")}
         />
-        {iconPath && <Image src={iconPath} className={iconCss} width={25} height={25} alt="icon" />}
+        <div className={iconCss}>{icon}</div>
       </div>
     </div>
   );
@@ -57,7 +56,7 @@ const textBoxCss = cva({
     },
   },
   variants: {
-    iconPath: {
+    icon: {
       true: { paddingLeft: "9" },
     },
   },
