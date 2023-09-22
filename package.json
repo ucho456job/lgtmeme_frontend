@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "prepare": "panda codegen && npm run prisma:generate",
-    "dev": "rm -rf .next && next dev",
+    "dev": "rm -rf .next && next dev -p 3002",
     "dev:start": "bash ./shells/start_development.sh",
-    "docker:start": "docker compose up -d",
-    "docker:stop": "docker compose down",
+    "docker:start": "docker compose -f docker-compose.local.yml up -d",
+    "docker:stop": "docker compose -f docker-compose.local.yml down",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
