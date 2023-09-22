@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import InputColor from "@/components/atoms/InputColor/InputColor";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import Form from "@/components/molecules/Form/Form";
 
@@ -16,9 +17,17 @@ const textSizeOptions = [
   { value: 84, label: "Large" },
 ];
 
+export const Color: Story = {
+  args: {
+    label: "Label",
+    isUnderLine: true,
+    children: <InputColor value={"#ffffff"} onChange={() => {}} />,
+  },
+};
+
 export const Select: Story = {
   args: {
-    label: "Select",
+    label: "Label",
     isUnderLine: true,
     children: <SelectBox value="36" options={textSizeOptions} onChange={() => {}} />,
   },
