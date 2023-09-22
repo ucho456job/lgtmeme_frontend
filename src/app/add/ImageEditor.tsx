@@ -7,6 +7,7 @@ import InputFile from "@/components/atoms/InputFile/InputFile";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import Svg from "@/components/atoms/Svg/Svg";
 import Form from "@/components/molecules/Form/Form";
+import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
 type TextStyle = {
@@ -142,7 +143,7 @@ const ImageEditor = ({ css }: Props) => {
     setIsDragging(false);
   };
 
-  const downloadWebPImage = (size: SizeMapKey) => {
+  const downloadWebPImage = async (size: SizeMapKey) => {
     setIsUpload(true);
     const diff = sizeMap.get(size)?.diff;
     if (canvasRef.current && diff) {
@@ -156,11 +157,9 @@ const ImageEditor = ({ css }: Props) => {
       const textY = textStyle.top + diff;
       ctx.fillText(text, textX, textY);
 
-      const dataURL = canvas.toDataURL("image/webp");
-      const a = document.createElement("a");
-      a.href = dataURL;
-      a.download = "image.webp";
-      a.click();
+      const image = canvas.toDataURL("image/webp");
+      const service = new ImageService();
+      await service.postImage({ image });
     }
   };
 
