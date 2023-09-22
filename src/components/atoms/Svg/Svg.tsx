@@ -3,13 +3,14 @@ import { cva } from "@@/styled-system/css";
 type Icon = "search" | "copy" | "flag" | "heart" | "plus" | "upload";
 
 type Props = {
+  css?: string;
   icon: Icon;
   color?: "black" | "white" | "pink";
   size?: "xs" | "sm" | "md" | "lg";
   fillStyle?: "solid" | "outline";
 };
 
-const Svg = ({ icon, color, size, fillStyle }: Props) => {
+const Svg = ({ css, icon, color, size, fillStyle }: Props) => {
   const iconMap: Map<Icon, string> = new Map([
     ["search", "M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"],
     [
@@ -33,17 +34,19 @@ const Svg = ({ icon, color, size, fillStyle }: Props) => {
   const d = iconMap.get(icon);
   const fill = fillStyle === "solid" ? "currentColor" : "none";
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill={fill}
-      strokeWidth={1.5}
-      stroke="currentColor"
-      viewBox="0 0 25 25"
-      className={svgRecipe({ color, size })}
-      data-testid="icon"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d={d} />
-    </svg>
+    <div className={css}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill={fill}
+        strokeWidth={1.5}
+        stroke="currentColor"
+        viewBox="0 0 25 25"
+        className={svgRecipe({ color, size })}
+        data-testid="icon"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d={d} />
+      </svg>
+    </div>
   );
 };
 

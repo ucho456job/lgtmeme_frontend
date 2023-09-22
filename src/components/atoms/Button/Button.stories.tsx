@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Button from "@/components/atoms/Button/Button";
+import Svg from "@/components/atoms/Svg/Svg";
+import { css } from "@@/styled-system/css";
 
 const meta = {
   title: "atoms/Button",
@@ -22,7 +24,7 @@ export const Solid: Story = {
 
 export const WithIcon: Story = {
   args: {
-    iconPath: "/images/upload.svg",
+    icon: <Svg css={css({ marginRight: "1" })} icon="upload" color="white" />,
     children: "Upload",
     onClick: () => alert("Click!"),
   },
@@ -38,7 +40,7 @@ export const OnlyText: Story = {
 
 export const OnlyIcon: Story = {
   args: {
-    iconPath: "/images/upload.svg",
+    icon: <Svg icon="upload" color="white" />,
     onClick: () => alert("Click!"),
   },
 };

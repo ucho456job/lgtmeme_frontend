@@ -1,6 +1,4 @@
-import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction, useRef } from "react";
-import Image from "next/image";
-import SearchSvg from "@/components/svgs/SearchSvg";
+import { ChangeEvent, KeyboardEvent, useRef } from "react";
 import { css, cva } from "@@/styled-system/css";
 
 type Props = {

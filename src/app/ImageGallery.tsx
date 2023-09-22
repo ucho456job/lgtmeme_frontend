@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Button from "@/components/atoms/Button/Button";
 import InputText from "@/components/atoms/InputText/InputText";
 import Loading from "@/components/atoms/Loading/Loading";
+import Svg from "@/components/atoms/Svg/Svg";
 import Tabs from "@/components/atoms/Tabs/Tabs";
 import ImageCard from "@/components/molecules/ImageCard/ImageCard";
-import SearchSvg from "@/components/svgs/SearchSvg";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
@@ -88,7 +88,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
         css={textBoxCss}
         value={keyword}
         placeholder="Keyword"
-        icon={<SearchSvg />}
+        icon={<Svg icon="search" size="lg" />}
         onChange={handleSetKeyword}
         onEnterPress={() => {
           setIsFull(false);

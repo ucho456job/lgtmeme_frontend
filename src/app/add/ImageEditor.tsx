@@ -5,6 +5,7 @@ import Button from "@/components/atoms/Button/Button";
 import InputColor from "@/components/atoms/InputColor/InputColor";
 import InputFile from "@/components/atoms/InputFile/InputFile";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
+import Svg from "@/components/atoms/Svg/Svg";
 import Form from "@/components/molecules/Form/Form";
 import { css } from "@@/styled-system/css";
 
@@ -200,7 +201,7 @@ const ImageEditor = ({ css }: Props) => {
       </Form>
       <Button
         css={uploadButton}
-        iconPath="/images/upload.svg"
+        icon={<Svg icon="upload" color="white" size="lg" />}
         size="lg"
         onClick={() => downloadWebPImage(textStyle.fontSize as SizeMapKey)}
       >
