@@ -20,8 +20,6 @@ git pull origin dev
 
 if ! npm run type-check; then
   echo "TypeScript type checking failed. Aborting the process."
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   exit 1
 fi
 
@@ -44,63 +42,37 @@ elif [ "$version_up_type" = "patch" ]; then
   ((patch++))
 else
   echo "Invalid version update type."
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
   exit 1
 fi
 
-# current_version=$(get_current_version)
+new_version="$major.$minor.$patch"
 
-# IFS='.' read -ra version_parts <<< "$current_version"
+sed -i "s/\"version\": \"$current_version\"/\"version\": \"$new_version\"/" package.json
 
-# major=${version_parts[0]}
-# minor=${version_parts[1]}
-# patch=${version_parts[2]}
+npm i
 
-# if [ "$version_up_type" = "major" ]; then
-#   ((major++))
-#   minor=0
-#   patch=0
-# elif [ "$version_up_type" = "minor" ]; then
-#   ((minor++))
-#   patch=0
-# elif [ "$version_up_type" = "patch" ]; then
-#   ((patch++))
-# else
-#   echo "Invalid version update type."
-#   exit 1
-# fi
+git add .
 
-# new_version="$major.$minor.$patch"
+git commit -m "Release version $new_version"
 
-# sed -i "s/\"version\": \"$current_version\"/\"version\": \"$new_version\"/" package.json
+git checkout main
 
-# npm i
+git pull origin main
 
-# git add .
+git merge dev
 
-# git commit -m "Release version $new_version"
+git tag -a v$new_version -m "Release version $new_version"
 
-# git checkout main
+git push origin v$new_version
 
-# git pull origin main
+git push origin main
 
-# git merge dev
+git branch -d release-$new_version
 
-# git tag -a v$new_version -m "Release version $new_version"
+git stash pop
 
-# git push origin v$new_version
+git checkout dev
 
-# git push origin main
+git push origin dev
 
-# git branch -d release-$new_version
-
-# git stash pop
-
-# git checkout dev
-
-# git push origin dev
-
-# echo "Version $new_version has been released."
+echo "Version $new_version has been released."

@@ -1,12 +1,4 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import { ActiveTabId } from "@/app/ImageGallery";
-=======
-import { ActiveTabId } from "@/appaa/ImageGallery";
->>>>>>> Stashed changes
-=======
-import { ActiveTabId } from "@/appaa/ImageGallery";
->>>>>>> Stashed changes
 
 const IMAGES_ENDPOINT = "/api/images";
 

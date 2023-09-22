@@ -11,8 +11,8 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "",
-    "type-check": "",
+    "format": "prettier --write --ignore-path .gitignore '**/*.{js,jsx,ts,tsx,json}' && prisma format",
+    "type-check": "tsc --noEmit -p ./tsconfig.json",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "db:seed": "node ./prisma/createData.js",
@@ -70,7 +70,6 @@
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx,css,scss,md}": [
-      "npm run type-check",
       "npm run format"
     ]
   }
