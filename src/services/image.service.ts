@@ -2,7 +2,7 @@ import { ActiveTabId } from "@/app/ImageGallery";
 
 const IMAGES_ENDPOINT = "/api/images";
 
-type Method = "GET";
+type Method = "GET" | "POST";
 
 type Cache = "no-store";
 
@@ -12,6 +12,7 @@ type Config = {
   headers: {
     "Content-Type": string;
   };
+  body?: string;
 };
 
 export class ImageService {
@@ -21,13 +22,14 @@ export class ImageService {
     this.baseUrl = process.env.NEXT_PUBLIC_APP_URL;
   }
 
-  private createConfig(method: Method, cache: Cache): Config {
+  private createConfig(method: Method, cache: Cache, body?: Record<string, string>): Config {
     return {
       method,
       cache,
       headers: {
         "Content-Type": "application/json",
       },
+      body: body ? JSON.stringify(body) : undefined,
     };
   }
 
@@ -58,5 +60,10 @@ export class ImageService {
     const config = this.createConfig("GET", "no-store");
     const res = await this.sendRequest<{ images: FetchImage[] }>(IMAGES_ENDPOINT, config, query);
     return res.images;
+  }
+
+  async postImage(body: Record<string, string>) {
+    const config = this.createConfig("POST", "no-store", body);
+    await this.sendRequest(IMAGES_ENDPOINT, config);
   }
 }

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+import { decode } from "base64-arraybuffer";
+import { v4 as uuid } from "uuid";
 import { ActiveTabId } from "@/app/ImageGallery";
 import prisma from "@/utils/client";
+import supabase from "@/utils/supabase";
 
 const LIMIT = 9;
 
@@ -31,6 +34,36 @@ export const GET = async (req: Request) => {
     });
 
     return NextResponse.json({ images }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+type Payload = {
+  image: string;
+};
+
+export const POST = async (req: Request) => {
+  try {
+    await prisma.$connect();
+    const payload: Payload = await req.json();
+    const base64 = payload.image.split(",")[1];
+    const id = uuid();
+    const { data, error } = await supabase.storage.from("images").upload(id, decode(base64), {
+      contentType: "image/webp",
+    });
+    if (error) throw new Error("Failed image upload.");
+    await prisma.image.create({
+      data: {
+        url: `${process.env.SUPABASE_URL}/storage/v1/object/public/images/${id}`,
+        width: 300,
+        height: 300,
+        keyword: "keyword",
+      },
+    });
+    return NextResponse.json({}, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error }, { status: 500 });
   } finally {
