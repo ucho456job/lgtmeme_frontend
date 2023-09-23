@@ -1,10 +1,10 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ImageGallery from "@/app/ImageGallery";
 import { ImageService } from "@/services/image.service";
 
 describe("ImageGallery", () => {
-  const initImages = [{ id: 1, url: "https://placehold.jp/300x300.png", width: 300, height: 300 }];
+  const initImages = [{ id: "1", url: "https://placehold.jp/300x300.png" }];
   describe("Render tests", () => {
     test("Renders with default props", () => {
       render(<ImageGallery initImages={initImages} />);
@@ -21,8 +21,8 @@ describe("ImageGallery", () => {
   describe("Event tests", () => {
     test("When popular tab is clicked, changes the active tab, fetch popular images", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: 1, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 2, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
+        { id: "1", url: "https://placehold.jp/300x300.png" },
+        { id: "2", url: "https://placehold.jp/300x300.png" },
       ]);
       render(<ImageGallery initImages={initImages} />);
 
@@ -38,8 +38,8 @@ describe("ImageGallery", () => {
     });
     test("When input keyword and press enter, fetch keyword images", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: 1, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 2, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
+        { id: "1", url: "https://placehold.jp/300x300.png" },
+        { id: "2", url: "https://placehold.jp/300x300.png" },
       ]);
       render(<ImageGallery initImages={initImages} />);
 
@@ -54,15 +54,15 @@ describe("ImageGallery", () => {
     });
     test("When clicked see more button, fetch 9 images, button is not disabled", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: 2, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 3, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 4, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 5, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 6, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 7, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 8, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 9, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 10, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
+        { id: "2", url: "https://placehold.jp/300x300.png" },
+        { id: "3", url: "https://placehold.jp/300x300.png" },
+        { id: "4", url: "https://placehold.jp/300x300.png" },
+        { id: "5", url: "https://placehold.jp/300x300.png" },
+        { id: "6", url: "https://placehold.jp/300x300.png" },
+        { id: "7", url: "https://placehold.jp/300x300.png" },
+        { id: "8", url: "https://placehold.jp/300x300.png" },
+        { id: "9", url: "https://placehold.jp/300x300.png" },
+        { id: "10", url: "https://placehold.jp/300x300.png" },
       ]);
       render(<ImageGallery initImages={initImages} />);
 
@@ -79,14 +79,14 @@ describe("ImageGallery", () => {
     });
     test("When clicked see more button, fetch 8 or less images, button is disabled", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: 2, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 3, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 4, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 5, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 6, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 7, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 8, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
-        { id: 9, url: "https://placehold.jp/300x300.png", width: 300, height: 300 },
+        { id: "2", url: "https://placehold.jp/300x300.png" },
+        { id: "3", url: "https://placehold.jp/300x300.png" },
+        { id: "4", url: "https://placehold.jp/300x300.png" },
+        { id: "5", url: "https://placehold.jp/300x300.png" },
+        { id: "6", url: "https://placehold.jp/300x300.png" },
+        { id: "7", url: "https://placehold.jp/300x300.png" },
+        { id: "8", url: "https://placehold.jp/300x300.png" },
+        { id: "9", url: "https://placehold.jp/300x300.png" },
       ]);
       render(<ImageGallery initImages={initImages} />);
 
