@@ -13,7 +13,7 @@ describe("Modal", () => {
   });
   describe("Render tests", () => {
     test("Renders with default props", () => {
-      render(<Modal message={messageData} onClick={onClickMock} />);
+      render(<Modal message={messageData} showModal onClick={onClickMock} />);
       const message = screen.getByText(messageData);
       const button = screen.getByRole("button", { name: "Close" });
       expect(message).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe("Modal", () => {
   });
   describe("Event tests", () => {
     test("Calls onClick", async () => {
-      render(<Modal message={messageData} onClick={onClickMock} />);
+      render(<Modal message={messageData} showModal onClick={onClickMock} />);
       const button = screen.getByRole("button", { name: "Close" });
       await userEvent.click(button);
       expect(onClickMock).toHaveBeenCalledTimes(1);

@@ -9,6 +9,6 @@ const Add = () => {
   );
 };
 
-const imageEditorCss = css({ marginX: "auto", width: "350px" });
+const imageEditorCss = css({ paddingTop: "30px", marginX: "auto", width: "700px" });
 
 export default Add;

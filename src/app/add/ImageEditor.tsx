@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Button from "@/components/atoms/Button/Button";
+import CheckBox from "@/components/atoms/CheckBox/CheckBox";
 import InputColor from "@/components/atoms/InputColor/InputColor";
 import InputFile from "@/components/atoms/InputFile/InputFile";
 import InputText from "@/components/atoms/InputText/InputText";
@@ -9,6 +10,7 @@ import Loading from "@/components/atoms/Loading/Loading";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import Svg from "@/components/atoms/Svg/Svg";
 import Form from "@/components/molecules/Form/Form";
+import Modal from "@/components/molecules/Modal/Modal";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
@@ -56,6 +58,9 @@ const ImageEditor = ({ css }: Props) => {
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartY, setDragStartY] = useState(0);
   const [isUpload, setIsUpload] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const handleImageUpload = (file: File) => {
@@ -193,6 +198,9 @@ const ImageEditor = ({ css }: Props) => {
   /** Stop text move */
   const handleStopTextMove = () => setIsDragging(false);
 
+  const handletoggleChecked = () => setChecked((prev) => !prev);
+
+  const successModalMessage = "Success create LGTM image and copied to clipboard!";
   const handleCreateImage = async () => {
     try {
       setIsUpload(true);
@@ -210,80 +218,121 @@ const ImageEditor = ({ css }: Props) => {
 
         const image = canvas.toDataURL("image/webp");
         const service = new ImageService();
-        await service.postImage({ image, keyword });
-        window.location.href = process.env.NEXT_PUBLIC_APP_URL;
+        const imageUrl = await service.postImage({ image, keyword });
+        await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
+        setModalMessage(successModalMessage);
       }
     } catch {
-      alert("Failed create LGTM image");
+      setModalMessage("Failed create LGTM image.");
     } finally {
       setIsUpload(false);
+      setShowModal(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    if (modalMessage === successModalMessage) {
+      window.location.href = process.env.NEXT_PUBLIC_APP_URL;
+    } else {
+      setShowModal(false);
     }
   };
 
   return (
     <div className={css}>
-      <br />
-      <div className={borderCss} id="canvas-border">
-        <canvas ref={canvasRef}></canvas>
-        {imageInfo.url !== "" && !isUpload && (
-          <div
-            className={lgtmCss}
-            style={textStyle}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleStopTextMove}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleStopTextMove}
-          >
-            LGTM
+      <div className={gridCss}>
+        <div className={gridItem1}>
+          <div className={borderCss} id="canvas-border">
+            <canvas ref={canvasRef}></canvas>
+            {imageInfo.url !== "" && !isUpload && (
+              <div
+                className={lgtmCss}
+                style={textStyle}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleStopTextMove}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleStopTextMove}
+              >
+                LGTM
+              </div>
+            )}
           </div>
-        )}
+          <InputFile css={inputFileCss} onChange={handleImageUpload} />
+        </div>
+        <div className={gridItem2}>
+          <Form css={formCss} label="Size">
+            <SelectBox
+              value={textStyle.fontSize}
+              options={textSizeOptions}
+              onChange={handleTextSizeChange}
+            />
+          </Form>
+          <Form label="Font family">
+            <SelectBox
+              value={textStyle.fontFamily}
+              options={fontFamilyOptions}
+              onChange={handleFontFamilyChange}
+            />
+          </Form>
+          <Form label="Color">
+            <InputColor value={textStyle.color} onChange={handleTextColorChange} />
+          </Form>
+          <Form css={bottomFormCss} label="Keyword" isUnderLine>
+            <InputText
+              css={inputTextCss}
+              value={keyword}
+              placeholder="ex: anime, human"
+              onChange={setKeyword}
+            />
+          </Form>
+          <div className={termsOfServiceLinkWrapCss}>
+            <a
+              className={termsOfServiceLinkCss}
+              href={process.env.NEXT_PUBLIC_APP_URL + "/" + "terms-of-service"}
+              target="_blank"
+            >
+              Please agree to the terms of use
+            </a>
+          </div>
+          <CheckBox
+            css={checkBoxCss}
+            label="Agree"
+            checked={checked}
+            onChange={handletoggleChecked}
+          />
+          {isUpload ? (
+            <Loading css={loadingCss} />
+          ) : (
+            <Button
+              css={uploadButtonCss}
+              icon={<Svg icon="upload" color="white" size="lg" />}
+              size="lg"
+              disabled={imageInfo.url === "" || !checked}
+              onClick={handleCreateImage}
+            >
+              Create LGTM image
+            </Button>
+          )}
+        </div>
       </div>
-      <InputFile css={inputFileCss} onChange={handleImageUpload} />
-      <Form css={formCss} label="Size">
-        <SelectBox
-          value={textStyle.fontSize}
-          options={textSizeOptions}
-          onChange={handleTextSizeChange}
-        />
-      </Form>
-      <Form label="Font family">
-        <SelectBox
-          value={textStyle.fontFamily}
-          options={fontFamilyOptions}
-          onChange={handleFontFamilyChange}
-        />
-      </Form>
-      <Form label="Color">
-        <InputColor value={textStyle.color} onChange={handleTextColorChange} />
-      </Form>
-      <Form label="Keyword" isUnderLine>
-        <InputText
-          css={inputTextCss}
-          value={keyword}
-          placeholder="ex: anime, human"
-          onChange={setKeyword}
-        />
-      </Form>
-      {isUpload ? (
-        <Loading css={loadingCss} />
-      ) : (
-        <Button
-          css={uploadButtonCss}
-          icon={<Svg icon="upload" color="white" size="lg" />}
-          size="lg"
-          disabled={imageInfo.url === ""}
-          onClick={handleCreateImage}
-        >
-          Create LGTM image
-        </Button>
-      )}
+      <Modal message={modalMessage} showModal={showModal} onClick={handleCloseModal} />
     </div>
   );
 };
 
+const gridCss = css({
+  display: "grid",
+  height: "370px",
+  gridTemplateColumns: "1fr 1fr",
+  gap: "10px",
+});
+const gridItem1 = css({ gridColumn: "1/2" });
+const gridItem2 = css({ gridColumn: "2/3" });
+
 const borderCss = css({
+  marginTop: "3",
   border: "2px dashed #737373",
   height: "304px",
   width: "304px",
@@ -299,8 +348,16 @@ const lgtmCss = css({
 });
 const inputFileCss = css({ textAlign: "center" });
 const formCss = css({ marginTop: "3" });
+const bottomFormCss = css({ marginBottom: "3" });
 const inputTextCss = css({ width: "90%", marginX: "auto", height: "32px" });
-const uploadButtonCss = css({ marginTop: "5", textAlign: "center" });
-const loadingCss = css({ marginTop: "5", marginX: "auto" });
+const uploadButtonCss = css({ textAlign: "center" });
+const termsOfServiceLinkWrapCss = css({ textAlign: "center" });
+const termsOfServiceLinkCss = css({
+  color: "LIGHT_BLUE",
+  textAlign: "center",
+  _hover: { opacity: "0.8", borderBottom: "1px solid", borderColor: "LIGHT_BLUE" },
+});
+const checkBoxCss = css({ display: "flex", justifyContent: "center", alignItems: "center" });
+const loadingCss = css({ marginX: "auto" });
 
 export default ImageEditor;

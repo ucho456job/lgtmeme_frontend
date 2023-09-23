@@ -55,14 +55,15 @@ export const POST = async (req: Request) => {
       contentType: "image/webp",
     });
     if (error) throw new Error("Image upload failed");
-    await prisma.image.create({
+    const image = await prisma.image.create({
+      select: { url: true },
       data: {
         id,
         url: `${process.env.SUPABASE_URL}/storage/v1/object/public/images/${id}`,
         keyword: payload.keyword,
       },
     });
-    return NextResponse.json({}, { status: 200 });
+    return NextResponse.json({ imageUrl: image.url }, { status: 200 });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "POST request failed";
     return NextResponse.json({ errorMessage }, { status: 500 });
