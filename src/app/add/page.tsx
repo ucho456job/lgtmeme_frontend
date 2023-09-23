@@ -9,6 +9,11 @@ const Add = () => {
   );
 };
 
-const imageEditorCss = css({ paddingTop: "30px", marginX: "auto", width: "700px" });
+const imageEditorCss = css({
+  paddingTop: "30px",
+  marginX: "auto",
+  width: "350px",
+  md: { width: "700px" },
+});
 
 export default Add;

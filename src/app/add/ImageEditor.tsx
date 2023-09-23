@@ -241,7 +241,7 @@ const ImageEditor = ({ css }: Props) => {
   return (
     <div className={css}>
       <div className={gridCss}>
-        <div className={gridItem1}>
+        <div>
           <div className={borderCss} id="canvas-border">
             <canvas ref={canvasRef}></canvas>
             {imageInfo.url !== "" && !isUpload && (
@@ -261,7 +261,7 @@ const ImageEditor = ({ css }: Props) => {
           </div>
           <InputFile css={inputFileCss} onChange={handleImageUpload} />
         </div>
-        <div className={gridItem2}>
+        <div>
           <Form css={formCss} label="Size">
             <SelectBox
               value={textStyle.fontSize}
@@ -324,12 +324,10 @@ const ImageEditor = ({ css }: Props) => {
 
 const gridCss = css({
   display: "grid",
-  height: "370px",
-  gridTemplateColumns: "1fr 1fr",
   gap: "10px",
+  height: "740px",
+  md: { height: "370px", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr" },
 });
-const gridItem1 = css({ gridColumn: "1/2" });
-const gridItem2 = css({ gridColumn: "2/3" });
 
 const borderCss = css({
   marginTop: "3",
