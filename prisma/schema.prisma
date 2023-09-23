@@ -11,10 +11,8 @@ datasource db {
 }
 
 model Image {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @db.VarChar(36)
   url       String
-  width     Int      @default(0)
-  height    Int      @default(0)
   keyword   String   @default("") @db.VarChar(50)
   usedCount Int      @default(0) @map("used_count")
   reported  Boolean  @default(false)

@@ -4,12 +4,10 @@ import ImageCard from "@/components/molecules/ImageCard/ImageCard";
 
 describe("ImageCard", () => {
   const imageData = {
-    id: 1,
+    id: "1",
     url: "https://placehold.jp/300x300.png",
-    width: 300,
-    height: 300,
   };
-  const favariteImageIds = [1];
+  const favariteImageIds = ["1"];
   let setFavariteImageIdsMock: jest.Mock<any, any, any>;
   beforeEach(() => {
     setFavariteImageIdsMock = jest.fn();
@@ -97,7 +95,7 @@ describe("ImageCard", () => {
       const favariteIcon = icons[1];
       expect(favariteIcon).toHaveAttribute("fill", "none");
       await userEvent.click(favariteButton);
-      expect(setFavariteImageIdsMock).toBeCalledWith([1]);
+      expect(setFavariteImageIdsMock).toBeCalledWith(["1"]);
       expect(favariteIcon).toHaveAttribute("fill", "currentColor");
     });
     test("When press favarite button when it's already a favorite, it will be removed from favorites", async () => {

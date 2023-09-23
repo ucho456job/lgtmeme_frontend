@@ -19,7 +19,7 @@ export type ActiveTabId = "timeLine" | "popular" | "favorite";
 
 const ImageGallery = ({ css, initImages }: Props) => {
   const [images, setImages] = useState<FetchImage[]>([]);
-  const [favariteImageIds, setFavariteImageIds] = useState<number[]>([]);
+  const [favariteImageIds, setFavariteImageIds] = useState<string[]>([]);
   const [activeTabId, setActiveTabId] = useState("timeLine");
   const [keyword, setKeyword] = useState("");
   const [page, setPage] = useState(0);
@@ -30,7 +30,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
     setImages(initImages);
     const favariteImageIds = JSON.parse(
       localStorage.getItem("favariteImageIds") || "[]",
-    ) as number[];
+    ) as string[];
     setFavariteImageIds(favariteImageIds);
     setIsLoading(false);
   }, [initImages]);
@@ -46,7 +46,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
     page: number,
     keyword: string,
     activeTabId: ActiveTabId,
-    favariteImageIds: number[],
+    favariteImageIds: string[],
   ) => {
     try {
       setIsLoading(true);

@@ -17,7 +17,7 @@ jest.mock("uuid", () => ({
  */
 
 describe("Image API", () => {
-  const resImages = [{ id: 1, url: "https://placehold.jp/300x300.png", width: 300, height: 300 }];
+  const resImages = [{ id: "1", url: "https://placehold.jp/300x300.png" }];
   describe("GET", () => {
     test("Success: When called with initial query, it shoule return images", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
@@ -65,7 +65,7 @@ describe("Image API", () => {
       },
     } as Request;
     test("Success: Image upload succeeds and returns 200 status", async () => {
-      jest.spyOn(uploadStorage, "upload").mockImplementation(async (path, fileBody) => {
+      jest.spyOn(uploadStorage, "upload").mockImplementation(async () => {
         return { data: { path: imageId }, error: null };
       });
       prismaMock.image.create.mockImplementation();
@@ -74,11 +74,9 @@ describe("Image API", () => {
       expect(status).toBe(200);
     });
     test("Failure: Image upload failed and returns 500 status", async () => {
-      jest
-        .spyOn(uploadStorage, "upload")
-        .mockImplementation(async (path, fileBody, fileOptions) => {
-          return { data: null, error: "happened error" as any };
-        });
+      jest.spyOn(uploadStorage, "upload").mockImplementation(async () => {
+        return { data: null, error: "happened error" as any };
+      });
       const result = await POST(req);
       const { errorMessage } = await result.json();
       const status = await result.status;
@@ -86,7 +84,7 @@ describe("Image API", () => {
       expect(status).toBe(500);
     });
     test("Failure: Image create failed and returns 500 status", async () => {
-      jest.spyOn(uploadStorage, "upload").mockImplementation(async (path, fileBody) => {
+      jest.spyOn(uploadStorage, "upload").mockImplementation(async () => {
         return { data: { path: imageId }, error: null };
       });
       prismaMock.image.create.mockRejectedValue(new Error("Internal server error"));

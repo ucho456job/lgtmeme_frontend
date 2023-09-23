@@ -1,13 +1,10 @@
 type FetchImage = {
-  id: number;
+  id: string;
   url: string;
-  width: number;
-  height: number;
 };
 
 type PostImage = {
+  id: string;
   url: string;
-  width: number;
-  height: number;
   keyword: string;
 };

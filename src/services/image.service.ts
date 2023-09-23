@@ -36,7 +36,7 @@ export class ImageService {
   private async sendRequest<T>(
     path: string,
     config: Config,
-    query?: Record<string, string | number | number[]>,
+    query?: Record<string, string | number | string[]>,
   ) {
     const url = new URL(path, this.baseUrl);
     if (query) {
@@ -53,7 +53,7 @@ export class ImageService {
     page?: number;
     keyword?: string;
     activeTabId?: ActiveTabId;
-    favariteImageIds?: number[];
+    favariteImageIds?: string[];
   }): Promise<FetchImage[]> {
     const { page = 0, keyword = "", activeTabId = "timeLine", favariteImageIds = [] } = queryOption;
     const query = { page, keyword, activeTabId, favariteImageIds };

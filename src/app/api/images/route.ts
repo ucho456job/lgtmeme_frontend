@@ -14,13 +14,11 @@ export const GET = async (req: Request) => {
     const page = Number(searchParams.get("page"));
     const keyword = String(searchParams.get("keyword"));
     const activeTabId = searchParams.get("activeTabId") as ActiveTabId;
-    const favariteImageIds = (searchParams.get("favariteImageIds") || "")
-      .split(",")
-      .map((id) => Number(id));
+    const favariteImageIds = (searchParams.get("favariteImageIds") || "").split(",");
     const skip = page * LIMIT;
 
     const images = await prisma.image.findMany({
-      select: { id: true, url: true, width: true, height: true },
+      select: { id: true, url: true },
       skip,
       take: LIMIT,
       orderBy:
@@ -58,9 +56,8 @@ export const POST = async (req: Request) => {
     if (error) throw new Error("Image upload failed");
     await prisma.image.create({
       data: {
+        id,
         url: `${process.env.SUPABASE_URL}/storage/v1/object/public/images/${id}`,
-        width: 300,
-        height: 300,
         keyword: "keyword",
       },
     });

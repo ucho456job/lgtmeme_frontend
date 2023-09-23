@@ -143,7 +143,7 @@ const ImageEditor = ({ css }: Props) => {
     setIsDragging(false);
   };
 
-  const downloadWebPImage = async (size: SizeMapKey) => {
+  const handleCreateImage = async (size: SizeMapKey) => {
     setIsUpload(true);
     const diff = sizeMap.get(size)?.diff;
     if (canvasRef.current && diff) {
@@ -157,6 +157,7 @@ const ImageEditor = ({ css }: Props) => {
       const textY = textStyle.top + diff;
       ctx.fillText(text, textX, textY);
 
+      console.log("ここだよ");
       const image = canvas.toDataURL("image/webp");
       const service = new ImageService();
       await service.postImage({ image });
@@ -202,7 +203,7 @@ const ImageEditor = ({ css }: Props) => {
         css={uploadButton}
         icon={<Svg icon="upload" color="white" size="lg" />}
         size="lg"
-        onClick={() => downloadWebPImage(textStyle.fontSize as SizeMapKey)}
+        onClick={() => handleCreateImage(textStyle.fontSize as SizeMapKey)}
       >
         Create LGTM image
       </Button>
