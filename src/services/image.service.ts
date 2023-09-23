@@ -62,7 +62,8 @@ export class ImageService {
 
   async postImage(body: Record<string, string>) {
     const config = this.createConfig("POST", body);
-    await this.sendRequest(IMAGES_ENDPOINT, config);
+    const res = await this.sendRequest<{ imageUrl: string }>(IMAGES_ENDPOINT, config);
+    return res.imageUrl;
   }
 
   async patchImage(id: string, body?: Record<string, number>) {

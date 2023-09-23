@@ -2,7 +2,7 @@ import "./CheckBox.css";
 
 type Props = {
   css?: string;
-  label: string;
+  label?: string;
   checked: boolean;
   onChange: () => void;
 };

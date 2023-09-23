@@ -25,6 +25,7 @@ export default defineConfig({
           LIGHT_PINK: { value: "#fdf2f8" },
           YELLOW: { value: "#fef08a" },
           GRAY: { value: "#e5e5e5" },
+          LIGHT_BLUE: { value: "#38bdf8" },
         },
       },
       breakpoints: {

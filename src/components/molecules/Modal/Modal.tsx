@@ -4,35 +4,41 @@ import { css } from "@@/styled-system/css";
 type Props = {
   css?: string;
   message: string;
+  showModal: boolean;
   onClick: () => void;
 };
 
-const Modal = ({ css, message, onClick }: Props) => {
+const Modal = ({ css, message, showModal, onClick }: Props) => {
   const handleClick = () => onClick();
   return (
-    <div className={css}>
-      <div className={backgroundCss}>
-        <div className={modalCss}>
-          <div className={messageCss}>
-            <p>{message}</p>
+    showModal && (
+      <div className={css}>
+        <div className={backgroundCss}>
+          <div className={modalCss}>
+            <div className={messageCss}>
+              <p>{message}</p>
+            </div>
+            <Button css={buttonCss} visual="text" size="sm" onClick={handleClick}>
+              Close
+            </Button>
           </div>
-          <Button css={buttonCss} visual="text" size="sm" onClick={handleClick}>
-            Close
-          </Button>
         </div>
       </div>
-    </div>
+    )
   );
 };
 
 const backgroundCss = css({
   width: "100vw",
   height: "100vh",
-  bgColor: "rgba(200, 200, 200)",
+  bgColor: "rgba(0, 0, 0, 0.7)",
   position: "fixed",
+  top: 0,
+  right: 0,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  zIndex: 9999,
 });
 const modalCss = css({
   width: "300px",

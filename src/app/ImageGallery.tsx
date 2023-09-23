@@ -7,6 +7,7 @@ import Loading from "@/components/atoms/Loading/Loading";
 import Svg from "@/components/atoms/Svg/Svg";
 import Tabs from "@/components/atoms/Tabs/Tabs";
 import ImageCard from "@/components/molecules/ImageCard/ImageCard";
+import Modal from "@/components/molecules/Modal/Modal";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
@@ -25,6 +26,8 @@ const ImageGallery = ({ css, initImages }: Props) => {
   const [page, setPage] = useState(0);
   const [isFull, setIsFull] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   useEffect(() => {
     setImages(initImages);
@@ -64,7 +67,8 @@ const ImageGallery = ({ css, initImages }: Props) => {
       }
       if (resImages.length < 9) setIsFull(true);
     } catch (error) {
-      // Make snackbar and display error message.
+      setModalMessage("Failed to fetch images");
+      setShowModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -77,9 +81,11 @@ const ImageGallery = ({ css, initImages }: Props) => {
       await navigator.clipboard.writeText(`![LGTM](${image.url})`);
       const service = new ImageService();
       service.patchImage(image.id);
-      alert("Success! Copied to clipboard");
+      setModalMessage("Copied to clipboard!");
     } catch {
-      alert("Failed to copy to clipboard");
+      setModalMessage("Failed to copy to clipboard");
+    } finally {
+      setShowModal(true);
     }
   };
 
@@ -91,6 +97,8 @@ const ImageGallery = ({ css, initImages }: Props) => {
     localStorage.setItem("favariteImageIds", JSON.stringify(newFavariteImageIds));
     setFavariteImageIds(newFavariteImageIds);
   };
+
+  const handleCloseModal = () => setShowModal(false);
 
   return (
     <div className={css}>
@@ -148,6 +156,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
           See more
         </Button>
       )}
+      <Modal message={modalMessage} showModal={showModal} onClick={handleCloseModal} />
     </div>
   );
 };
