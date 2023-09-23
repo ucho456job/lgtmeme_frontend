@@ -61,7 +61,7 @@ describe("Image API", () => {
   describe("POST", () => {
     const req = {
       json: async () => {
-        return { image: "data:image/webp;base64,iVBORw0KGgoA" };
+        return { image: "data:image/webp;base64,iVBORw0KGgoA", keyword: "keyword" };
       },
     } as Request;
     test("Success: Image upload succeeds and returns 200 status", async () => {

@@ -88,7 +88,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
         css={textBoxCss}
         value={keyword}
         placeholder="Keyword"
-        icon={<Svg icon="search" size="lg" />}
+        icon={<Svg icon="search" size="md" />}
         onChange={handleSetKeyword}
         onEnterPress={() => {
           setIsFull(false);

@@ -27,6 +27,7 @@ const TextBox = ({ css, value, placeholder, icon, onChange, onEnterPress }: Prop
         <input
           ref={inputRef}
           type="text"
+          maxLength={50}
           value={value}
           className={textBoxCss({ icon: icon ? true : false })}
           placeholder={placeholder}
@@ -45,6 +46,7 @@ const textBoxWrapCss = css({ position: "relative", width: "100%" });
 const textBoxCss = cva({
   base: {
     width: "100%",
+    height: "32px",
     paddingY: "2",
     paddingX: "2.5",
     border: "1px solid #cccccc",

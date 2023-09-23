@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/atoms/Button/Button";
 import InputColor from "@/components/atoms/InputColor/InputColor";
 import InputFile from "@/components/atoms/InputFile/InputFile";
+import InputText from "@/components/atoms/InputText/InputText";
 import Loading from "@/components/atoms/Loading/Loading";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import Svg from "@/components/atoms/Svg/Svg";
@@ -12,23 +13,23 @@ import Form from "@/components/molecules/Form/Form";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
+type SizeMapKey = 36 | 60 | 84;
+
 type TextStyle = {
   left: number;
   top: number;
   color: string;
-  fontSize: number;
+  fontSize: SizeMapKey;
   width: number;
   height: number;
   lineHeight: string;
   fontFamily: string;
 };
 
-type SizeMapKey = 12 | 24 | 36 | 48 | 60 | 72 | 84 | 96;
-
 type SizeMap = Map<
   SizeMapKey,
   {
-    size: number;
+    size: SizeMapKey;
     width: number;
     height: number;
     diff: number;
@@ -51,6 +52,7 @@ const ImageEditor = ({ css }: Props) => {
     lineHeight: "60px",
     fontFamily: "Arial",
   });
+  const [keyword, setKeyword] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartY, setDragStartY] = useState(0);
@@ -158,10 +160,10 @@ const ImageEditor = ({ css }: Props) => {
   };
 
   const router = useRouter();
-  const handleCreateImage = async (size: SizeMapKey) => {
+  const handleCreateImage = async () => {
     try {
       setIsUpload(true);
-      const diff = sizeMap.get(size)?.diff;
+      const diff = sizeMap.get(textStyle.fontSize)?.diff;
       if (canvasRef.current && diff) {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -175,8 +177,8 @@ const ImageEditor = ({ css }: Props) => {
 
         const image = canvas.toDataURL("image/webp");
         const service = new ImageService();
-        await service.postImage({ image });
-        router.push("/");
+        await service.postImage({ image, keyword });
+        window.location.href = process.env.NEXT_PUBLIC_APP_URL;
       }
     } catch {
       alert("Failed create LGTM image");
@@ -202,7 +204,7 @@ const ImageEditor = ({ css }: Props) => {
           </div>
         )}
       </div>
-      <InputFile css={fileInputCss} onChange={handleImageUpload} />
+      <InputFile css={inputFileCss} onChange={handleImageUpload} />
       <Form css={formCss} label="Size">
         <SelectBox
           value={textStyle.fontSize}
@@ -217,8 +219,16 @@ const ImageEditor = ({ css }: Props) => {
           onChange={handleFontFamilyChange}
         />
       </Form>
-      <Form label="Color" isUnderLine>
+      <Form label="Color">
         <InputColor value={textStyle.color} onChange={handleTextColorChange} />
+      </Form>
+      <Form label="Keyword" isUnderLine>
+        <InputText
+          css={inputTextCss}
+          value={keyword}
+          placeholder="ex: anime, human"
+          onChange={setKeyword}
+        />
       </Form>
       {isUpload ? (
         <Loading css={loadingCss} />
@@ -228,7 +238,7 @@ const ImageEditor = ({ css }: Props) => {
           icon={<Svg icon="upload" color="white" size="lg" />}
           size="lg"
           disabled={imageInfo.url === ""}
-          onClick={() => handleCreateImage(textStyle.fontSize as SizeMapKey)}
+          onClick={handleCreateImage}
         >
           Create LGTM image
         </Button>
@@ -251,8 +261,9 @@ const lgtmCss = css({
   _hover: { cursor: "grab" },
   _active: { cursor: "grabbing" },
 });
-const fileInputCss = css({ textAlign: "center" });
+const inputFileCss = css({ textAlign: "center" });
 const formCss = css({ marginTop: "3" });
+const inputTextCss = css({ width: "90%", marginX: "auto", height: "32px" });
 const uploadButtonCss = css({ marginTop: "5", textAlign: "center" });
 const loadingCss = css({ marginTop: "5", marginX: "auto" });
 
