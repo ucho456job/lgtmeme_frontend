@@ -308,7 +308,7 @@ const ImageEditor = ({ css }: Props) => {
             <Button
               css={uploadButtonCss}
               icon={<Svg icon="upload" color="white" size="lg" />}
-              size="lg"
+              // size="lg"
               disabled={imageInfo.url === "" || !checked}
               onClick={handleCreateImage}
             >
@@ -348,14 +348,19 @@ const inputFileCss = css({ textAlign: "center" });
 const formCss = css({ marginTop: "3" });
 const bottomFormCss = css({ marginBottom: "3" });
 const inputTextCss = css({ width: "90%", marginX: "auto", height: "32px" });
-const uploadButtonCss = css({ textAlign: "center" });
+const uploadButtonCss = css({ marginTop: "4", textAlign: "center" });
 const termsOfServiceLinkWrapCss = css({ textAlign: "center" });
 const termsOfServiceLinkCss = css({
   color: "LIGHT_BLUE",
   textAlign: "center",
   _hover: { opacity: "0.8", borderBottom: "1px solid", borderColor: "LIGHT_BLUE" },
 });
-const checkBoxCss = css({ display: "flex", justifyContent: "center", alignItems: "center" });
-const loadingCss = css({ marginX: "auto" });
+const checkBoxCss = css({
+  marginTop: "3",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+});
+const loadingCss = css({ marginTop: "4", marginX: "auto" });
 
 export default ImageEditor;

@@ -19,16 +19,11 @@ describe("ImageGallery", () => {
     });
   });
   describe("Event tests", () => {
-    let alertMock: jest.SpyInstance<void, [message?: any], any>;
     const localStorageMock = {
       getItem: jest.fn(),
       setItem: jest.fn(),
     };
-    beforeEach(() => {
-      alertMock = jest.spyOn(window, "alert").mockImplementation(() => {});
-    });
     afterEach(() => {
-      alertMock.mockClear();
       localStorageMock.getItem.mockClear();
       localStorageMock.setItem.mockClear();
     });
@@ -114,7 +109,20 @@ describe("ImageGallery", () => {
       const afterSeeMoreButton = screen.getByRole("button", { name: "See more" });
       expect(afterSeeMoreButton).toHaveAttribute("disabled");
     });
-    test("When copying to clipboard succeeds, it should show a success alert", async () => {
+    test("When failed to fetch images, it should show a failure modal", async () => {
+      ImageService.prototype.fetchImages = jest.fn().mockRejectedValue(new Error());
+      render(<ImageGallery initImages={initImages} />);
+
+      const beforeImageCardComps = screen.getAllByAltText("LGTM");
+      expect(beforeImageCardComps.length).toBe(1);
+
+      const seeMoreButton = screen.getByRole("button", { name: "See more" });
+      await userEvent.click(seeMoreButton);
+
+      const modalMessage = screen.getByText("Failed to fetch images");
+      expect(modalMessage).toBeInTheDocument();
+    });
+    test("When copying to clipboard succeeds, it should show a success modal", async () => {
       const clipboardWriteTextMock = jest.fn();
       ImageService.prototype.patchImage = jest.fn(async () => {});
       Object.assign(navigator, {
@@ -128,9 +136,10 @@ describe("ImageGallery", () => {
       await userEvent.click(copyButton);
 
       expect(clipboardWriteTextMock).toHaveBeenCalledWith(`![LGTM](${initImages[0].url})`);
-      expect(alertMock).toHaveBeenCalledWith("Success! Copied to clipboard");
+      const modalMessage = screen.getByText("Copied to clipboard!");
+      expect(modalMessage).toBeInTheDocument();
     });
-    test("When copying to clipboard fails, it should show a failure alert", async () => {
+    test("When copying to clipboard fails, it should show a failure modal", async () => {
       ImageService.prototype.patchImage = jest.fn(async () => {});
       Object.assign(navigator, {
         clipboard: {
@@ -142,7 +151,8 @@ describe("ImageGallery", () => {
       const copyButton = screen.getAllByRole("button")[0];
       await userEvent.click(copyButton);
 
-      expect(alertMock).toHaveBeenCalledWith("Failed to copy to clipboard");
+      const modalMessage = screen.getByText("Failed to copy to clipboard");
+      expect(modalMessage).toBeInTheDocument();
     });
     test("When press favarite button, it will be added to favorites", async () => {
       Object.defineProperty(window, "localStorage", {

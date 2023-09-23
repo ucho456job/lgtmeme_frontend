@@ -10,21 +10,20 @@ type Props = {
 
 const Modal = ({ css, message, showModal, onClick }: Props) => {
   const handleClick = () => onClick();
-  console.log({ showModal });
   return (
     showModal && (
-      // <div className={css}>
-      <div className={backgroundCss}>
-        <div className={modalCss}>
-          <div className={messageCss}>
-            <p>{message}</p>
+      <div className={css}>
+        <div className={backgroundCss}>
+          <div className={modalCss}>
+            <div className={messageCss}>
+              <p>{message}</p>
+            </div>
+            <Button css={buttonCss} visual="text" size="sm" onClick={handleClick}>
+              Close
+            </Button>
           </div>
-          <Button css={buttonCss} visual="text" size="sm" onClick={handleClick}>
-            Close
-          </Button>
         </div>
       </div>
-      // </div>
     )
   );
 };

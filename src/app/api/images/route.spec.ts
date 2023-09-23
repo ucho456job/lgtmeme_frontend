@@ -68,9 +68,12 @@ describe("Image API", () => {
       jest.spyOn(uploadStorage, "upload").mockImplementation(async () => {
         return { data: { path: imageId }, error: null };
       });
-      prismaMock.image.create.mockImplementation();
+      const url = "Test image url";
+      prismaMock.image.create.mockResolvedValue({ url } as any);
       const result = await POST(req);
+      const { imageUrl } = await result.json();
       const status = await result.status;
+      expect(imageUrl).toBe(url);
       expect(status).toBe(200);
     });
     test("Failure: Image upload failed and returns 500 status", async () => {

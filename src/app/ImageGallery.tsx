@@ -67,7 +67,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
       }
       if (resImages.length < 9) setIsFull(true);
     } catch (error) {
-      setModalMessage("Failed to fetch images.");
+      setModalMessage("Failed to fetch images");
       setShowModal(true);
     } finally {
       setIsLoading(false);
@@ -83,7 +83,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
       service.patchImage(image.id);
       setModalMessage("Copied to clipboard!");
     } catch {
-      setModalMessage("Failed to copy to clipboard.");
+      setModalMessage("Failed to copy to clipboard");
     } finally {
       setShowModal(true);
     }
