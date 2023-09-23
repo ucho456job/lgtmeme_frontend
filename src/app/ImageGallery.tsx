@@ -72,6 +72,17 @@ const ImageGallery = ({ css, initImages }: Props) => {
 
   const handleSetKeyword = (value: string) => setKeyword(value);
 
+  const handleCopyToClipboard = async (image: FetchImage) => {
+    try {
+      await navigator.clipboard.writeText(`![LGTM](${image.url})`);
+      const service = new ImageService();
+      service.patchImage(image.id);
+      alert("Success! Copied to clipboard");
+    } catch {
+      alert("Failed to copy to clipboard");
+    }
+  };
+
   return (
     <div className={css}>
       <Tabs
@@ -104,6 +115,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
             image={i}
             favariteImageIds={favariteImageIds}
             setFavariteImageIds={setFavariteImageIds}
+            onClickCopy={() => handleCopyToClipboard(i)}
           />
         ))}
       </div>

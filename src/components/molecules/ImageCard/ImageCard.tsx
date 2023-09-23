@@ -11,9 +11,10 @@ type Props = {
   image: FetchImage;
   favariteImageIds: string[];
   setFavariteImageIds: Dispatch<SetStateAction<string[]>>;
+  onClickCopy: Function;
 };
 
-const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props) => {
+const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds, onClickCopy }: Props) => {
   const [isFavarite, setIsFavarite] = useState(false);
 
   useEffect(() => {
@@ -21,14 +22,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
     if (isFavarite) setIsFavarite(true);
   }, [image, favariteImageIds]);
 
-  const handleCopyToClipboard = async (imageUrl: string) => {
-    try {
-      await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
-      alert("Success! Copied to clipboard");
-    } catch (error) {
-      alert("Failed to copy to clipboard");
-    }
-  };
+  const handleClickCopy = () => onClickCopy();
 
   const handleToggleFavarite = () => {
     const newIsFavarite = !isFavarite;
@@ -40,9 +34,9 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
     setIsFavarite(newIsFavarite);
   };
 
-  const handleReport = () => {
-    console.log("report");
-  };
+  // const handleReport = () => {
+  //   console.log("report");
+  // };
 
   if (!image) return <></>;
   return (
@@ -63,7 +57,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
             css={buttonCss}
             size="sm"
             icon={<Svg icon="copy" color="white" size="md" />}
-            onClick={() => handleCopyToClipboard(image.url)}
+            onClick={handleClickCopy}
           >
             Copy
           </Button>
@@ -83,7 +77,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
           >
             Favorite
           </Button>
-          <Button
+          {/* <Button
             css={buttonCss}
             size="sm"
             color="yellow"
@@ -91,7 +85,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
             onClick={handleReport}
           >
             Report
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

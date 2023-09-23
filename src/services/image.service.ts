@@ -2,13 +2,11 @@ import { ActiveTabId } from "@/app/ImageGallery";
 
 const IMAGES_ENDPOINT = "/api/images";
 
-type Method = "GET" | "POST";
-
-type Cache = "no-store";
+type Method = "GET" | "POST" | "PATCH";
 
 type Config = {
   method: Method;
-  cache: Cache;
+  cache: "no-store";
   headers: {
     "Content-Type": string;
   };
@@ -22,10 +20,10 @@ export class ImageService {
     this.baseUrl = process.env.NEXT_PUBLIC_APP_URL;
   }
 
-  private createConfig(method: Method, cache: Cache, body?: Record<string, string>): Config {
+  private createConfig(method: Method, body?: Record<string, string | number>): Config {
     return {
       method,
-      cache,
+      cache: "no-store",
       headers: {
         "Content-Type": "application/json",
       },
@@ -57,13 +55,18 @@ export class ImageService {
   }): Promise<FetchImage[]> {
     const { page = 0, keyword = "", activeTabId = "timeLine", favariteImageIds = [] } = queryOption;
     const query = { page, keyword, activeTabId, favariteImageIds };
-    const config = this.createConfig("GET", "no-store");
+    const config = this.createConfig("GET");
     const res = await this.sendRequest<{ images: FetchImage[] }>(IMAGES_ENDPOINT, config, query);
     return res.images;
   }
 
   async postImage(body: Record<string, string>) {
-    const config = this.createConfig("POST", "no-store", body);
+    const config = this.createConfig("POST", body);
     await this.sendRequest(IMAGES_ENDPOINT, config);
+  }
+
+  async patchImage(id: string, body?: Record<string, number>) {
+    const config = this.createConfig("PATCH", body);
+    await this.sendRequest(IMAGES_ENDPOINT + "/" + id, config);
   }
 }
