@@ -1,6 +1,5 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/atoms/Button/Button";
 import Svg from "@/components/atoms/Svg/Svg";
@@ -9,41 +8,15 @@ import { css } from "@@/styled-system/css";
 type Props = {
   css?: string;
   image: FetchImage;
-  favariteImageIds: string[];
-  setFavariteImageIds: Dispatch<SetStateAction<string[]>>;
+  isFavarite: boolean;
+  onClickCopy: Function;
+  onClickFavarite: (isFavarite: boolean) => void;
 };
 
-const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props) => {
-  const [isFavarite, setIsFavarite] = useState(false);
-
-  useEffect(() => {
-    const isFavarite = favariteImageIds.find((id) => id === image.id);
-    if (isFavarite) setIsFavarite(true);
-  }, [image, favariteImageIds]);
-
-  const handleCopyToClipboard = async (imageUrl: string) => {
-    try {
-      await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
-      alert("Success! Copied to clipboard");
-    } catch (error) {
-      alert("Failed to copy to clipboard");
-    }
-  };
-
-  const handleToggleFavarite = () => {
-    const newIsFavarite = !isFavarite;
-    const newFavariteImageIds = newIsFavarite
-      ? [...favariteImageIds, image.id]
-      : favariteImageIds.filter((id) => id !== image.id);
-    localStorage.setItem("favariteImageIds", JSON.stringify(newFavariteImageIds));
-    setFavariteImageIds(newFavariteImageIds);
-    setIsFavarite(newIsFavarite);
-  };
-
-  const handleReport = () => {
-    console.log("report");
-  };
-
+const ImageCard = ({ css, image, isFavarite, onClickCopy, onClickFavarite }: Props) => {
+  const handleClickCopy = () => onClickCopy();
+  const handleClickFavarite = () => onClickFavarite(isFavarite);
+  // const handleClickReport = () => {};
   if (!image) return <></>;
   return (
     <div className={css}>
@@ -63,7 +36,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
             css={buttonCss}
             size="sm"
             icon={<Svg icon="copy" color="white" size="md" />}
-            onClick={() => handleCopyToClipboard(image.url)}
+            onClick={handleClickCopy}
           >
             Copy
           </Button>
@@ -79,19 +52,19 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
                 fillStyle={isFavarite ? "solid" : "outline"}
               />
             }
-            onClick={handleToggleFavarite}
+            onClick={handleClickFavarite}
           >
             Favorite
           </Button>
-          <Button
+          {/* <Button
             css={buttonCss}
             size="sm"
             color="yellow"
             icon={<Svg icon="flag" size="md" />}
-            onClick={handleReport}
+            onClick={handleClickReport}
           >
             Report
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
