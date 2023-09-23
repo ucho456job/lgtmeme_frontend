@@ -67,8 +67,6 @@ git push origin v$new_version
 
 git push origin main
 
-git branch -d release-$new_version
-
 git stash pop
 
 git checkout dev
