@@ -42,6 +42,7 @@ export const GET = async (req: Request) => {
 
 type Payload = {
   image: string;
+  keyword: string;
 };
 
 export const POST = async (req: Request) => {
@@ -58,7 +59,7 @@ export const POST = async (req: Request) => {
       data: {
         id,
         url: `${process.env.SUPABASE_URL}/storage/v1/object/public/images/${id}`,
-        keyword: "keyword",
+        keyword: payload.keyword,
       },
     });
     return NextResponse.json({}, { status: 200 });

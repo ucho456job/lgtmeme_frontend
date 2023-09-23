@@ -1,32 +1,35 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/components/atoms/Button/Button";
 import InputColor from "@/components/atoms/InputColor/InputColor";
 import InputFile from "@/components/atoms/InputFile/InputFile";
+import InputText from "@/components/atoms/InputText/InputText";
+import Loading from "@/components/atoms/Loading/Loading";
 import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import Svg from "@/components/atoms/Svg/Svg";
 import Form from "@/components/molecules/Form/Form";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
+type SizeMapKey = 36 | 60 | 84;
+
 type TextStyle = {
   left: number;
   top: number;
   color: string;
-  fontSize: number;
+  fontSize: SizeMapKey;
   width: number;
   height: number;
   lineHeight: string;
   fontFamily: string;
 };
 
-type SizeMapKey = 12 | 24 | 36 | 48 | 60 | 72 | 84 | 96;
-
 type SizeMap = Map<
   SizeMapKey,
   {
-    size: number;
+    size: SizeMapKey;
     width: number;
     height: number;
     diff: number;
@@ -38,7 +41,7 @@ type Props = {
 };
 
 const ImageEditor = ({ css }: Props) => {
-  const [image, setImage] = useState<string | null>(null);
+  const [imageInfo, setImageInfo] = useState({ url: "", width: 0, height: 0 });
   const [textStyle, setTextStyle] = useState<TextStyle>({
     left: 66,
     top: 120,
@@ -49,36 +52,49 @@ const ImageEditor = ({ css }: Props) => {
     lineHeight: "60px",
     fontFamily: "Arial",
   });
+  const [keyword, setKeyword] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartY, setDragStartY] = useState(0);
   const [isUpload, setIsUpload] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  useEffect(() => {
-    if (image && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        canvas.width = 300;
-        canvas.height = 300;
-        const img = new Image();
-        img.src = image;
-        img.onload = () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          const centerX = (canvas.width - img.width) / 2;
-          const centerY = (canvas.height - img.height) / 2;
-          ctx.drawImage(img, centerX, centerY);
-        };
-      }
-    }
-  }, [image]);
-
   const handleImageUpload = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const dataURL = e.target?.result as string;
-      setImage(dataURL);
+      const img = new Image();
+      img.src = dataURL;
+      img.onload = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const maxWidth = 300;
+          const maxHeight = 300;
+          let canvasWidth = img.width;
+          let canvasHeight = img.height;
+          if (img.width > maxWidth || img.height > maxHeight) {
+            const widthRatio = maxWidth / img.width;
+            const heightRatio = maxHeight / img.height;
+            const minRatio = Math.min(widthRatio, heightRatio);
+            canvasWidth = img.width * minRatio;
+            canvasHeight = img.height * minRatio;
+          }
+          canvas.width = maxWidth;
+          canvas.height = maxHeight;
+          const canvasX = (maxWidth - canvasWidth) / 2;
+          const canvasY = (maxHeight - canvasHeight) / 2;
+          ctx.clearRect(0, 0, maxWidth, maxHeight);
+          ctx.drawImage(img, canvasX, canvasY, canvasWidth, canvasHeight);
+          const newImageInfo = {
+            url: canvas.toDataURL("image/jpeg"),
+            width: canvasWidth,
+            height: canvasHeight,
+          };
+          setImageInfo(newImageInfo);
+        }
+      };
     };
     reader.readAsDataURL(file);
   };
@@ -143,24 +159,31 @@ const ImageEditor = ({ css }: Props) => {
     setIsDragging(false);
   };
 
-  const handleCreateImage = async (size: SizeMapKey) => {
-    setIsUpload(true);
-    const diff = sizeMap.get(size)?.diff;
-    if (canvasRef.current && diff) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-      ctx.fillStyle = textStyle.color;
-      ctx.font = `${textStyle.fontSize}px ${textStyle.fontFamily}`;
-      const text = "LGTM";
-      const textX = textStyle.left;
-      const textY = textStyle.top + diff;
-      ctx.fillText(text, textX, textY);
+  const router = useRouter();
+  const handleCreateImage = async () => {
+    try {
+      setIsUpload(true);
+      const diff = sizeMap.get(textStyle.fontSize)?.diff;
+      if (canvasRef.current && diff) {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.fillStyle = textStyle.color;
+        ctx.font = `${textStyle.fontSize}px ${textStyle.fontFamily}`;
+        const text = "LGTM";
+        const textX = textStyle.left;
+        const textY = textStyle.top + diff;
+        ctx.fillText(text, textX, textY);
 
-      console.log("ここだよ");
-      const image = canvas.toDataURL("image/webp");
-      const service = new ImageService();
-      await service.postImage({ image });
+        const image = canvas.toDataURL("image/webp");
+        const service = new ImageService();
+        await service.postImage({ image, keyword });
+        window.location.href = process.env.NEXT_PUBLIC_APP_URL;
+      }
+    } catch {
+      alert("Failed create LGTM image");
+    } finally {
+      setIsUpload(false);
     }
   };
 
@@ -169,7 +192,7 @@ const ImageEditor = ({ css }: Props) => {
       <br />
       <div className={borderCss} id="canvas-border">
         <canvas ref={canvasRef}></canvas>
-        {image && !isUpload && (
+        {imageInfo.url !== "" && !isUpload && (
           <div
             className={lgtmCss}
             style={textStyle}
@@ -181,7 +204,7 @@ const ImageEditor = ({ css }: Props) => {
           </div>
         )}
       </div>
-      <InputFile css={fileInputCss} onChange={handleImageUpload} />
+      <InputFile css={inputFileCss} onChange={handleImageUpload} />
       <Form css={formCss} label="Size">
         <SelectBox
           value={textStyle.fontSize}
@@ -196,17 +219,30 @@ const ImageEditor = ({ css }: Props) => {
           onChange={handleFontFamilyChange}
         />
       </Form>
-      <Form label="Color" isUnderLine>
+      <Form label="Color">
         <InputColor value={textStyle.color} onChange={handleTextColorChange} />
       </Form>
-      <Button
-        css={uploadButton}
-        icon={<Svg icon="upload" color="white" size="lg" />}
-        size="lg"
-        onClick={() => handleCreateImage(textStyle.fontSize as SizeMapKey)}
-      >
-        Create LGTM image
-      </Button>
+      <Form label="Keyword" isUnderLine>
+        <InputText
+          css={inputTextCss}
+          value={keyword}
+          placeholder="ex: anime, human"
+          onChange={setKeyword}
+        />
+      </Form>
+      {isUpload ? (
+        <Loading css={loadingCss} />
+      ) : (
+        <Button
+          css={uploadButtonCss}
+          icon={<Svg icon="upload" color="white" size="lg" />}
+          size="lg"
+          disabled={imageInfo.url === ""}
+          onClick={handleCreateImage}
+        >
+          Create LGTM image
+        </Button>
+      )}
     </div>
   );
 };
@@ -225,8 +261,10 @@ const lgtmCss = css({
   _hover: { cursor: "grab" },
   _active: { cursor: "grabbing" },
 });
-const fileInputCss = css({ textAlign: "center" });
+const inputFileCss = css({ textAlign: "center" });
 const formCss = css({ marginTop: "3" });
-const uploadButton = css({ marginTop: "5", textAlign: "center" });
+const inputTextCss = css({ width: "90%", marginX: "auto", height: "32px" });
+const uploadButtonCss = css({ marginTop: "5", textAlign: "center" });
+const loadingCss = css({ marginTop: "5", marginX: "auto" });
 
 export default ImageEditor;
