@@ -1,9 +1,7 @@
 -- CreateTable
 CREATE TABLE "images" (
-    "id" SERIAL NOT NULL,
+    "id" VARCHAR(36) NOT NULL,
     "url" TEXT NOT NULL,
-    "width" INTEGER NOT NULL DEFAULT 0,
-    "height" INTEGER NOT NULL DEFAULT 0,
     "keyword" VARCHAR(50) NOT NULL DEFAULT '',
     "used_count" INTEGER NOT NULL DEFAULT 0,
     "reported" BOOLEAN NOT NULL DEFAULT false,

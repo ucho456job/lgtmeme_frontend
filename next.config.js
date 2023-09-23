@@ -2,7 +2,11 @@
 const nextConfig = {
   output: "standalone",
   images: {
-    domains: ["placehold.jp", "clilsxztvvlfnlqdwbsa.supabase.co"],
+    domains: [
+      "placehold.jp",
+      "clilsxztvvlfnlqdwbsa.supabase.co",
+      "vaznmnhnwfkbgorhmlbi.supabase.co",
+    ],
   },
   typescript: {
     tsconfigPath: "tsconfig.build.json",

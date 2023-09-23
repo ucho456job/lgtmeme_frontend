@@ -9,8 +9,8 @@ import { css } from "@@/styled-system/css";
 type Props = {
   css?: string;
   image: FetchImage;
-  favariteImageIds: number[];
-  setFavariteImageIds: Dispatch<SetStateAction<number[]>>;
+  favariteImageIds: string[];
+  setFavariteImageIds: Dispatch<SetStateAction<string[]>>;
 };
 
 const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props) => {
@@ -52,8 +52,8 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds }: Props)
           <Image
             className={imageCss}
             src={image.url}
-            height={image.height}
-            width={image.width}
+            height={300}
+            width={300}
             alt="LGTM"
             priority
           />
