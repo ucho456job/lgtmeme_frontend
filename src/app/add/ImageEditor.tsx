@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import Button from "@/components/atoms/Button/Button";
 import InputColor from "@/components/atoms/InputColor/InputColor";
 import InputFile from "@/components/atoms/InputFile/InputFile";
@@ -133,33 +132,67 @@ const ImageEditor = ({ css }: Props) => {
     setTextStyle((prev) => ({ ...prev, fontFamily: value }));
   };
 
-  const handleTextDrag = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isDragging) {
-      const newLeft = e.clientX - dragStartX;
-      const newTop = e.clientY - dragStartY;
-      const parentElement = document.getElementById("canvas-border");
-      if (parentElement) {
-        const parentRect = parentElement.getBoundingClientRect();
-        const maxX = parentRect.width - textStyle.width;
-        const maxY = parentRect.height - textStyle.height;
-        const clampedLeft = Math.min(Math.max(newLeft, 0), maxX);
-        const clampedTop = Math.min(Math.max(newTop, 0), maxY);
-        setTextStyle((prev) => ({ ...prev, left: clampedLeft, top: clampedTop }));
-      }
-    }
-  };
-
-  const handleDragStart = (e: any) => {
+  /** Start text drag */
+  const startTextDrag = (eventX: number, eventY: number) => {
     setIsDragging(true);
-    setDragStartX(e.clientX - textStyle.left);
-    setDragStartY(e.clientY - textStyle.top);
+    setDragStartX(eventX - textStyle.left);
+    setDragStartY(eventY - textStyle.top);
+  };
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isDragging) return;
+    startTextDrag(e.clientX, e.clientY);
+  };
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (isDragging) return;
+    const touch = e.touches[0];
+    startTextDrag(touch.clientX, touch.clientY);
   };
 
-  const handleDragEnd = () => {
-    setIsDragging(false);
+  /** Moving text */
+  const movingText = (newLeft: number, newTop: number) => {
+    const parentElement = document.getElementById("canvas-border");
+    if (!parentElement) return;
+    const parentRect = parentElement.getBoundingClientRect();
+    const maxX = parentRect.width - textStyle.width;
+    const maxY = parentRect.height - textStyle.height;
+    const clampedLeft = Math.min(Math.max(newLeft, 0), maxX);
+    const clampedTop = Math.min(Math.max(newTop, 0), maxY);
+    setTextStyle((prev) => ({ ...prev, left: clampedLeft, top: clampedTop }));
+  };
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    const newLeft = e.clientX - dragStartX;
+    const newTop = e.clientY - dragStartY;
+    movingText(newLeft, newTop);
+  };
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    const touch = e.touches[0];
+    const newLeft = touch.clientX - dragStartX;
+    const newTop = touch.clientY - dragStartY;
+    movingText(newLeft, newTop);
   };
 
-  const router = useRouter();
+  /** When moving the text, prevent scrolling */
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener(
+        "touchmove",
+        (e) => {
+          e.preventDefault();
+        },
+        { passive: false },
+      );
+    } else {
+      window.removeEventListener("touchmove", (e) => {
+        e.preventDefault();
+      });
+    }
+  }, [isDragging]);
+
+  /** Stop text move */
+  const handleStopTextMove = () => setIsDragging(false);
+
   const handleCreateImage = async () => {
     try {
       setIsUpload(true);
@@ -196,9 +229,12 @@ const ImageEditor = ({ css }: Props) => {
           <div
             className={lgtmCss}
             style={textStyle}
-            onMouseDown={handleDragStart}
-            onMouseMove={handleTextDrag}
-            onMouseUp={handleDragEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleStopTextMove}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleStopTextMove}
           >
             LGTM
           </div>
