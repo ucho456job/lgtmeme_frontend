@@ -1,6 +1,5 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "@/components/atoms/Button/Button";
 import Svg from "@/components/atoms/Svg/Svg";
@@ -9,35 +8,15 @@ import { css } from "@@/styled-system/css";
 type Props = {
   css?: string;
   image: FetchImage;
-  favariteImageIds: string[];
-  setFavariteImageIds: Dispatch<SetStateAction<string[]>>;
+  isFavarite: boolean;
   onClickCopy: Function;
+  onClickFavarite: (isFavarite: boolean) => void;
 };
 
-const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds, onClickCopy }: Props) => {
-  const [isFavarite, setIsFavarite] = useState(false);
-
-  useEffect(() => {
-    const isFavarite = favariteImageIds.find((id) => id === image.id);
-    if (isFavarite) setIsFavarite(true);
-  }, [image, favariteImageIds]);
-
+const ImageCard = ({ css, image, isFavarite, onClickCopy, onClickFavarite }: Props) => {
   const handleClickCopy = () => onClickCopy();
-
-  const handleToggleFavarite = () => {
-    const newIsFavarite = !isFavarite;
-    const newFavariteImageIds = newIsFavarite
-      ? [...favariteImageIds, image.id]
-      : favariteImageIds.filter((id) => id !== image.id);
-    localStorage.setItem("favariteImageIds", JSON.stringify(newFavariteImageIds));
-    setFavariteImageIds(newFavariteImageIds);
-    setIsFavarite(newIsFavarite);
-  };
-
-  // const handleReport = () => {
-  //   console.log("report");
-  // };
-
+  const handleClickFavarite = () => onClickFavarite(isFavarite);
+  // const handleClickReport = () => {};
   if (!image) return <></>;
   return (
     <div className={css}>
@@ -73,7 +52,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds, onClickC
                 fillStyle={isFavarite ? "solid" : "outline"}
               />
             }
-            onClick={handleToggleFavarite}
+            onClick={handleClickFavarite}
           >
             Favorite
           </Button>
@@ -82,7 +61,7 @@ const ImageCard = ({ css, image, favariteImageIds, setFavariteImageIds, onClickC
             size="sm"
             color="yellow"
             icon={<Svg icon="flag" size="md" />}
-            onClick={handleReport}
+            onClick={handleClickReport}
           >
             Report
           </Button> */}

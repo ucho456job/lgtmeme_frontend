@@ -83,6 +83,15 @@ const ImageGallery = ({ css, initImages }: Props) => {
     }
   };
 
+  const handleToggleFavarite = (isFavarite: boolean, image: FetchImage) => {
+    const newIsFavarite = !isFavarite;
+    const newFavariteImageIds = newIsFavarite
+      ? [...favariteImageIds, image.id]
+      : favariteImageIds.filter((id) => id !== image.id);
+    localStorage.setItem("favariteImageIds", JSON.stringify(newFavariteImageIds));
+    setFavariteImageIds(newFavariteImageIds);
+  };
+
   return (
     <div className={css}>
       <Tabs
@@ -113,9 +122,9 @@ const ImageGallery = ({ css, initImages }: Props) => {
             css={imageCardCss}
             key={i.id}
             image={i}
-            favariteImageIds={favariteImageIds}
-            setFavariteImageIds={setFavariteImageIds}
+            isFavarite={favariteImageIds.some((id) => id === i.id)}
             onClickCopy={() => handleCopyToClipboard(i)}
+            onClickFavarite={(isFavarite: boolean) => handleToggleFavarite(isFavarite, i)}
           />
         ))}
       </div>

@@ -19,6 +19,19 @@ describe("ImageGallery", () => {
     });
   });
   describe("Event tests", () => {
+    let alertMock: jest.SpyInstance<void, [message?: any], any>;
+    const localStorageMock = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+    };
+    beforeEach(() => {
+      alertMock = jest.spyOn(window, "alert").mockImplementation(() => {});
+    });
+    afterEach(() => {
+      alertMock.mockClear();
+      localStorageMock.getItem.mockClear();
+      localStorageMock.setItem.mockClear();
+    });
     test("When popular tab is clicked, changes the active tab, fetch popular images", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
         { id: "1", url: "https://placehold.jp/300x300.png" },
@@ -100,6 +113,55 @@ describe("ImageGallery", () => {
       expect(afterImageCardComps.length).toBe(9);
       const afterSeeMoreButton = screen.getByRole("button", { name: "See more" });
       expect(afterSeeMoreButton).toHaveAttribute("disabled");
+    });
+    test("When copying to clipboard succeeds, it should show a success alert", async () => {
+      const clipboardWriteTextMock = jest.fn();
+      ImageService.prototype.patchImage = jest.fn(async () => {});
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: clipboardWriteTextMock,
+        },
+      });
+      render(<ImageGallery initImages={initImages} />);
+
+      const copyButton = screen.getAllByRole("button")[0];
+      await userEvent.click(copyButton);
+
+      expect(clipboardWriteTextMock).toHaveBeenCalledWith(`![LGTM](${initImages[0].url})`);
+      expect(alertMock).toHaveBeenCalledWith("Success! Copied to clipboard");
+    });
+    test("When copying to clipboard fails, it should show a failure alert", async () => {
+      ImageService.prototype.patchImage = jest.fn(async () => {});
+      Object.assign(navigator, {
+        clipboard: {
+          writeText: jest.fn(() => Promise.reject(new Error("Failed to copy"))),
+        },
+      });
+      render(<ImageGallery initImages={initImages} />);
+
+      const copyButton = screen.getAllByRole("button")[0];
+      await userEvent.click(copyButton);
+
+      expect(alertMock).toHaveBeenCalledWith("Failed to copy to clipboard");
+    });
+    test("When press favarite button, it will be added to favorites", async () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      render(<ImageGallery initImages={initImages} />);
+      const favariteButton = screen.getAllByRole("button")[1];
+      await userEvent.click(favariteButton);
+      expect(localStorageMock.setItem).toBeCalledWith("favariteImageIds", '["1"]');
+    });
+    test("When press favarite button when it's already a favorite, it will be removed from favorites", async () => {
+      Object.defineProperty(window, "localStorage", {
+        value: localStorageMock,
+      });
+      localStorageMock.getItem.mockReturnValue('["1"]');
+      render(<ImageGallery initImages={initImages} />);
+      const favariteButton = screen.getAllByRole("button")[1];
+      await userEvent.click(favariteButton);
+      expect(localStorageMock.setItem).toBeCalledWith("favariteImageIds", "[]");
     });
   });
 });

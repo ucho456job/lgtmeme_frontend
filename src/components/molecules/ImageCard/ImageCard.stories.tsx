@@ -9,13 +9,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const commonArgs = {
+  isFavarite: false,
+  onClickCopy: () => alert("Click copy button!"),
+  onClickFavarite: () => alert("Click favarite button!"),
+};
+
 export const Square: Story = {
   args: {
     image: {
       id: "1",
       url: "https://placehold.jp/300x300.png",
     },
-    favariteImageIds: [],
+    ...commonArgs,
   },
 };
 
@@ -25,7 +31,7 @@ export const Horizontal: Story = {
       id: "1",
       url: "https://placehold.jp/350x250.png",
     },
-    favariteImageIds: [],
+    ...commonArgs,
   },
 };
 
@@ -35,7 +41,7 @@ export const Vertical: Story = {
       id: "1",
       url: "https://placehold.jp/250x350.png",
     },
-    favariteImageIds: [],
+    ...commonArgs,
   },
 };
 
@@ -45,6 +51,6 @@ export const Mini: Story = {
       id: "1",
       url: "https://placehold.jp/200x200.png",
     },
-    favariteImageIds: [],
+    ...commonArgs,
   },
 };
