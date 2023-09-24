@@ -201,7 +201,8 @@ const ImageEditor = ({ css }: Props) => {
       const imageUrl = await service.postImage({ image, keyword });
       await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
       setModalMessage(successModalMessage);
-    } catch {
+    } catch (error) {
+      console.log(error);
       setModalMessage("Failed create LGTM image.");
     } finally {
       setIsUpload(false);

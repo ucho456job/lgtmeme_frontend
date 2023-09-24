@@ -67,6 +67,7 @@ export class ImageService {
   async postImage(body: Record<string, string>) {
     const config = this.createConfig("POST", body);
     const res = await this.sendRequest<{ imageUrl: string }>(IMAGES_API_ENDPOINT, config);
+    console.log(res);
     return res.imageUrl;
   }
 

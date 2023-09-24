@@ -47,14 +47,18 @@ type Payload = {
 
 export const POST = async (req: Request) => {
   try {
+    console.log("POST");
     await prisma.$connect();
     const payload: Payload = await req.json();
     const base64 = payload.image.split(",")[1];
     const id = uuid();
+    console.log("before storage");
     const { error } = await uploadStorage.upload(id, decode(base64), {
       contentType: "image/webp",
     });
+    console.log("after storage");
     if (error) throw new Error("Image upload failed");
+    console.log("before create");
     const image = await prisma.image.create({
       select: { url: true },
       data: {
@@ -63,8 +67,10 @@ export const POST = async (req: Request) => {
         keyword: payload.keyword,
       },
     });
+    console.log("after create");
     return NextResponse.json({ imageUrl: image.url }, { status: 200 });
   } catch (error) {
+    console.log({ error });
     const errorMessage = error instanceof Error ? error.message : "POST request failed";
     return NextResponse.json({ errorMessage }, { status: 500 });
   } finally {
