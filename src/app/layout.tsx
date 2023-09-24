@@ -25,7 +25,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 const mainRecipe = cva({
-  base: { bg: "GHOUST_WHITE", minHeight: "calc(100vh - 200px)", maxWidth: "100vw" },
+  base: { bg: "GHOUST_WHITE", maxWidth: "100vw", md: { minHeight: "calc(100vh - 200px)" } },
 });
 
 export default RootLayout;
