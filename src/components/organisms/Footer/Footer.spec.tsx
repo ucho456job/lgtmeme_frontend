@@ -1,5 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import Footer from "@/components/organisms/Footer/Footer";
+import {
+  HOME_PAGE_ENDPOINT,
+  PRIVACY_POLICY_ENDPOINT,
+  TERMS_OF_SERVICE_ENDPOINT,
+} from "@/constants/endpoints";
 import packageJson from "@@/package.json";
 
 describe("Footer", () => {
@@ -14,11 +19,11 @@ describe("Footer", () => {
       const privacyPolicyLink = privacyPolicyButton.closest("a");
       const copyrightText = screen.getByText(`©2023 LGTMeme version ${packageJson.version}`);
       expect(homeButton).toBeInTheDocument();
-      expect(homeLink).toHaveAttribute("href", "/");
+      expect(homeLink).toHaveAttribute("href", HOME_PAGE_ENDPOINT);
       expect(termsOfServiceButton).toBeInTheDocument();
-      expect(termsOfServiceLink).toHaveAttribute("href", "/terms-of-service");
+      expect(termsOfServiceLink).toHaveAttribute("href", TERMS_OF_SERVICE_ENDPOINT);
       expect(privacyPolicyButton).toBeInTheDocument();
-      expect(privacyPolicyLink).toHaveAttribute("href", "/privacy-policy");
+      expect(privacyPolicyLink).toHaveAttribute("href", PRIVACY_POLICY_ENDPOINT);
       expect(copyrightText).toBeInTheDocument();
     });
   });
