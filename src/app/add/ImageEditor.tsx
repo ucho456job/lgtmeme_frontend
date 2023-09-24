@@ -151,6 +151,7 @@ const ImageEditor = ({ css }: Props) => {
     if (isDragging) return;
     const touch = e.touches[0];
     startTextDrag(touch.clientX, touch.clientY);
+    document.body.style.overflow = "hidden";
   };
 
   /** Moving text */
@@ -179,7 +180,10 @@ const ImageEditor = ({ css }: Props) => {
   };
 
   /** Stop text move */
-  const handleStopTextMove = () => setIsDragging(false);
+  const handleStopTextMove = () => {
+    document.body.style.overflow = "auto";
+    setIsDragging(false);
+  };
 
   const handletoggleChecked = () => setChecked((prev) => !prev);
 
