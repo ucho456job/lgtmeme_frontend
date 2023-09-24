@@ -248,14 +248,14 @@ const ImageEditor = ({ css }: Props) => {
               onChange={handleTextSizeChange}
             />
           </Form>
-          <Form css={formCss} label="Font family">
+          <Form label="Font family">
             <SelectBox
               value={textStyle.fontFamily}
               options={FONT_FAMILY_OPTIONS}
               onChange={handleFontFamilyChange}
             />
           </Form>
-          <Form css={formCss} label="Color">
+          <Form label="Color">
             <InputColor
               css={inputColorCss}
               value={textStyle.color}
@@ -326,9 +326,8 @@ const lgtmCss = css({
   _active: { cursor: "grabbing" },
 });
 const inputFileCss = css({ textAlign: "center" });
-const topFormCss = css({ marginTop: "3", height: "50px" });
-const formCss = css({ height: "50px" });
-const bottomFormCss = css({ marginBottom: "3", height: "50px" });
+const topFormCss = css({ marginTop: "3" });
+const bottomFormCss = css({ marginBottom: "3" });
 const inputColorCss = css({ height: "50px" });
 const inputTextCss = css({ width: "90%", marginX: "auto" });
 const uploadButtonCss = css({ marginTop: "4", textAlign: "center" });
