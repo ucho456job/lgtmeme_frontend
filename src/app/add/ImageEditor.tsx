@@ -324,7 +324,14 @@ const lgtmCss = css({
 const inputFileCss = css({ textAlign: "center" });
 const formCss = css({ marginTop: "3" });
 const bottomFormCss = css({ marginBottom: "3" });
-const inputTextCss = css({ width: "90%", marginX: "auto", height: "32px" });
+const inputTextCss = css({
+  width: "90%",
+  marginX: "auto",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100%",
+});
 const uploadButtonCss = css({ marginTop: "4", textAlign: "center" });
 const termsOfServiceLinkWrapCss = css({ textAlign: "center" });
 const termsOfServiceLinkCss = css({
