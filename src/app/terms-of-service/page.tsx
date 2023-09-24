@@ -7,6 +7,7 @@ const TermsOfService = () => {
     <div className={containerCss}>
       <div className={contentCss}>
         <h1 className={h1Css}>利用規約</h1>
+        <br />
         <p>
           この利用規約（以下「規約」といいます）は、サービス提供者（以下「運営者」といいます）とサービス利用者（以下「利用者」といいます）との間で、運営者が提供するLGTM画像生成サービス『LGTMeme』（以下「本サービス」といいます）の利用に関する条件を定めるものです。本サービスを利用する前に、以下の規約をよくお読みいただき、同意いただく必要があります。
         </p>
@@ -57,9 +58,9 @@ const TermsOfService = () => {
           本サービスに関する問い合わせ、通報、およびその他の連絡事項については、以下の連絡先にご連絡ください。
         </p>
         <br />
-        <Link className={linkCss} href={TWITTER_LINK_ENDPOINT}>
+        <a className={linkCss} href={TWITTER_LINK_ENDPOINT} target="_blank">
           {TWITTER_LINK_ENDPOINT}
-        </Link>
+        </a>
       </div>
     </div>
   );
@@ -67,7 +68,7 @@ const TermsOfService = () => {
 
 const containerCss = css({ display: "flex", justifyContent: "center", padding: "5" });
 const contentCss = css({ maxWidth: "1090px", padding: 5 });
-const h1Css = css({ fontSize: "3xl", fontWeight: "bold" });
+const h1Css = css({ fontSize: "2xl", fontWeight: "bold" });
 const h2Css = css({ fontSize: "xl", fontWeight: "bold", marginTop: "5" });
 const linkCss = css({
   color: "LIGHT_BLUE",

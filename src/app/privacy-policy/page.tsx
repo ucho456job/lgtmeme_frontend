@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { TWITTER_LINK_ENDPOINT } from "@/constants/endpoints";
 import { css } from "@@/styled-system/css";
 
@@ -7,6 +6,7 @@ const PrivacyPolicy = () => {
     <div className={containerCss}>
       <div className={contentCss}>
         <h1 className={h1Css}>プライバシーポリシー</h1>
+        <br />
         <p>
           このプライバシーポリシー（以下「ポリシー」といいます）は、LGTM画像生成サービス『LGTMeme』（以下「本サービス」といいます）を提供するサービス提供者（以下「運営者」といいます）が、ユーザー（以下「利用者」といいます）の個人情報を収集、使用、保護する方法に関するポリシーを説明します。本サービスを利用する前に、以下のポリシーを注意深くお読みいただき、同意いただく必要があります。
         </p>
@@ -57,9 +57,9 @@ const PrivacyPolicy = () => {
           プライバシーポリシーに関するご質問、要望、およびその他の連絡事項については、以下の連絡先にご連絡ください。
         </p>
         <br />
-        <Link className={linkCss} href={TWITTER_LINK_ENDPOINT}>
+        <a className={linkCss} href={TWITTER_LINK_ENDPOINT} target="_blank">
           {TWITTER_LINK_ENDPOINT}
-        </Link>
+        </a>
       </div>
     </div>
   );
@@ -67,7 +67,7 @@ const PrivacyPolicy = () => {
 
 const containerCss = css({ display: "flex", justifyContent: "center", padding: "5" });
 const contentCss = css({ maxWidth: "1090px", padding: 5 });
-const h1Css = css({ fontSize: "3xl", fontWeight: "bold" });
+const h1Css = css({ fontSize: "2xl", fontWeight: "bold" });
 const h2Css = css({ fontSize: "xl", fontWeight: "bold", marginTop: "5" });
 const linkCss = css({
   color: "LIGHT_BLUE",
