@@ -151,7 +151,6 @@ const ImageEditor = ({ css }: Props) => {
     if (isDragging) return;
     const touch = e.touches[0];
     startTextDrag(touch.clientX, touch.clientY);
-    document.body.style.overflow = "hidden";
   };
 
   /** Moving text */
@@ -179,9 +178,21 @@ const ImageEditor = ({ css }: Props) => {
     movingText(newLeft, newTop);
   };
 
+  /** Prevent scroll */
+  useEffect(() => {
+    const preventScroll = (e: TouchEvent) => {
+      if (isDragging) e.preventDefault();
+    };
+    document.addEventListener("touchstart", preventScroll, { passive: false });
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+    return () => {
+      document.removeEventListener("touchstart", preventScroll);
+      document.removeEventListener("touchmove", preventScroll);
+    };
+  }, [isDragging]);
+
   /** Stop text move */
   const handleStopTextMove = () => {
-    document.body.style.overflow = "auto";
     setIsDragging(false);
   };
 
