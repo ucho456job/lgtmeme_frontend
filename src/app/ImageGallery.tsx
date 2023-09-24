@@ -54,7 +54,6 @@ const ImageGallery = ({ css, initImages }: Props) => {
   ) => {
     try {
       setIsLoading(true);
-      setModalMessage("");
       setPage(page);
       setActiveTabId(activeTabId);
       const service = new ImageService();
@@ -80,16 +79,15 @@ const ImageGallery = ({ css, initImages }: Props) => {
 
   const handleCopyToClipboard = async (image: FetchImage) => {
     try {
-      setModalMessage("");
       await navigator.clipboard.writeText(`![LGTM](${image.url})`);
-      const service = new ImageService();
-      service.patchImage(image.id);
       setModalMessage("Copied to clipboard!");
     } catch {
       setModalMessage("Failed to copy to clipboard");
     } finally {
       setShowModal(true);
     }
+    const service = new ImageService();
+    service.patchImage(image.id);
   };
 
   const handleToggleFavarite = (isFavarite: boolean, image: FetchImage) => {
