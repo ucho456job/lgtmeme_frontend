@@ -1,16 +1,18 @@
 import { ChangeEvent, KeyboardEvent, useRef } from "react";
+import { MAX_KEYWORD_LENGTH } from "@/constants/image";
 import { css, cva } from "@@/styled-system/css";
 
 type Props = {
   css?: string;
   value?: string;
   placeholder?: string;
+  maxLength?: number;
   icon?: JSX.Element;
   onChange: (value: string) => void;
   onEnterPress?: Function;
 };
 
-const TextBox = ({ css, value, placeholder, icon, onChange, onEnterPress }: Props) => {
+const TextBox = ({ css, value, placeholder, maxLength, icon, onChange, onEnterPress }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -27,7 +29,7 @@ const TextBox = ({ css, value, placeholder, icon, onChange, onEnterPress }: Prop
         <input
           ref={inputRef}
           type="text"
-          maxLength={50}
+          maxLength={maxLength || MAX_KEYWORD_LENGTH}
           value={value}
           className={textBoxCss({ icon: icon ? true : false })}
           placeholder={placeholder}

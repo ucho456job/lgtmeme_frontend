@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TWITTER_LINK_ENDPOINT } from "@/constants/endpoints";
 import { css } from "@@/styled-system/css";
 
 const PrivacyPolicy = () => {
@@ -56,8 +57,8 @@ const PrivacyPolicy = () => {
           プライバシーポリシーに関するご質問、要望、およびその他の連絡事項については、以下の連絡先にご連絡ください。
         </p>
         <br />
-        <Link className={linkCss} href="https://twitter.com/ucho456job">
-          https://twitter.com/ucho456job
+        <Link className={linkCss} href={TWITTER_LINK_ENDPOINT}>
+          {TWITTER_LINK_ENDPOINT}
         </Link>
       </div>
     </div>

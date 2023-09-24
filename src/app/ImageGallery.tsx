@@ -8,6 +8,7 @@ import Svg from "@/components/atoms/Svg/Svg";
 import Tabs from "@/components/atoms/Tabs/Tabs";
 import ImageCard from "@/components/molecules/ImageCard/ImageCard";
 import Modal from "@/components/molecules/Modal/Modal";
+import { FetchImage, MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
@@ -65,7 +66,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
         resImages.forEach((image) => imageMap.set(image.id, image));
         setImages(Array.from(imageMap.values()));
       }
-      if (resImages.length < 9) setIsFull(true);
+      if (resImages.length < MAX_IMAGES_FETCH_COUNT) setIsFull(true);
     } catch (error) {
       setModalMessage("Failed to fetch images");
       setShowModal(true);

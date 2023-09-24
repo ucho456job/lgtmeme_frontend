@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Button from "@/components/atoms/Button/Button";
 import Svg from "@/components/atoms/Svg/Svg";
+import { FetchImage, IMAGE_SIZE } from "@/constants/image";
 import { css } from "@@/styled-system/css";
 
 type Props = {
@@ -25,8 +26,8 @@ const ImageCard = ({ css, image, isFavarite, onClickCopy, onClickFavarite }: Pro
           <Image
             className={imageCss}
             src={image.url}
-            height={300}
-            width={300}
+            height={IMAGE_SIZE}
+            width={IMAGE_SIZE}
             alt="LGTM"
             priority
           />

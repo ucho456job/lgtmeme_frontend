@@ -2,6 +2,7 @@ import Link from "next/link";
 import ImageGallery from "@/app/ImageGallery";
 import Button from "@/components/atoms/Button/Button";
 import Svg from "@/components/atoms/Svg/Svg";
+import { ADD_PAGE_ENDPOINT } from "@/constants/endpoints";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
@@ -11,7 +12,7 @@ export default async function Home() {
   return (
     <>
       <ImageGallery css={imageGalleryCss} initImages={images} />
-      <Link href="/add">
+      <Link href={ADD_PAGE_ENDPOINT}>
         <Button css={buttonCss} icon={<Svg icon="plus" color="white" />}>
           Create image
         </Button>

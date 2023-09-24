@@ -1,5 +1,10 @@
 import Link from "next/link";
 import Button from "@/components/atoms/Button/Button";
+import {
+  HOME_PAGE_ENDPOINT,
+  PRIVACY_POLICY_ENDPOINT,
+  TERMS_OF_SERVICE_ENDPOINT,
+} from "@/constants/endpoints";
 import packageJson from "@@/package.json";
 import { css } from "@@/styled-system/css";
 
@@ -7,13 +12,13 @@ const Footer = () => {
   return (
     <footer className={footerCss}>
       <div className={buttonsCss}>
-        <Link href="/">
+        <Link href={HOME_PAGE_ENDPOINT}>
           <Button visual="text">Home</Button>
         </Link>
-        <Link href="/terms-of-service">
+        <Link href={TERMS_OF_SERVICE_ENDPOINT}>
           <Button visual="text">Terms of service</Button>
         </Link>
-        <Link href="/privacy-policy">
+        <Link href={PRIVACY_POLICY_ENDPOINT}>
           <Button visual="text">Privacy policy</Button>
         </Link>
       </div>
