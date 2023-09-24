@@ -178,23 +178,6 @@ const ImageEditor = ({ css }: Props) => {
     movingText(newLeft, newTop);
   };
 
-  /** When moving the text, prevent scrolling */
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener(
-        "touchmove",
-        (e) => {
-          e.preventDefault();
-        },
-        { passive: false },
-      );
-    } else {
-      window.removeEventListener("touchmove", (e) => {
-        e.preventDefault();
-      });
-    }
-  }, [isDragging]);
-
   /** Stop text move */
   const handleStopTextMove = () => setIsDragging(false);
 
