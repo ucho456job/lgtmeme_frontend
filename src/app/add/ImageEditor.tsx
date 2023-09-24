@@ -20,6 +20,7 @@ import {
   FONT_FAMILY_OPTIONS,
 } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
+import copyClipboard from "@/utils/copyClipboard";
 import { css } from "@@/styled-system/css";
 
 type TextStyle = {
@@ -179,11 +180,9 @@ const ImageEditor = ({ css }: Props) => {
 
   const handletoggleChecked = () => setChecked((prev) => !prev);
 
-  const successModalMessage = "Success create LGTM image and copied to clipboard!";
   const handleCreateImage = async () => {
     try {
       setIsUpload(true);
-      setModalMessage("");
       const diff = SIZE_MAP.get(textStyle.fontSize)?.diff;
       if (!canvasRef.current || !diff) return;
       const canvas = canvasRef.current;
@@ -199,22 +198,19 @@ const ImageEditor = ({ css }: Props) => {
       const image = canvas.toDataURL("image/webp");
       const service = new ImageService();
       const imageUrl = await service.postImage({ image, keyword });
-      await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
-      setModalMessage(successModalMessage);
+      await copyClipboard(imageUrl);
+      setModalMessage("Success create image and copied to clipboard!");
     } catch {
-      setModalMessage("Failed create LGTM image.");
+      setModalMessage("Failed to create image");
     } finally {
       setIsUpload(false);
       setShowModal(true);
     }
   };
 
-  const handleCloseModal = () => {
-    if (modalMessage === successModalMessage) {
-      window.location.href = process.env.NEXT_PUBLIC_APP_URL;
-    } else {
-      setShowModal(false);
-    }
+  const handleCloseModal = async () => {
+    setShowModal(false);
+    window.location.href = process.env.NEXT_PUBLIC_APP_URL;
   };
 
   return (

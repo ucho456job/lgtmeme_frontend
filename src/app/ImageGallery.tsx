@@ -10,6 +10,7 @@ import ImageCard from "@/components/molecules/ImageCard/ImageCard";
 import Modal from "@/components/molecules/Modal/Modal";
 import { FetchImage, MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
+import copyClipboard from "@/utils/copyClipboard";
 import { css } from "@@/styled-system/css";
 
 type Props = {
@@ -54,7 +55,6 @@ const ImageGallery = ({ css, initImages }: Props) => {
   ) => {
     try {
       setIsLoading(true);
-      setModalMessage("");
       setPage(page);
       setActiveTabId(activeTabId);
       const service = new ImageService();
@@ -80,8 +80,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
 
   const handleCopyToClipboard = async (image: FetchImage) => {
     try {
-      setModalMessage("");
-      await navigator.clipboard.writeText(`![LGTM](${image.url})`);
+      await copyClipboard(image.url);
       const service = new ImageService();
       service.patchImage(image.id);
       setModalMessage("Copied to clipboard!");
