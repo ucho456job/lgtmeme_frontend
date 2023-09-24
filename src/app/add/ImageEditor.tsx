@@ -241,22 +241,26 @@ const ImageEditor = ({ css }: Props) => {
           <InputFile css={inputFileCss} onChange={handleImageUpload} />
         </div>
         <div>
-          <Form css={formCss} label="Size">
+          <Form css={topFormCss} label="Size">
             <SelectBox
               value={textStyle.fontSize}
               options={TEXT_SIZE_OPTIONS}
               onChange={handleTextSizeChange}
             />
           </Form>
-          <Form label="Font family">
+          <Form css={formCss} label="Font family">
             <SelectBox
               value={textStyle.fontFamily}
               options={FONT_FAMILY_OPTIONS}
               onChange={handleFontFamilyChange}
             />
           </Form>
-          <Form label="Color">
-            <InputColor value={textStyle.color} onChange={handleTextColorChange} />
+          <Form css={formCss} label="Color">
+            <InputColor
+              css={inputColorCss}
+              value={textStyle.color}
+              onChange={handleTextColorChange}
+            />
           </Form>
           <Form css={bottomFormCss} label="Keyword" isUnderLine>
             <InputText
@@ -303,7 +307,7 @@ const ImageEditor = ({ css }: Props) => {
 const gridCss = css({
   display: "grid",
   gap: "10px",
-  height: "740px",
+  height: "760px",
   md: { height: "370px", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr" },
 });
 const borderCss = css({
@@ -322,16 +326,11 @@ const lgtmCss = css({
   _active: { cursor: "grabbing" },
 });
 const inputFileCss = css({ textAlign: "center" });
-const formCss = css({ marginTop: "3" });
-const bottomFormCss = css({ marginBottom: "3" });
-const inputTextCss = css({
-  width: "90%",
-  marginX: "auto",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100%",
-});
+const topFormCss = css({ marginTop: "3", height: "50px" });
+const formCss = css({ height: "50px" });
+const bottomFormCss = css({ marginBottom: "3", height: "50px" });
+const inputColorCss = css({ height: "50px" });
+const inputTextCss = css({ width: "90%", marginX: "auto" });
 const uploadButtonCss = css({ marginTop: "4", textAlign: "center" });
 const termsOfServiceLinkWrapCss = css({ textAlign: "center" });
 const termsOfServiceLinkCss = css({
