@@ -31,7 +31,7 @@ const TextBox = ({ css, value, placeholder, maxLength, icon, onChange, onEnterPr
           type="text"
           maxLength={maxLength || MAX_KEYWORD_LENGTH}
           value={value}
-          className={textBoxCss({ icon: icon ? true : false })}
+          className={textBoxRecipe({ icon: icon ? true : false })}
           placeholder={placeholder}
           onChange={handleOnChange}
           onKeyDown={handleKeyDown}
@@ -45,8 +45,9 @@ const TextBox = ({ css, value, placeholder, maxLength, icon, onChange, onEnterPr
 };
 
 const textBoxWrapCss = css({ position: "relative", width: "100%" });
-const textBoxCss = cva({
+const textBoxRecipe = cva({
   base: {
+    display: "block",
     width: "100%",
     height: "32px",
     paddingY: "2",
