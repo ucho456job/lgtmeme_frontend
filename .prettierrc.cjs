@@ -14,6 +14,7 @@ module.exports = {
     "<THIRD_PARTY_MODULES>",
     "^@/app",
     "^@/components",
+    "^@/constants",
     "^@/services",
     "^@/styles",
     "^@/types",

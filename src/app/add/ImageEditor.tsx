@@ -11,10 +11,16 @@ import SelectBox from "@/components/atoms/SelectBox/SelectBox";
 import Svg from "@/components/atoms/Svg/Svg";
 import Form from "@/components/molecules/Form/Form";
 import Modal from "@/components/molecules/Modal/Modal";
+import { TERMS_OF_SERVICE_ENDPOINT } from "@/constants/endpoints";
+import {
+  IMAGE_SIZE,
+  SIZE_MAP,
+  SizeMapKey,
+  TEXT_SIZE_OPTIONS,
+  FONT_FAMILY_OPTIONS,
+} from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
-
-type SizeMapKey = 36 | 60 | 84;
 
 type TextStyle = {
   left: number;
@@ -26,16 +32,6 @@ type TextStyle = {
   lineHeight: string;
   fontFamily: string;
 };
-
-type SizeMap = Map<
-  SizeMapKey,
-  {
-    size: SizeMapKey;
-    width: number;
-    height: number;
-    diff: number;
-  }
->;
 
 type Props = {
   css?: string;
@@ -74,8 +70,8 @@ const ImageEditor = ({ css }: Props) => {
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
         if (ctx) {
-          const maxWidth = 300;
-          const maxHeight = 300;
+          const maxWidth = IMAGE_SIZE;
+          const maxHeight = IMAGE_SIZE;
           let canvasWidth = img.width;
           let canvasHeight = img.height;
           if (img.width > maxWidth || img.height > maxHeight) {
@@ -103,18 +99,8 @@ const ImageEditor = ({ css }: Props) => {
     reader.readAsDataURL(file);
   };
 
-  const textSizeOptions = [
-    { value: 36, label: "Small" },
-    { value: 60, label: "Medium" },
-    { value: 84, label: "Large" },
-  ];
-  const sizeMap: SizeMap = new Map([
-    [36, { size: 36, width: 102, height: 36, diff: 30 }],
-    [60, { size: 60, width: 169, height: 60, diff: 50 }],
-    [84, { size: 84, width: 235, height: 84, diff: 71 }],
-  ]);
   const handleTextSizeChange = (value: string) => {
-    const map = sizeMap.get(Number(value) as SizeMapKey)!;
+    const map = SIZE_MAP.get(Number(value) as SizeMapKey)!;
     setTextStyle((prev) => ({
       ...prev,
       fontSize: map.size,
@@ -128,11 +114,6 @@ const ImageEditor = ({ css }: Props) => {
     setTextStyle((prev) => ({ ...prev, color: value }));
   };
 
-  const fontFamilyOptions = [
-    { value: "Arial", label: "Arial" },
-    { value: "Verdana", label: "Verdana" },
-    { value: "Times New Roman", label: "Times New Roman" },
-  ];
   const handleFontFamilyChange = (value: string) => {
     setTextStyle((prev) => ({ ...prev, fontFamily: value }));
   };
@@ -202,7 +183,7 @@ const ImageEditor = ({ css }: Props) => {
   const handleCreateImage = async () => {
     try {
       setIsUpload(true);
-      const diff = sizeMap.get(textStyle.fontSize)?.diff;
+      const diff = SIZE_MAP.get(textStyle.fontSize)?.diff;
       if (canvasRef.current && diff) {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext("2d");
@@ -263,14 +244,14 @@ const ImageEditor = ({ css }: Props) => {
           <Form css={formCss} label="Size">
             <SelectBox
               value={textStyle.fontSize}
-              options={textSizeOptions}
+              options={TEXT_SIZE_OPTIONS}
               onChange={handleTextSizeChange}
             />
           </Form>
           <Form label="Font family">
             <SelectBox
               value={textStyle.fontFamily}
-              options={fontFamilyOptions}
+              options={FONT_FAMILY_OPTIONS}
               onChange={handleFontFamilyChange}
             />
           </Form>
@@ -288,7 +269,7 @@ const ImageEditor = ({ css }: Props) => {
           <div className={termsOfServiceLinkWrapCss}>
             <a
               className={termsOfServiceLinkCss}
-              href={process.env.NEXT_PUBLIC_APP_URL + "/" + "terms-of-service"}
+              href={process.env.NEXT_PUBLIC_APP_URL + TERMS_OF_SERVICE_ENDPOINT}
               target="_blank"
             >
               Please agree to the terms of use
@@ -306,7 +287,6 @@ const ImageEditor = ({ css }: Props) => {
             <Button
               css={uploadButtonCss}
               icon={<Svg icon="upload" color="white" size="lg" />}
-              // size="lg"
               disabled={imageInfo.url === "" || !checked}
               onClick={handleCreateImage}
             >
@@ -326,7 +306,6 @@ const gridCss = css({
   height: "740px",
   md: { height: "370px", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr" },
 });
-
 const borderCss = css({
   marginTop: "3",
   border: "2px dashed #737373",

@@ -1,6 +1,6 @@
 import { ActiveTabId } from "@/app/ImageGallery";
-
-const IMAGES_ENDPOINT = "/api/images";
+import { IMAGES_API_ENDPOINT } from "@/constants/endpoints";
+import { FetchImage } from "@/constants/image";
 
 type Method = "GET" | "POST" | "PATCH";
 
@@ -56,18 +56,22 @@ export class ImageService {
     const { page = 0, keyword = "", activeTabId = "timeLine", favariteImageIds = [] } = queryOption;
     const query = { page, keyword, activeTabId, favariteImageIds };
     const config = this.createConfig("GET");
-    const res = await this.sendRequest<{ images: FetchImage[] }>(IMAGES_ENDPOINT, config, query);
+    const res = await this.sendRequest<{ images: FetchImage[] }>(
+      IMAGES_API_ENDPOINT,
+      config,
+      query,
+    );
     return res.images;
   }
 
   async postImage(body: Record<string, string>) {
     const config = this.createConfig("POST", body);
-    const res = await this.sendRequest<{ imageUrl: string }>(IMAGES_ENDPOINT, config);
+    const res = await this.sendRequest<{ imageUrl: string }>(IMAGES_API_ENDPOINT, config);
     return res.imageUrl;
   }
 
   async patchImage(id: string, body?: Record<string, number>) {
     const config = this.createConfig("PATCH", body);
-    await this.sendRequest(IMAGES_ENDPOINT + "/" + id, config);
+    await this.sendRequest(IMAGES_API_ENDPOINT + "/" + id, config);
   }
 }

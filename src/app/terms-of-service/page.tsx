@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PRIVACY_POLICY_ENDPOINT, TWITTER_LINK_ENDPOINT } from "@/constants/endpoints";
 import { css } from "@@/styled-system/css";
 
 const TermsOfService = () => {
@@ -35,7 +36,7 @@ const TermsOfService = () => {
         <p>
           4.1.
           利用者のプライバシーについては、運営者のプライバシーポリシーに従います。プライバシーポリシーについては
-          <Link className={linkCss} href="/privacy-policy">
+          <Link className={linkCss} href={PRIVACY_POLICY_ENDPOINT}>
             こちら
           </Link>
           を参照してください。
@@ -56,8 +57,8 @@ const TermsOfService = () => {
           本サービスに関する問い合わせ、通報、およびその他の連絡事項については、以下の連絡先にご連絡ください。
         </p>
         <br />
-        <Link className={linkCss} href="https://twitter.com/ucho456job">
-          https://twitter.com/ucho456job
+        <Link className={linkCss} href={TWITTER_LINK_ENDPOINT}>
+          {TWITTER_LINK_ENDPOINT}
         </Link>
       </div>
     </div>

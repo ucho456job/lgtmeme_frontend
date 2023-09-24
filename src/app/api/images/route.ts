@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { decode } from "base64-arraybuffer";
 import { v4 as uuid } from "uuid";
 import { ActiveTabId } from "@/app/ImageGallery";
+import { STORAGE_API_ENDPOINT } from "@/constants/endpoints";
+import { MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
 import prisma from "@/utils/client";
 import { uploadStorage } from "@/utils/supabase";
-
-const LIMIT = 9;
 
 export const GET = async (req: Request) => {
   try {
@@ -15,12 +15,12 @@ export const GET = async (req: Request) => {
     const keyword = String(searchParams.get("keyword"));
     const activeTabId = searchParams.get("activeTabId") as ActiveTabId;
     const favariteImageIds = (searchParams.get("favariteImageIds") || "").split(",");
-    const skip = page * LIMIT;
+    const skip = page * MAX_IMAGES_FETCH_COUNT;
 
     const images = await prisma.image.findMany({
       select: { id: true, url: true },
       skip,
-      take: LIMIT,
+      take: MAX_IMAGES_FETCH_COUNT,
       orderBy:
         activeTabId === "popular"
           ? [{ usedCount: "desc" }, { createdAt: "desc" }]
@@ -59,7 +59,7 @@ export const POST = async (req: Request) => {
       select: { url: true },
       data: {
         id,
-        url: `${process.env.SUPABASE_URL}/storage/v1/object/public/images/${id}`,
+        url: process.env.SUPABASE_URL + STORAGE_API_ENDPOINT + "/" + id,
         keyword: payload.keyword,
       },
     });
