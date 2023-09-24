@@ -126,6 +126,11 @@ describe("ImageGallery", () => {
       const clipboardWriteTextMock = jest.fn();
       ImageService.prototype.patchImage = jest.fn(async () => {});
       Object.assign(navigator, {
+        permissions: {
+          query: () => {
+            return { state: "granted" };
+          },
+        },
         clipboard: {
           writeText: clipboardWriteTextMock,
         },
@@ -140,10 +145,11 @@ describe("ImageGallery", () => {
       expect(modalMessage).toBeInTheDocument();
     });
     test("When copying to clipboard fails, it should show a failure modal", async () => {
-      ImageService.prototype.patchImage = jest.fn(async () => {});
       Object.assign(navigator, {
-        clipboard: {
-          writeText: jest.fn(() => Promise.reject(new Error("Failed to copy"))),
+        permissions: {
+          query: () => {
+            return { state: "denied" };
+          },
         },
       });
       render(<ImageGallery initImages={initImages} />);

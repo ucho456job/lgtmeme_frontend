@@ -198,8 +198,11 @@ const ImageEditor = ({ css }: Props) => {
       const image = canvas.toDataURL("image/webp");
       const service = new ImageService();
       const imageUrl = await service.postImage({ image, keyword });
-      await copyClipboard(imageUrl);
-      setModalMessage("Success create image and copied to clipboard!");
+      const result = await copyClipboard(imageUrl);
+      const message = result
+        ? "Success create image and copied to clipboard!"
+        : "Success create image";
+      setModalMessage(message);
     } catch {
       setModalMessage("Failed to create image");
     } finally {

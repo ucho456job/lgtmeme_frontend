@@ -80,10 +80,14 @@ const ImageGallery = ({ css, initImages }: Props) => {
 
   const handleCopyToClipboard = async (image: FetchImage) => {
     try {
-      await copyClipboard(image.url);
-      const service = new ImageService();
-      service.patchImage(image.id);
-      setModalMessage("Copied to clipboard!");
+      const result = await copyClipboard(image.url);
+      if (result) {
+        const service = new ImageService();
+        service.patchImage(image.id);
+        setModalMessage("Copied to clipboard!");
+      } else {
+        throw new Error();
+      }
     } catch {
       setModalMessage("Failed to copy to clipboard");
     } finally {
