@@ -35,6 +35,7 @@ const checkCss = css({
   border: "1px solid #cccccc",
   borderRadius: "sm",
   cursor: "pointer",
+  paddingLeft: "3px",
 });
 const labelCss = css({ height: "22px", marginLeft: "2", cursor: "pointer" });
 
