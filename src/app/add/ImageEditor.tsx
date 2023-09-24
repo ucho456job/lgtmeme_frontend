@@ -241,7 +241,15 @@ const ImageEditor = ({ css }: Props) => {
           <InputFile css={inputFileCss} onChange={handleImageUpload} />
         </div>
         <div>
-          <Form css={topFormCss} label="Size">
+          <Form css={topFormCss} label="Keyword">
+            <InputText
+              css={inputTextCss}
+              value={keyword}
+              placeholder="ex: anime, human"
+              onChange={setKeyword}
+            />
+          </Form>
+          <Form label="Size">
             <SelectBox
               value={textStyle.fontSize}
               options={TEXT_SIZE_OPTIONS}
@@ -255,19 +263,11 @@ const ImageEditor = ({ css }: Props) => {
               onChange={handleFontFamilyChange}
             />
           </Form>
-          <Form label="Color">
+          <Form css={bottomFormCss} label="Color" isUnderLine>
             <InputColor
               css={inputColorCss}
               value={textStyle.color}
               onChange={handleTextColorChange}
-            />
-          </Form>
-          <Form css={bottomFormCss} label="Keyword" isUnderLine>
-            <InputText
-              css={inputTextCss}
-              value={keyword}
-              placeholder="ex: anime, human"
-              onChange={setKeyword}
             />
           </Form>
           <div className={termsOfServiceLinkWrapCss}>
