@@ -183,24 +183,24 @@ const ImageEditor = ({ css }: Props) => {
   const handleCreateImage = async () => {
     try {
       setIsUpload(true);
+      setModalMessage("");
       const diff = SIZE_MAP.get(textStyle.fontSize)?.diff;
-      if (canvasRef.current && diff) {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        ctx.fillStyle = textStyle.color;
-        ctx.font = `${textStyle.fontSize}px ${textStyle.fontFamily}`;
-        const text = "LGTM";
-        const textX = textStyle.left;
-        const textY = textStyle.top + diff;
-        ctx.fillText(text, textX, textY);
+      if (!canvasRef.current || !diff) return;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.fillStyle = textStyle.color;
+      ctx.font = `${textStyle.fontSize}px ${textStyle.fontFamily}`;
+      const text = "LGTM";
+      const textX = textStyle.left;
+      const textY = textStyle.top + diff;
+      ctx.fillText(text, textX, textY);
 
-        const image = canvas.toDataURL("image/webp");
-        const service = new ImageService();
-        const imageUrl = await service.postImage({ image, keyword });
-        await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
-        setModalMessage(successModalMessage);
-      }
+      const image = canvas.toDataURL("image/webp");
+      const service = new ImageService();
+      const imageUrl = await service.postImage({ image, keyword });
+      await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
+      setModalMessage(successModalMessage);
     } catch {
       setModalMessage("Failed create LGTM image.");
     } finally {
