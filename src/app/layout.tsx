@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     "LGTMemeはシンプルなLGTM（Looks Good To Me）画像作成サービスです。お気に入りの画像に素早くLGTMの文字を挿入してMarkdownをコピーできます。単調なコードレビューや承認プロセスにユーモアのあるLGTM画像を使って、華やかにしましょう。",
   manifest: "/manifest.webmanifest",
   icons: [{ rel: "icon", url: Favicon.src }],
+  themeColor: "#292524",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
