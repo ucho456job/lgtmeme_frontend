@@ -16,6 +16,7 @@ model Image {
   keyword   String   @default("") @db.VarChar(50)
   usedCount Int      @default(0) @map("used_count")
   reported  Boolean  @default(false)
+  confirmed Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("images")
