@@ -10,7 +10,7 @@ type Props = {
   css?: string;
   image: Image;
   isFavarite: boolean;
-  onClickCopy: Function;
+  onClickCopy: () => void;
   onClickFavarite: (isFavarite: boolean) => void;
 };
 
