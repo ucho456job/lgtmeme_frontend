@@ -25,8 +25,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
   const [page, setPage] = useState(0);
   const [isFull, setIsFull] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [modal, setModal] = useState({ message: "", show: false });
 
   useEffect(() => {
     setImages(initImages);
@@ -66,23 +65,32 @@ const ImageGallery = ({ css, initImages }: Props) => {
       }
       if (resImages.length < MAX_IMAGES_FETCH_COUNT) setIsFull(true);
     } catch (error) {
-      setModalMessage("Failed to fetch images");
-      setShowModal(true);
+      setModal({ message: "Failed to get images.", show: true });
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleClickTab = (id: string) => {
+    setIsFull(false);
+    setImages([]);
+    handleFetchImages(images, 0, keyword, id as ActiveTabId, favariteImageIds);
+  };
+
   const handleSetKeyword = (value: string) => setKeyword(value);
+
+  const handlePressEnter = () => {
+    setIsFull(false);
+    setImages([]);
+    handleFetchImages(images, 0, keyword, activeTabId as ActiveTabId, favariteImageIds);
+  };
 
   const handleCopyToClipboard = async (image: Image) => {
     try {
       await navigator.clipboard.writeText(`![LGTM](${image.url})`);
-      setModalMessage("Copied to clipboard!");
+      setModal({ message: "Copied to clipboard!", show: true });
     } catch {
-      setModalMessage("Failed to copy to clipboard");
-    } finally {
-      setShowModal(true);
+      setModal({ message: "Failed to copy to clipboard.", show: true });
     }
     const service = new ImageService();
     service.patchImage(image.id);
@@ -97,31 +105,18 @@ const ImageGallery = ({ css, initImages }: Props) => {
     setFavariteImageIds(newFavariteImageIds);
   };
 
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = () => setModal({ message: "", show: false });
 
   return (
     <div className={css}>
-      <Tabs
-        css={tabCss}
-        tabs={tabs}
-        value={activeTabId}
-        onClick={(id: string) => {
-          setIsFull(false);
-          setImages([]);
-          handleFetchImages(images, 0, keyword, id as ActiveTabId, favariteImageIds);
-        }}
-      />
+      <Tabs css={tabCss} tabs={tabs} value={activeTabId} onClick={handleClickTab} />
       <InputText
         css={textBoxCss}
         value={keyword}
         placeholder="Keyword"
         icon={<Svg icon="search" />}
         onChange={handleSetKeyword}
-        onEnterPress={() => {
-          setIsFull(false);
-          setImages([]);
-          handleFetchImages(images, 0, keyword, activeTabId as ActiveTabId, favariteImageIds);
-        }}
+        onEnterPress={handlePressEnter}
       />
       <div className={imageCardsCss}>
         {images.map((i) => (
@@ -155,7 +150,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
           See more
         </Button>
       )}
-      <Modal message={modalMessage} showModal={showModal} onClick={handleCloseModal} />
+      <Modal {...modal} onClick={handleCloseModal} />
     </div>
   );
 };

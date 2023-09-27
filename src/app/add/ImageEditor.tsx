@@ -38,8 +38,6 @@ const ImageEditor = ({ css }: Props) => {
   const [dragStartY, setDragStartY] = useState(0);
   const [isUpload, setIsUpload] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const handleImageUpload = (file: File) => {
@@ -162,6 +160,7 @@ const ImageEditor = ({ css }: Props) => {
 
   const handletoggleChecked = () => setChecked((prev) => !prev);
 
+  const [modal, setModal] = useState({ message: "", show: false });
   const handleCreateImage = async () => {
     try {
       setIsUpload(true);
@@ -182,20 +181,18 @@ const ImageEditor = ({ css }: Props) => {
       const imageUrl = await service.postImage({ image, keyword });
       try {
         await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
-        setModalMessage("Success create image and copied to clipboard!");
+        setModal({ message: "Success create image and copied to clipboard!", show: true });
       } catch {
-        setModalMessage("Success create image!");
+        setModal({ message: "Success create image!", show: true });
       }
     } catch {
-      setModalMessage("Failed to create image");
+      setModal({ message: "Failed to create image.", show: true });
     } finally {
       setIsUpload(false);
-      setShowModal(true);
     }
   };
 
   const handleCloseModal = async () => {
-    setShowModal(false);
     window.location.href = process.env.NEXT_PUBLIC_APP_URL;
   };
 
@@ -281,7 +278,7 @@ const ImageEditor = ({ css }: Props) => {
           )}
         </div>
       </div>
-      <Modal message={modalMessage} showModal={showModal} onClick={handleCloseModal} />
+      <Modal {...modal} onClick={handleCloseModal} />
     </div>
   );
 };

@@ -4,14 +4,14 @@ import { css } from "@@/styled-system/css";
 type Props = {
   css?: string;
   message: string;
-  showModal: boolean;
+  show: boolean;
   onClick: () => void;
 };
 
-const Modal = ({ css, message, showModal, onClick }: Props) => {
+const Modal = ({ css, message, show, onClick }: Props) => {
   const handleClick = () => onClick();
   return (
-    showModal && (
+    show && (
       <div className={css}>
         <div className={backgroundCss}>
           <div className={modalCss}>
