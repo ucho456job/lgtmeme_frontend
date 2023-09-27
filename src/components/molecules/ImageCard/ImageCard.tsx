@@ -3,12 +3,12 @@
 import Image from "next/image";
 import Button from "@/components/atoms/Button/Button";
 import Svg from "@/components/atoms/Svg/Svg";
-import { FetchImage, IMAGE_SIZE } from "@/constants/image";
+import { IMAGE_SIZE } from "@/constants/image";
 import { css } from "@@/styled-system/css";
 
 type Props = {
   css?: string;
-  image: FetchImage;
+  image: Image;
   isFavarite: boolean;
   onClickCopy: Function;
   onClickFavarite: (isFavarite: boolean) => void;

@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useRef } from "react";
+import { useRef } from "react";
 import { MAX_KEYWORD_LENGTH } from "@/constants/image";
 import { css, cva } from "@@/styled-system/css";
 
@@ -14,10 +14,10 @@ type Props = {
 
 const TextBox = ({ css, value, placeholder, maxLength, icon, onChange, onEnterPress }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && inputRef.current) {
       const isIMEActive = inputRef.current.getAttribute("composition") === "true";
       if (!isIMEActive && onEnterPress) onEnterPress();
