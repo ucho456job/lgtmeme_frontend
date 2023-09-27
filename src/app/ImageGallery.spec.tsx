@@ -109,7 +109,7 @@ describe("ImageGallery", () => {
       const afterSeeMoreButton = screen.getByRole("button", { name: "See more" });
       expect(afterSeeMoreButton).toHaveAttribute("disabled");
     });
-    test("When failed to fetch images, it should show a failure modal", async () => {
+    test("When failed to get images, it should show a failure modal", async () => {
       ImageService.prototype.fetchImages = jest.fn().mockRejectedValue(new Error());
       render(<ImageGallery initImages={initImages} />);
 
@@ -119,7 +119,7 @@ describe("ImageGallery", () => {
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       await userEvent.click(seeMoreButton);
 
-      const modalMessage = screen.getByText("Failed to fetch images");
+      const modalMessage = screen.getByText("Failed to get images.");
       expect(modalMessage).toBeInTheDocument();
     });
     test("When copying to clipboard succeeds, it should show a success modal", async () => {
@@ -151,7 +151,7 @@ describe("ImageGallery", () => {
       const copyButton = screen.getAllByRole("button")[0];
       await userEvent.click(copyButton);
 
-      const modalMessage = screen.getByText("Failed to copy to clipboard");
+      const modalMessage = screen.getByText("Failed to copy to clipboard.");
       expect(modalMessage).toBeInTheDocument();
     });
     test("When press favarite button, it will be added to favorites", async () => {
