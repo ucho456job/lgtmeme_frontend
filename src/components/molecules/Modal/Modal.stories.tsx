@@ -12,6 +12,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     message: "Success! Create LGTM image!",
-    showModal: true,
+    show: true,
   },
 };

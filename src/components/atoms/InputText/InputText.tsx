@@ -6,13 +6,12 @@ type Props = {
   css?: string;
   value?: string;
   placeholder?: string;
-  maxLength?: number;
   icon?: JSX.Element;
   onChange: (value: string) => void;
-  onEnterPress?: Function;
+  onEnterPress?: () => void;
 };
 
-const TextBox = ({ css, value, placeholder, maxLength, icon, onChange, onEnterPress }: Props) => {
+const TextBox = ({ css, value, placeholder, icon, onChange, onEnterPress }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -29,7 +28,7 @@ const TextBox = ({ css, value, placeholder, maxLength, icon, onChange, onEnterPr
         <input
           ref={inputRef}
           type="text"
-          maxLength={maxLength || MAX_KEYWORD_LENGTH}
+          maxLength={MAX_KEYWORD_LENGTH}
           value={value}
           className={textBoxRecipe({ icon: icon ? true : false })}
           placeholder={placeholder}
