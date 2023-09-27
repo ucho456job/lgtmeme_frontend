@@ -36,7 +36,7 @@ const ImageCard = ({ css, image, isFavarite, onClickCopy, onClickFavarite }: Pro
           <Button
             css={buttonCss}
             size="sm"
-            icon={<Svg icon="copy" color="white" size="md" />}
+            icon={<Svg icon="copy" color="white" />}
             onClick={handleClickCopy}
           >
             Copy
@@ -45,14 +45,7 @@ const ImageCard = ({ css, image, isFavarite, onClickCopy, onClickFavarite }: Pro
             css={buttonCss}
             size="sm"
             color="lightPink"
-            icon={
-              <Svg
-                icon="heart"
-                color="pink"
-                size="md"
-                fillStyle={isFavarite ? "solid" : "outline"}
-              />
-            }
+            icon={<Svg icon="heart" color="pink" fillStyle={isFavarite ? "solid" : "outline"} />}
             onClick={handleClickFavarite}
           >
             Favorite
@@ -61,7 +54,7 @@ const ImageCard = ({ css, image, isFavarite, onClickCopy, onClickFavarite }: Pro
             css={buttonCss}
             size="sm"
             color="yellow"
-            icon={<Svg icon="flag" size="md" />}
+            icon={<Svg icon="flag"/>}
             onClick={handleClickReport}
           >
             Report

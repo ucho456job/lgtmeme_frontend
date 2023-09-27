@@ -6,7 +6,7 @@ type Props = {
   css?: string;
   icon: Icon;
   color?: "black" | "white" | "pink";
-  size?: "xs" | "sm" | "md" | "lg";
+  size?: "md" | "lg";
   fillStyle?: "solid" | "outline";
 };
 
