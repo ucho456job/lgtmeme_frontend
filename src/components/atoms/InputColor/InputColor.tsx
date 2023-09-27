@@ -1,4 +1,3 @@
-import { ChangeEvent } from "react";
 import { css } from "@@/styled-system/css";
 
 type Props = {
@@ -8,7 +7,7 @@ type Props = {
 };
 
 const ColorInput = ({ css, value, onChange }: Props) => {
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
   return (

@@ -12,7 +12,7 @@ export const PATCH = async (req: Request) => {
         data: { usedCount: image.usedCount + 1 },
       });
     }
-    return NextResponse.json({}, { status: 200 });
+    return NextResponse.json({});
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "PATCH request failed";
     return NextResponse.json({ errorMessage }, { status: 500 });

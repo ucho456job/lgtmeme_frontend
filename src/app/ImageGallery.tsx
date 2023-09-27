@@ -8,19 +8,17 @@ import Svg from "@/components/atoms/Svg/Svg";
 import Tabs from "@/components/atoms/Tabs/Tabs";
 import ImageCard from "@/components/molecules/ImageCard/ImageCard";
 import Modal from "@/components/molecules/Modal/Modal";
-import { FetchImage, MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
+import { MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
 type Props = {
   css?: string;
-  initImages: FetchImage[];
+  initImages: Image[];
 };
 
-export type ActiveTabId = "timeLine" | "popular" | "favorite";
-
 const ImageGallery = ({ css, initImages }: Props) => {
-  const [images, setImages] = useState<FetchImage[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
   const [favariteImageIds, setFavariteImageIds] = useState<string[]>([]);
   const [activeTabId, setActiveTabId] = useState("timeLine");
   const [keyword, setKeyword] = useState("");
@@ -46,7 +44,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
   ];
 
   const handleFetchImages = async (
-    images: FetchImage[],
+    images: Image[],
     page: number,
     keyword: string,
     activeTabId: ActiveTabId,
@@ -77,7 +75,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
 
   const handleSetKeyword = (value: string) => setKeyword(value);
 
-  const handleCopyToClipboard = async (image: FetchImage) => {
+  const handleCopyToClipboard = async (image: Image) => {
     try {
       await navigator.clipboard.writeText(`![LGTM](${image.url})`);
       setModalMessage("Copied to clipboard!");
@@ -90,7 +88,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
     service.patchImage(image.id);
   };
 
-  const handleToggleFavarite = (isFavarite: boolean, image: FetchImage) => {
+  const handleToggleFavarite = (isFavarite: boolean, image: Image) => {
     const newIsFavarite = !isFavarite;
     const newFavariteImageIds = newIsFavarite
       ? [...favariteImageIds, image.id]

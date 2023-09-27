@@ -12,26 +12,9 @@ import Svg from "@/components/atoms/Svg/Svg";
 import Form from "@/components/molecules/Form/Form";
 import Modal from "@/components/molecules/Modal/Modal";
 import { TERMS_OF_SERVICE_ENDPOINT } from "@/constants/endpoints";
-import {
-  IMAGE_SIZE,
-  SIZE_MAP,
-  SizeMapKey,
-  TEXT_SIZE_OPTIONS,
-  FONT_FAMILY_OPTIONS,
-} from "@/constants/image";
+import { IMAGE_SIZE, SIZE_MAP, TEXT_SIZE_OPTIONS, FONT_FAMILY_OPTIONS } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
-
-type TextStyle = {
-  left: number;
-  top: number;
-  color: string;
-  fontSize: SizeMapKey;
-  width: number;
-  height: number;
-  lineHeight: string;
-  fontFamily: string;
-};
 
 type Props = {
   css?: string;

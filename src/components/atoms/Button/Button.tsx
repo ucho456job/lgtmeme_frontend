@@ -1,5 +1,3 @@
-import { MouseEventHandler } from "react";
-import Image from "next/image";
 import { css, cva } from "@@/styled-system/css";
 
 type Props = {
@@ -11,7 +9,7 @@ type Props = {
   disabled?: boolean;
   icon?: JSX.Element;
   children?: string;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 const Button = ({ css, visual, color, size, radius, disabled, icon, children, onClick }: Props) => {

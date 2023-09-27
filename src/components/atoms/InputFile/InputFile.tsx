@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef } from "react";
+import { useRef } from "react";
 import { css } from "@@/styled-system/css";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 const FileInput = ({ css, onChange }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onChange(file);
   };
