@@ -1,5 +1,5 @@
 export class CommonService {
-  private baseUrl: string;
+  baseUrl: string;
 
   constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_APP_URL;
