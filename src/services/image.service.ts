@@ -7,7 +7,7 @@ export class ImageService extends CommonService {
       page: arg.page || 0,
       keyword: arg.keyword || "",
       activeTabId: arg.activeTabId || "timeLine",
-      favariteImageIds: arg.favariteImageIds || [],
+      favoriteImageIds: arg.favoriteImageIds || [],
     };
     const config = this.createConfig("GET");
     const res = await this.sendRequest<{ images: Image[] }>(IMAGES_API_ENDPOINT, config, query);

@@ -10,9 +10,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const commonArgs = {
-  isFavarite: false,
+  isFavorite: false,
   onClickCopy: () => alert("Click copy button!"),
-  onClickFavarite: () => alert("Click favarite button!"),
+  onClickFavorite: () => alert("Click favorite button!"),
 };
 
 export const Square: Story = {

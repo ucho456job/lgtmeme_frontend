@@ -14,9 +14,9 @@ export const GET = async (req: Request) => {
       page: Number(searchParams.get("page")),
       keyword: String(searchParams.get("keyword")),
       activeTabId: searchParams.get("activeTabId") as ActiveTabId,
-      favariteImageIds: (searchParams.get("favariteImageIds") || "").split(","),
+      favoriteImageIds: (searchParams.get("favoriteImageIds") || "").split(","),
     };
-    const { page, keyword, activeTabId, favariteImageIds } = query;
+    const { page, keyword, activeTabId, favoriteImageIds } = query;
     const skip = page * MAX_IMAGES_FETCH_COUNT;
 
     const images = await prisma.image.findMany({
@@ -29,7 +29,7 @@ export const GET = async (req: Request) => {
           : { createdAt: "desc" },
       where: {
         keyword: { contains: keyword },
-        id: activeTabId === "favorite" ? { in: favariteImageIds } : undefined,
+        id: activeTabId === "favorite" ? { in: favoriteImageIds } : undefined,
       },
     });
     const resBody: GetImageResBody = { images };

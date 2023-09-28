@@ -19,7 +19,7 @@ type Props = {
 
 const ImageGallery = ({ css, initImages }: Props) => {
   const [images, setImages] = useState<Image[]>([]);
-  const [favariteImageIds, setFavariteImageIds] = useState<string[]>([]);
+  const [favoriteImageIds, setFavoriteImageIds] = useState<string[]>([]);
   const [activeTabId, setActiveTabId] = useState("timeLine");
   const [keyword, setKeyword] = useState("");
   const [page, setPage] = useState(0);
@@ -29,10 +29,10 @@ const ImageGallery = ({ css, initImages }: Props) => {
 
   useEffect(() => {
     setImages(initImages);
-    const favariteImageIds = JSON.parse(
-      localStorage.getItem("favariteImageIds") || "[]",
+    const favoriteImageIds = JSON.parse(
+      localStorage.getItem("favoriteImageIds") || "[]",
     ) as string[];
-    setFavariteImageIds(favariteImageIds);
+    setFavoriteImageIds(favoriteImageIds);
     setIsLoading(false);
   }, [initImages]);
 
@@ -47,14 +47,14 @@ const ImageGallery = ({ css, initImages }: Props) => {
     page: number,
     keyword: string,
     activeTabId: ActiveTabId,
-    favariteImageIds: string[],
+    favoriteImageIds: string[],
   ) => {
     try {
       setIsLoading(true);
       setPage(page);
       setActiveTabId(activeTabId);
       const service = new ImageService();
-      const resImages = await service.fetchImages({ page, keyword, activeTabId, favariteImageIds });
+      const resImages = await service.fetchImages({ page, keyword, activeTabId, favoriteImageIds });
       if (page === 0) {
         setImages(resImages);
       } else {
@@ -74,7 +74,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
   const handleClickTab = (id: string) => {
     setIsFull(false);
     setImages([]);
-    handleFetchImages(images, 0, keyword, id as ActiveTabId, favariteImageIds);
+    handleFetchImages(images, 0, keyword, id as ActiveTabId, favoriteImageIds);
   };
 
   const handleSetKeyword = (value: string) => setKeyword(value);
@@ -82,7 +82,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
   const handlePressEnter = () => {
     setIsFull(false);
     setImages([]);
-    handleFetchImages(images, 0, keyword, activeTabId as ActiveTabId, favariteImageIds);
+    handleFetchImages(images, 0, keyword, activeTabId as ActiveTabId, favoriteImageIds);
   };
 
   const handleCopyToClipboard = async (image: Image) => {
@@ -96,13 +96,13 @@ const ImageGallery = ({ css, initImages }: Props) => {
     service.patchImage(image.id);
   };
 
-  const handleToggleFavarite = (isFavarite: boolean, image: Image) => {
-    const newIsFavarite = !isFavarite;
-    const newFavariteImageIds = newIsFavarite
-      ? [...favariteImageIds, image.id]
-      : favariteImageIds.filter((id) => id !== image.id);
-    localStorage.setItem("favariteImageIds", JSON.stringify(newFavariteImageIds));
-    setFavariteImageIds(newFavariteImageIds);
+  const handleToggleFavorite = (isFavorite: boolean, image: Image) => {
+    const newIsFavorite = !isFavorite;
+    const newFavoriteImageIds = newIsFavorite
+      ? [...favoriteImageIds, image.id]
+      : favoriteImageIds.filter((id) => id !== image.id);
+    localStorage.setItem("favoriteImageIds", JSON.stringify(newFavoriteImageIds));
+    setFavoriteImageIds(newFavoriteImageIds);
   };
 
   const handleCloseModal = () => setModal({ message: "", show: false });
@@ -124,9 +124,9 @@ const ImageGallery = ({ css, initImages }: Props) => {
             css={imageCardCss}
             key={i.id}
             image={i}
-            isFavarite={favariteImageIds.some((id) => id === i.id)}
+            isFavorite={favoriteImageIds.some((id) => id === i.id)}
             onClickCopy={() => handleCopyToClipboard(i)}
-            onClickFavarite={(isFavarite: boolean) => handleToggleFavarite(isFavarite, i)}
+            onClickFavorite={(isFavorite: boolean) => handleToggleFavorite(isFavorite, i)}
           />
         ))}
       </div>
@@ -143,7 +143,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
               page + 1,
               keyword,
               activeTabId as ActiveTabId,
-              favariteImageIds,
+              favoriteImageIds,
             )
           }
         >

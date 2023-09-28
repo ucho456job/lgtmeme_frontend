@@ -154,24 +154,24 @@ describe("ImageGallery", () => {
       const modalMessage = screen.getByText("Failed to copy to clipboard.");
       expect(modalMessage).toBeInTheDocument();
     });
-    test("When press favarite button, it will be added to favorites", async () => {
+    test("When press favorite button, it will be added to favorites", async () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
       render(<ImageGallery initImages={initImages} />);
-      const favariteButton = screen.getAllByRole("button")[1];
-      await userEvent.click(favariteButton);
-      expect(localStorageMock.setItem).toBeCalledWith("favariteImageIds", '["1"]');
+      const favoriteButton = screen.getAllByRole("button")[1];
+      await userEvent.click(favoriteButton);
+      expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", '["1"]');
     });
-    test("When press favarite button when it's already a favorite, it will be removed from favorites", async () => {
+    test("When press favorite button when it's already a favorite, it will be removed from favorites", async () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
       localStorageMock.getItem.mockReturnValue('["1"]');
       render(<ImageGallery initImages={initImages} />);
-      const favariteButton = screen.getAllByRole("button")[1];
-      await userEvent.click(favariteButton);
-      expect(localStorageMock.setItem).toBeCalledWith("favariteImageIds", "[]");
+      const favoriteButton = screen.getAllByRole("button")[1];
+      await userEvent.click(favoriteButton);
+      expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", "[]");
     });
   });
 });

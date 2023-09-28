@@ -38,14 +38,14 @@ type GetImageArg = {
   page?: number;
   keyword?: string;
   activeTabId?: ActiveTabId;
-  favariteImageIds?: string[];
+  favoriteImageIds?: string[];
 };
 
 type GetImageQuery = {
   page: number;
   keyword: string;
   activeTabId: ActiveTabId;
-  favariteImageIds: string[];
+  favoriteImageIds: string[];
 };
 
 type GetImageResBody = {
