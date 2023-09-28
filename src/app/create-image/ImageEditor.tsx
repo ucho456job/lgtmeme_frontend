@@ -255,7 +255,7 @@ const ImageEditor = ({ css }: Props) => {
               href={process.env.NEXT_PUBLIC_APP_URL + TERMS_OF_SERVICE_ENDPOINT}
               target="_blank"
             >
-              Please agree to the terms of use
+              Please agree to the terms of service
             </a>
           </div>
           <CheckBox

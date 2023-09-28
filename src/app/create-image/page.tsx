@@ -1,4 +1,4 @@
-import ImageEditor from "@/app/add/ImageEditor";
+import ImageEditor from "@/app/create-image/ImageEditor";
 import { css } from "@@/styled-system/css";
 
 const Add = () => {

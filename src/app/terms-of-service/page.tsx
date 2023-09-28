@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PRIVACY_POLICY_ENDPOINT, TWITTER_LINK_ENDPOINT } from "@/constants/endpoints";
-import { css } from "@@/styled-system/css";
+import { containerCss, contentCss, h1Css, h2Css, linkCss } from "@/styles/legal";
 
 const TermsOfService = () => {
   return (
@@ -29,7 +29,7 @@ const TermsOfService = () => {
         <p>3.1. 利用者は、本サービスを利用する際に、次の条件に同意し、これに従うものとします。</p>
         <p>・本サービスを悪用し、違法な行為を行わないこと。</p>
         <p>・元画像の著作権やライセンスに留意し、それに違反しないこと。</p>
-        <p>・過剰な数のリクエストを送信してサービスに負荷をかけないこと。。</p>
+        <p>・過剰な数のリクエストを送信してサービスに負荷をかけないこと。</p>
         <p>
           ・運営者が不適切と判断した画像を作成しないこと。不適切な画像は運営者の裁量で削除することがあります。
         </p>
@@ -65,14 +65,5 @@ const TermsOfService = () => {
     </div>
   );
 };
-
-const containerCss = css({ display: "flex", justifyContent: "center", padding: "5" });
-const contentCss = css({ maxWidth: "1090px", padding: 5 });
-const h1Css = css({ fontSize: "2xl", fontWeight: "bold" });
-const h2Css = css({ fontSize: "xl", fontWeight: "bold", marginTop: "5" });
-const linkCss = css({
-  color: "LIGHT_BLUE",
-  _hover: { opacity: 0.8, borderBottom: "1px solid", borderColor: "LIGHT_BLUE" },
-});
 
 export default TermsOfService;
