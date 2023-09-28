@@ -8,32 +8,32 @@ describe("ImageCard", () => {
     url: "https://placehold.jp/300x300.png",
   };
   let onClickCopyMock: jest.Mock<any, any, any>;
-  let onClickFavariteMock: jest.Mock<any, any, any>;
+  let onClickFavoriteMock: jest.Mock<any, any, any>;
   beforeEach(() => {
     onClickCopyMock = jest.fn();
-    onClickFavariteMock = jest.fn();
+    onClickFavoriteMock = jest.fn();
   });
   afterEach(() => {
     onClickCopyMock.mockReset();
-    onClickFavariteMock.mockReset();
+    onClickFavoriteMock.mockReset();
   });
   describe("Render tests", () => {
     test("Renders with default props", () => {
       render(
         <ImageCard
           image={imageData}
-          isFavarite={false}
+          isFavorite={false}
           onClickCopy={onClickCopyMock}
-          onClickFavarite={onClickFavariteMock}
+          onClickFavorite={onClickFavoriteMock}
         />,
       );
       const image = screen.getByAltText("LGTM");
       const copyButton = screen.getAllByRole("button")[0];
-      const favariteButton = screen.getAllByRole("button")[1];
+      const favoriteButton = screen.getAllByRole("button")[1];
       // const reportButton = screen.getAllByRole("button")[2];
       expect(image).toBeInTheDocument();
       expect(copyButton).toBeInTheDocument();
-      expect(favariteButton).toBeInTheDocument();
+      expect(favoriteButton).toBeInTheDocument();
       // expect(reportButton).toBeInTheDocument();
     });
   });
@@ -42,27 +42,27 @@ describe("ImageCard", () => {
       render(
         <ImageCard
           image={imageData}
-          isFavarite={false}
+          isFavorite={false}
           onClickCopy={onClickCopyMock}
-          onClickFavarite={onClickFavariteMock}
+          onClickFavorite={onClickFavoriteMock}
         />,
       );
       const copyButton = screen.getAllByRole("button")[0];
       await userEvent.click(copyButton);
       expect(onClickCopyMock).toHaveBeenCalledTimes(1);
     });
-    test("Calls onClickFavariteMock", async () => {
+    test("Calls onClickFavoriteMock", async () => {
       render(
         <ImageCard
           image={imageData}
-          isFavarite={false}
+          isFavorite={false}
           onClickCopy={onClickCopyMock}
-          onClickFavarite={onClickFavariteMock}
+          onClickFavorite={onClickFavoriteMock}
         />,
       );
-      const favariteButton = screen.getAllByRole("button")[1];
-      await userEvent.click(favariteButton);
-      expect(onClickFavariteMock).toHaveBeenCalledTimes(1);
+      const favoriteButton = screen.getAllByRole("button")[1];
+      await userEvent.click(favoriteButton);
+      expect(onClickFavoriteMock).toHaveBeenCalledTimes(1);
     });
   });
 });

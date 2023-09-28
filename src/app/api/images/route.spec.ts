@@ -22,7 +22,7 @@ describe("Image API", () => {
     test("Success: When called with initial query, it shoule return images", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
-        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favariteImageIds=",
+        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=",
       } as Request;
       const result = await GET(req);
       const { images } = await result.json();
@@ -31,16 +31,16 @@ describe("Image API", () => {
     test("Success: When called with page, keyword, and activeTagId set in the query, it should return images", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
-        url: "http://localhost:3002/api/images?page=1&keyword=test&activeTabId=popular&favariteImageIds=",
+        url: "http://localhost:3002/api/images?page=1&keyword=test&activeTabId=popular&favoriteImageIds=",
       } as Request;
       const result = await GET(req);
       const { images } = await result.json();
       expect(images).toEqual(resImages);
     });
-    test("Success: When called with favariteImageIds set in the query, it should return images", async () => {
+    test("Success: When called with favoriteImageIds set in the query, it should return images", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
-        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=favarite&favariteImageIds=1",
+        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=favorite&favoriteImageIds=1",
       } as Request;
       const result = await GET(req);
       const { images } = await result.json();
@@ -49,7 +49,7 @@ describe("Image API", () => {
     test("Failure: When an error occurs, return 500", async () => {
       prismaMock.image.findMany.mockRejectedValue(new Error("Internal server error"));
       const req = {
-        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favariteImageIds=",
+        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=",
       } as Request;
       const result = await GET(req);
       const { errorMessage } = await result.json();

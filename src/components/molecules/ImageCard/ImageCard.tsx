@@ -9,14 +9,14 @@ import { css } from "@@/styled-system/css";
 type Props = {
   css?: string;
   image: Image;
-  isFavarite: boolean;
+  isFavorite: boolean;
   onClickCopy: () => void;
-  onClickFavarite: (isFavarite: boolean) => void;
+  onClickFavorite: (isFavorite: boolean) => void;
 };
 
-const ImageCard = ({ css, image, isFavarite, onClickCopy, onClickFavarite }: Props) => {
+const ImageCard = ({ css, image, isFavorite, onClickCopy, onClickFavorite }: Props) => {
   const handleClickCopy = () => onClickCopy();
-  const handleClickFavarite = () => onClickFavarite(isFavarite);
+  const handleClickFavorite = () => onClickFavorite(isFavorite);
   // const handleClickReport = () => {};
   if (!image) return <></>;
   return (
@@ -45,8 +45,8 @@ const ImageCard = ({ css, image, isFavarite, onClickCopy, onClickFavarite }: Pro
             css={buttonCss}
             size="sm"
             color="lightPink"
-            icon={<Svg icon="heart" color="pink" fillStyle={isFavarite ? "solid" : "outline"} />}
-            onClick={handleClickFavarite}
+            icon={<Svg icon="heart" color="pink" fillStyle={isFavorite ? "solid" : "outline"} />}
+            onClick={handleClickFavorite}
           >
             Favorite
           </Button>
