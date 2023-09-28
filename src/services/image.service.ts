@@ -2,7 +2,7 @@ import { IMAGES_API_ENDPOINT } from "@/constants/endpoints";
 import { CommonService } from "@/services";
 
 export class ImageService extends CommonService {
-  async fetchImages(arg: GetImageArg): Promise<Image[]> {
+  async fetchImages(arg: GetImageArg) {
     const query: GetImageQuery = {
       page: arg.page || 0,
       keyword: arg.keyword || "",

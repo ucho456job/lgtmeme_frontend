@@ -58,7 +58,7 @@ export const POST = async (req: Request) => {
       select: { url: true },
       data: {
         id,
-        url: process.env.SUPABASE_URL + STORAGE_API_ENDPOINT + "/" + id,
+        url: process.env.NEXT_PUBLIC_SUPABASE_URL + STORAGE_API_ENDPOINT + "/" + id,
         keyword: reqBody.keyword,
       },
     });
