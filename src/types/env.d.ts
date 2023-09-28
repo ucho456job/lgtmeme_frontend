@@ -6,8 +6,8 @@ declare global {
     interface ProcessEnv {
       NEXT_PUBLIC_APP_URL: string;
       DATABASE_URL: string;
-      SUPABASE_URL: string;
-      SUPABASE_ANON: string;
+      NEXT_PUBLIC_SUPABASE_URL: string;
+      NEXT_PUBLIC_SUPABASE_ANON: string;
     }
   }
 }
