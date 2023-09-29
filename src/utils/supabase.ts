@@ -5,4 +5,6 @@ const client = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON,
 );
 
-export const uploadStorage = client.storage.from("images");
+export const auth = client.auth;
+
+export const storage = client.storage.from("images");

@@ -40,6 +40,7 @@ type GetImageArg = {
   keyword?: string;
   activeTabId?: ActiveTabId;
   favoriteImageIds?: string[];
+  confirm?: "true" | "false";
 };
 
 type GetImageQuery = {
@@ -47,6 +48,7 @@ type GetImageQuery = {
   keyword: string;
   activeTabId: ActiveTabId;
   favoriteImageIds: string[];
+  confirm: "true" | "false";
 };
 
 type GetImageResBody = {

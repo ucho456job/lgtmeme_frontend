@@ -1,10 +1,11 @@
-type RequestMethod = "GET" | "POST" | "PATCH";
+type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE";
 
 type RequestConfig = {
   method: RequestMethod;
   cache: "no-store";
   headers: {
     "Content-Type": string;
+    authorization: string;
   };
   body?: string;
 };

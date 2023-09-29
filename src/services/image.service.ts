@@ -8,6 +8,7 @@ export class ImageService extends CommonService {
       keyword: arg.keyword || "",
       activeTabId: arg.activeTabId || "timeLine",
       favoriteImageIds: arg.favoriteImageIds || [],
+      confirm: arg.confirm || "false",
     };
     const config = this.createConfig("GET");
     const res = await this.sendRequest<{ images: Image[] }>(IMAGES_API_ENDPOINT, config, query);
@@ -22,6 +23,11 @@ export class ImageService extends CommonService {
 
   async patchImage(id: string, body: PatchImageReqBody) {
     const config = this.createConfig("PATCH", body);
+    await this.sendRequest(IMAGES_API_ENDPOINT + "/" + id, config);
+  }
+
+  async deleteImage(id: string, accessToken: string) {
+    const config = this.createConfig("DELETE", undefined, accessToken);
     await this.sendRequest(IMAGES_API_ENDPOINT + "/" + id, config);
   }
 }

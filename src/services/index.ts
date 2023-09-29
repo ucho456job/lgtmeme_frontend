@@ -5,12 +5,13 @@ export class CommonService {
     this.baseUrl = process.env.NEXT_PUBLIC_APP_URL;
   }
 
-  createConfig(method: RequestMethod, body?: RequestBody): RequestConfig {
+  createConfig(method: RequestMethod, body?: RequestBody, accessToken?: string): RequestConfig {
     return {
       method,
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${accessToken}`,
       },
       body: body ? JSON.stringify(body) : undefined,
     };

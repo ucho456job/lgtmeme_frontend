@@ -8,6 +8,8 @@ declare global {
       DATABASE_URL: string;
       NEXT_PUBLIC_SUPABASE_URL: string;
       NEXT_PUBLIC_SUPABASE_ANON: string;
+      JWT_SECRET: string;
+      AUTH_USER_ID: string;
     }
   }
 }
