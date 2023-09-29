@@ -183,7 +183,7 @@ const ImageEditor = ({ css }: Props) => {
         await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
         setModal({ message: "Created an image and copied it to the clipboard!", show: true });
       } catch {
-        setModal({ message: "Create an image!", show: true });
+        setModal({ message: "Created an image!", show: true });
       }
     } catch {
       setModal({ message: "Failed to create image. Please try again later.", show: true });

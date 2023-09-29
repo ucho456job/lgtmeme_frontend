@@ -7,11 +7,20 @@ type Props = {
   value?: string;
   placeholder?: string;
   icon?: JSX.Element;
+  type?: "text" | "email" | "password";
   onChange: (value: string) => void;
   onEnterPress?: () => void;
 };
 
-const TextBox = ({ css, value, placeholder, icon, onChange, onEnterPress }: Props) => {
+const TextBox = ({
+  css,
+  value,
+  placeholder,
+  icon,
+  type = "text",
+  onChange,
+  onEnterPress,
+}: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
@@ -27,7 +36,7 @@ const TextBox = ({ css, value, placeholder, icon, onChange, onEnterPress }: Prop
       <div className={textBoxWrapCss}>
         <input
           ref={inputRef}
-          type="text"
+          type={type}
           maxLength={MAX_KEYWORD_LENGTH}
           value={value}
           className={textBoxRecipe({ icon: icon ? true : false })}

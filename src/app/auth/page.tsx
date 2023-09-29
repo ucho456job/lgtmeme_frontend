@@ -3,9 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { User } from "@supabase/supabase-js";
+import Button from "@/components/atoms/Button/Button";
+import InputText from "@/components/atoms/InputText/InputText";
+import Modal from "@/components/molecules/Modal/Modal";
 import { PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { auth } from "@/utils/supabase";
+import { css } from "@@/styled-system/css";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -30,12 +34,17 @@ const Auth = () => {
     }
   };
 
+  const [modal, setModal] = useState({ message: "", show: false });
+  const handleClose = () => setModal({ message: "", show: false });
+
   const handleDelete = async (imageId: string) => {
     try {
       const service = new ImageService();
       await service.deleteImage(imageId, accessToken);
+      setImages((prevImages) => prevImages.filter((pi) => pi.id !== imageId));
+      setModal({ message: "Deleted an image!", show: true });
     } catch {
-      alert("Error");
+      setModal({ message: "Failed to delete image.", show: true });
     }
   };
 
@@ -43,38 +52,54 @@ const Auth = () => {
     try {
       const service = new ImageService();
       await service.patchImage(imageId, { requestType: PATCH_IMAGE_REQUEST_TYPE.confirm });
+      setImages((prevImages) => prevImages.filter((pi) => pi.id !== imageId));
+      setModal({ message: "Confirmed an image.", show: true });
     } catch {
-      alert("Error");
+      setModal({ message: "Failed to confirm image.", show: true });
     }
   };
 
   return (
     <div>
       {user ? (
-        <div>
+        <div className={loginCss}>
           {images.map((i) => (
-            <div key={i.id}>
+            <div key={i.id} className={imageContainerCss}>
               <Image src={i.url} alt="LGTM" width={300} height={300} />
-              <button onClick={() => handleDelete(i.id)}>Delete</button>
-              <button onClick={() => handleConfirm(i.id)}>Confirm</button>
+              <div>
+                <Button onClick={() => handleDelete(i.id)}>Delete</Button>
+                <Button onClick={() => handleConfirm(i.id)}>Confirm</Button>
+              </div>
             </div>
           ))}
         </div>
       ) : (
-        <div>
-          <input type="email" value={email} onChange={(e) => handleChangeEmail(e.target.value)} />
-          <br />
-          <input
-            type="password"
+        <div className={loginCss}>
+          <InputText value={email} type="email" placeholder="Email" onChange={handleChangeEmail} />
+          <InputText
             value={password}
-            onChange={(e) => handleChangePassword(e.target.value)}
+            type="password"
+            placeholder="Password"
+            onChange={handleChangePassword}
           />
-          <br />
-          <button onClick={handleLogin}>Login</button>
+          <Button onClick={handleLogin}>Login</Button>
         </div>
       )}
+      <Modal {...modal} onClick={handleClose} />
     </div>
   );
 };
+
+const imageContainerCss = css({ display: "flex" });
+const loginCss = css({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "300px",
+  paddingTop: "10",
+  marginX: "auto",
+  gap: "5",
+});
 
 export default Auth;
