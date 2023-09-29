@@ -1,6 +1,7 @@
 type Image = {
   id: string;
   url: string;
+  reported: boolean;
 };
 
 type ActiveTabId = "timeLine" | "popular" | "favorite";
@@ -59,4 +60,16 @@ type PostImageReqBody = {
 
 type PostImageResBody = {
   imageUrl: string;
+};
+
+type PatchRequestTypeCopy = "copy";
+
+type PatchRequestTypeReport = "report";
+
+type PatchRequestTypeConfirm = "confirm";
+
+type PatchRequestType = PatchRequestTypeCopy | PatchRequestTypeReport | PatchRequestTypeConfirm;
+
+type PatchImageReqBody = {
+  requestType: PatchRequestType;
 };

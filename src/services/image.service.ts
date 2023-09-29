@@ -20,8 +20,8 @@ export class ImageService extends CommonService {
     return res.imageUrl;
   }
 
-  async patchImage(id: string) {
-    const config = this.createConfig("PATCH");
+  async patchImage(id: string, body: PatchImageReqBody) {
+    const config = this.createConfig("PATCH", body);
     await this.sendRequest(IMAGES_API_ENDPOINT + "/" + id, config);
   }
 }

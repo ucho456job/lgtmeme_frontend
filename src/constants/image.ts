@@ -23,3 +23,13 @@ export const SIZE_MAP: SizeMap = new Map([
   [TEXT_SIZE_MEDIUM, { size: TEXT_SIZE_MEDIUM, width: 169, height: TEXT_SIZE_MEDIUM, diff: 50 }],
   [TEXT_SIZE_LARGE, { size: TEXT_SIZE_LARGE, width: 235, height: TEXT_SIZE_LARGE, diff: 71 }],
 ]);
+
+export const PATCH_IMAGE_REQUEST_TYPE: {
+  copy: PatchRequestTypeCopy;
+  report: PatchRequestTypeReport;
+  confirm: PatchRequestTypeConfirm;
+} = {
+  copy: "copy",
+  report: "report",
+  confirm: "confirm",
+};

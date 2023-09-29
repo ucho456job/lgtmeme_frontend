@@ -20,7 +20,7 @@ export const GET = async (req: Request) => {
     const skip = page * MAX_IMAGES_FETCH_COUNT;
 
     const images = await prisma.image.findMany({
-      select: { id: true, url: true },
+      select: { id: true, url: true, reported: true },
       skip,
       take: MAX_IMAGES_FETCH_COUNT,
       orderBy:
