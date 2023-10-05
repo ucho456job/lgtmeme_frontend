@@ -13,12 +13,17 @@ describe("CommonService", () => {
     commonService = new CommonService();
   });
   test("The createConfig method returns the correct configuration object", () => {
-    const config: RequestConfig = commonService.createConfig("GET", { key: "value" });
+    const config: RequestConfig = commonService.createConfig(
+      "GET",
+      { key: "value" },
+      "accessToken",
+    );
     expect(config).toEqual({
       method: "GET",
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
+        authorization: "Bearer accessToken",
       },
       body: '{"key":"value"}',
     });
