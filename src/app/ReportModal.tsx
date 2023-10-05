@@ -43,7 +43,7 @@ const ReportModal = ({ css, image, onClickClose }: Props) => {
       <div className={css}>
         <div className={backgroundCss}>
           <div className={modalCss}>
-            <Image src={image.url} alt="lgtm" width={IMAGE_SIZE} height={IMAGE_SIZE} />
+            <Image src={image.url} alt="LGTM" width={IMAGE_SIZE} height={IMAGE_SIZE} />
             <div className={messageCss}>
               <p>
                 Would you like to report an image that may be inappropriate or violate
