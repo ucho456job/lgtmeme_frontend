@@ -1,0 +1,30 @@
+name: Prisma Migrate Deploy
+
+on:
+  push:
+    # branches:
+    #   - main
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18.x
+
+    - name: Install dependencies
+      run: npm install
+      env:
+        NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_ANON: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON }}
+
+    - name: Run Prisma Migrate Deploy
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      run: npx prisma migrate deploy
