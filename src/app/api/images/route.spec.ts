@@ -16,10 +16,10 @@ jest.mock("uuid", () => ({
  * https://github.com/prisma/prisma/discussions/7084#discussioncomment-793219
  */
 
-describe("Image API", () => {
-  const resImages = [{ id: "1", url: "https://placehold.jp/300x300.png" }];
+describe("Images API", () => {
+  const resImages = [{ id: "1", url: "https://placehold.jp/300x300.png", reported: false }];
   describe("GET", () => {
-    test("Success: When called with initial query, it shoule return images", async () => {
+    test("Success: When called with initial query, it shoule return images.", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
         url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=",
@@ -28,7 +28,7 @@ describe("Image API", () => {
       const { images } = await result.json();
       expect(images).toEqual(resImages);
     });
-    test("Success: When called with page, keyword, and activeTagId set in the query, it should return images", async () => {
+    test("Success: When called with page, keyword, and activeTagId set in the query, it should return images.", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
         url: "http://localhost:3002/api/images?page=1&keyword=test&activeTabId=popular&favoriteImageIds=",
@@ -37,7 +37,7 @@ describe("Image API", () => {
       const { images } = await result.json();
       expect(images).toEqual(resImages);
     });
-    test("Success: When called with favoriteImageIds set in the query, it should return images", async () => {
+    test("Success: When called with favoriteImageIds set in the query, it should return images.", async () => {
       prismaMock.image.findMany.mockResolvedValue(resImages as any);
       const req = {
         url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=favorite&favoriteImageIds=1",
@@ -46,7 +46,7 @@ describe("Image API", () => {
       const { images } = await result.json();
       expect(images).toEqual(resImages);
     });
-    test("Failure: When an error occurs, return 500", async () => {
+    test("Failure: When an error occurs, return 500.", async () => {
       prismaMock.image.findMany.mockRejectedValue(new Error("Internal server error"));
       const req = {
         url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=",
@@ -64,7 +64,7 @@ describe("Image API", () => {
         return { image: "data:image/webp;base64,iVBORw0KGgoA", keyword: "keyword" };
       },
     } as Request;
-    test("Success: Image upload succeeds and returns 200 status", async () => {
+    test("Success: Image upload succeeds and returns 200 status.", async () => {
       jest.spyOn(storage, "upload").mockImplementation(async () => {
         return { data: { path: imageId }, error: null };
       });
@@ -76,7 +76,7 @@ describe("Image API", () => {
       expect(imageUrl).toBe(url);
       expect(status).toBe(200);
     });
-    test("Failure: Image upload failed and returns 500 status", async () => {
+    test("Failure: Image upload failed and returns 500 status.", async () => {
       jest.spyOn(storage, "upload").mockImplementation(async () => {
         return { data: null, error: "happened error" as any };
       });
@@ -86,7 +86,7 @@ describe("Image API", () => {
       expect(errorMessage).toBe("Image upload failed");
       expect(status).toBe(500);
     });
-    test("Failure: Image create failed and returns 500 status", async () => {
+    test("Failure: Image create failed and returns 500 status.", async () => {
       jest.spyOn(storage, "upload").mockImplementation(async () => {
         return { data: { path: imageId }, error: null };
       });
