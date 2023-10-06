@@ -32,7 +32,7 @@ jobs:
         run: npm run build-storybook
 
       - name: Copy vercel_ignore_build_step.sh
-        run: npm run copy-vercel-deploy-ignore
+        run: mkdir -p ./storybook-static/shells && cp ./shells/vercel_ignore_build_step.sh ./storybook-static/shells/vercel_ignore_build_step.sh
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
