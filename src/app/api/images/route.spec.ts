@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 import { GET, POST } from "@/app/api/images/route";
-import { uploadStorage } from "@/utils/supabase";
+import { storage } from "@/utils/supabase";
 import { prismaMock } from "@@/jest.setup";
 
 const imageId = "imageId";
@@ -65,7 +65,7 @@ describe("Image API", () => {
       },
     } as Request;
     test("Success: Image upload succeeds and returns 200 status", async () => {
-      jest.spyOn(uploadStorage, "upload").mockImplementation(async () => {
+      jest.spyOn(storage, "upload").mockImplementation(async () => {
         return { data: { path: imageId }, error: null };
       });
       const url = "Test image url";
@@ -77,7 +77,7 @@ describe("Image API", () => {
       expect(status).toBe(200);
     });
     test("Failure: Image upload failed and returns 500 status", async () => {
-      jest.spyOn(uploadStorage, "upload").mockImplementation(async () => {
+      jest.spyOn(storage, "upload").mockImplementation(async () => {
         return { data: null, error: "happened error" as any };
       });
       const result = await POST(req);
@@ -87,7 +87,7 @@ describe("Image API", () => {
       expect(status).toBe(500);
     });
     test("Failure: Image create failed and returns 500 status", async () => {
-      jest.spyOn(uploadStorage, "upload").mockImplementation(async () => {
+      jest.spyOn(storage, "upload").mockImplementation(async () => {
         return { data: { path: imageId }, error: null };
       });
       prismaMock.image.create.mockRejectedValue(new Error("Internal server error"));
