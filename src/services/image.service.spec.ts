@@ -1,4 +1,3 @@
-// ImageServiceのインポートが必要です
 import { IMAGES_API_ENDPOINT } from "@/constants/endpoints";
 import { ImageService } from "@/services/image.service";
 
@@ -22,11 +21,12 @@ describe("ImageService", () => {
       keyword: "test",
       activeTabId: "timeLine",
       favoriteImageIds: ["1", "2"],
+      confirm: "false",
     };
     const images = await imageService.fetchImages(arg);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      `${imageService.baseUrl}${IMAGES_API_ENDPOINT}?page=1&keyword=test&activeTabId=timeLine&favoriteImageIds=1%2C2`,
+      `${imageService.baseUrl}${IMAGES_API_ENDPOINT}?page=1&keyword=test&activeTabId=timeLine&favoriteImageIds=1%2C2&confirm=false`,
       expect.objectContaining({
         method: "GET",
       }),
@@ -61,12 +61,29 @@ describe("ImageService", () => {
     });
     global.fetch = mockFetch;
 
-    await imageService.patchImage(imageId);
+    await imageService.patchImage(imageId, { requestType: "copy" });
 
     expect(mockFetch).toHaveBeenCalledWith(
       `${imageService.baseUrl}${IMAGES_API_ENDPOINT}/${imageId}`,
       expect.objectContaining({
         method: "PATCH",
+      }),
+    );
+  });
+
+  test("The deleteImage method delete data correctly", async () => {
+    const imageId = "123";
+    const mockFetch = jest.fn().mockResolvedValue({
+      json: async () => {},
+    });
+    global.fetch = mockFetch;
+
+    await imageService.deleteImage(imageId, "accessToken");
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      `${imageService.baseUrl}${IMAGES_API_ENDPOINT}/${imageId}`,
+      expect.objectContaining({
+        method: "DELETE",
       }),
     );
   });

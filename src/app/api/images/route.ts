@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import { STORAGE_API_ENDPOINT } from "@/constants/endpoints";
 import { MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
 import prisma from "@/utils/client";
-import { uploadStorage } from "@/utils/supabase";
+import { storage } from "@/utils/supabase";
 
 export const GET = async (req: Request) => {
   try {
@@ -15,12 +15,13 @@ export const GET = async (req: Request) => {
       keyword: String(searchParams.get("keyword")),
       activeTabId: searchParams.get("activeTabId") as ActiveTabId,
       favoriteImageIds: (searchParams.get("favoriteImageIds") || "").split(","),
+      confirm: (searchParams.get("confirm") as "true") || "false",
     };
-    const { page, keyword, activeTabId, favoriteImageIds } = query;
+    const { page, keyword, activeTabId, favoriteImageIds, confirm } = query;
     const skip = page * MAX_IMAGES_FETCH_COUNT;
 
     const images = await prisma.image.findMany({
-      select: { id: true, url: true },
+      select: { id: true, url: true, reported: true },
       skip,
       take: MAX_IMAGES_FETCH_COUNT,
       orderBy:
@@ -30,6 +31,8 @@ export const GET = async (req: Request) => {
       where: {
         keyword: { contains: keyword },
         id: activeTabId === "favorite" ? { in: favoriteImageIds } : undefined,
+        confirmed: confirm === "true" ? false : undefined,
+        reported: confirm === "true" ? true : undefined,
       },
     });
     const resBody: GetImageResBody = { images };
@@ -49,7 +52,7 @@ export const POST = async (req: Request) => {
     const base64 = reqBody.image.split(",")[1];
     const id = uuid();
 
-    const { error } = await uploadStorage.upload(id, decode(base64), {
+    const { error } = await storage.upload(id, decode(base64), {
       contentType: "image/webp",
     });
     if (error) throw new Error("Image upload failed");

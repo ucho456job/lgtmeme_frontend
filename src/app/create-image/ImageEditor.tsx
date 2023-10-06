@@ -181,12 +181,12 @@ const ImageEditor = ({ css }: Props) => {
       const imageUrl = await service.postImage({ image, keyword });
       try {
         await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
-        setModal({ message: "Success create image and copied to clipboard!", show: true });
+        setModal({ message: "Created an image and copied it to the clipboard!", show: true });
       } catch {
-        setModal({ message: "Success create image!", show: true });
+        setModal({ message: "Created an image!", show: true });
       }
     } catch {
-      setModal({ message: "Failed to create image.", show: true });
+      setModal({ message: "Failed to create image. Please try again later.", show: true });
     } finally {
       setIsUpload(false);
     }

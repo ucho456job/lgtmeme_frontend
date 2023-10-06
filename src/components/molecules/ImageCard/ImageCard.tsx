@@ -12,12 +12,20 @@ type Props = {
   isFavorite: boolean;
   onClickCopy: () => void;
   onClickFavorite: (isFavorite: boolean) => void;
+  onClickReport: () => void;
 };
 
-const ImageCard = ({ css, image, isFavorite, onClickCopy, onClickFavorite }: Props) => {
+const ImageCard = ({
+  css,
+  image,
+  isFavorite,
+  onClickCopy,
+  onClickFavorite,
+  onClickReport,
+}: Props) => {
   const handleClickCopy = () => onClickCopy();
   const handleClickFavorite = () => onClickFavorite(isFavorite);
-  // const handleClickReport = () => {};
+  const handleClickReport = () => onClickReport();
   if (!image) return <></>;
   return (
     <div className={css}>
@@ -50,15 +58,17 @@ const ImageCard = ({ css, image, isFavorite, onClickCopy, onClickFavorite }: Pro
           >
             Favorite
           </Button>
-          {/* <Button
-            css={buttonCss}
-            size="sm"
-            color="yellow"
-            icon={<Svg icon="flag"/>}
-            onClick={handleClickReport}
-          >
-            Report
-          </Button> */}
+          {!image.reported && (
+            <Button
+              css={buttonCss}
+              size="sm"
+              color="yellow"
+              icon={<Svg icon="flag" />}
+              onClick={handleClickReport}
+            >
+              Report
+            </Button>
+          )}
         </div>
       </div>
     </div>

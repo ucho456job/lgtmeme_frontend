@@ -1,6 +1,7 @@
 type Image = {
   id: string;
   url: string;
+  reported: boolean;
 };
 
 type ActiveTabId = "timeLine" | "popular" | "favorite";
@@ -39,6 +40,7 @@ type GetImageArg = {
   keyword?: string;
   activeTabId?: ActiveTabId;
   favoriteImageIds?: string[];
+  confirm?: "true" | "false";
 };
 
 type GetImageQuery = {
@@ -46,6 +48,7 @@ type GetImageQuery = {
   keyword: string;
   activeTabId: ActiveTabId;
   favoriteImageIds: string[];
+  confirm: "true" | "false";
 };
 
 type GetImageResBody = {
@@ -59,4 +62,16 @@ type PostImageReqBody = {
 
 type PostImageResBody = {
   imageUrl: string;
+};
+
+type PatchRequestTypeCopy = "copy";
+
+type PatchRequestTypeReport = "report";
+
+type PatchRequestTypeConfirm = "confirm";
+
+type PatchRequestType = PatchRequestTypeCopy | PatchRequestTypeReport | PatchRequestTypeConfirm;
+
+type PatchImageReqBody = {
+  requestType: PatchRequestType;
 };

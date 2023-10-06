@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ReportModal from "@/app/ReportModal";
 import Button from "@/components/atoms/Button/Button";
 import InputText from "@/components/atoms/InputText/InputText";
 import Loading from "@/components/atoms/Loading/Loading";
@@ -8,7 +9,7 @@ import Svg from "@/components/atoms/Svg/Svg";
 import Tabs from "@/components/atoms/Tabs/Tabs";
 import ImageCard from "@/components/molecules/ImageCard/ImageCard";
 import Modal from "@/components/molecules/Modal/Modal";
-import { MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
+import { MAX_IMAGES_FETCH_COUNT, PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
@@ -65,7 +66,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
       }
       if (resImages.length < MAX_IMAGES_FETCH_COUNT) setIsFull(true);
     } catch (error) {
-      setModal({ message: "Failed to get images.", show: true });
+      setModal({ message: "Failed to get images. Please try again later.", show: true });
     } finally {
       setIsLoading(false);
     }
@@ -90,10 +91,10 @@ const ImageGallery = ({ css, initImages }: Props) => {
       await navigator.clipboard.writeText(`![LGTM](${image.url})`);
       setModal({ message: "Copied to clipboard!", show: true });
     } catch {
-      setModal({ message: "Failed to copy to clipboard.", show: true });
+      setModal({ message: "Failed to copy clipboard. Please try again later.", show: true });
     }
     const service = new ImageService();
-    service.patchImage(image.id);
+    service.patchImage(image.id, { requestType: PATCH_IMAGE_REQUEST_TYPE.copy });
   };
 
   const handleToggleFavorite = (isFavorite: boolean, image: Image) => {
@@ -106,6 +107,10 @@ const ImageGallery = ({ css, initImages }: Props) => {
   };
 
   const handleCloseModal = () => setModal({ message: "", show: false });
+
+  const [reportImage, setReportImage] = useState<Image | null>(null);
+  const handleOpenReportModal = async (image: Image) => setReportImage(image);
+  const handleCloseReportModal = () => setReportImage(null);
 
   return (
     <div className={css}>
@@ -127,6 +132,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
             isFavorite={favoriteImageIds.some((id) => id === i.id)}
             onClickCopy={() => handleCopyToClipboard(i)}
             onClickFavorite={(isFavorite: boolean) => handleToggleFavorite(isFavorite, i)}
+            onClickReport={() => handleOpenReportModal(i)}
           />
         ))}
       </div>
@@ -151,6 +157,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
         </Button>
       )}
       <Modal {...modal} onClick={handleCloseModal} />
+      <ReportModal image={reportImage} onClickClose={handleCloseReportModal} />
     </div>
   );
 };

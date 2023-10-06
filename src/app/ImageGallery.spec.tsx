@@ -4,7 +4,7 @@ import ImageGallery from "@/app/ImageGallery";
 import { ImageService } from "@/services/image.service";
 
 describe("ImageGallery", () => {
-  const initImages = [{ id: "1", url: "https://placehold.jp/300x300.png" }];
+  const initImages = [{ id: "1", url: "https://placehold.jp/300x300.png", reported: false }];
   describe("Render tests", () => {
     test("Renders with default props", () => {
       render(<ImageGallery initImages={initImages} />);
@@ -29,8 +29,8 @@ describe("ImageGallery", () => {
     });
     test("When popular tab is clicked, changes the active tab, fetch popular images", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: "1", url: "https://placehold.jp/300x300.png" },
-        { id: "2", url: "https://placehold.jp/300x300.png" },
+        { id: "1", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "2", url: "https://placehold.jp/300x300.png", reported: false },
       ]);
       render(<ImageGallery initImages={initImages} />);
 
@@ -46,8 +46,8 @@ describe("ImageGallery", () => {
     });
     test("When input keyword and press enter, fetch keyword images", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: "1", url: "https://placehold.jp/300x300.png" },
-        { id: "2", url: "https://placehold.jp/300x300.png" },
+        { id: "1", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "2", url: "https://placehold.jp/300x300.png", reported: false },
       ]);
       render(<ImageGallery initImages={initImages} />);
 
@@ -62,15 +62,15 @@ describe("ImageGallery", () => {
     });
     test("When clicked see more button, fetch 9 images, button is not disabled", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: "2", url: "https://placehold.jp/300x300.png" },
-        { id: "3", url: "https://placehold.jp/300x300.png" },
-        { id: "4", url: "https://placehold.jp/300x300.png" },
-        { id: "5", url: "https://placehold.jp/300x300.png" },
-        { id: "6", url: "https://placehold.jp/300x300.png" },
-        { id: "7", url: "https://placehold.jp/300x300.png" },
-        { id: "8", url: "https://placehold.jp/300x300.png" },
-        { id: "9", url: "https://placehold.jp/300x300.png" },
-        { id: "10", url: "https://placehold.jp/300x300.png" },
+        { id: "2", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "3", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "4", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "5", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "6", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "7", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "8", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "9", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "10", url: "https://placehold.jp/300x300.png", reported: false },
       ]);
       render(<ImageGallery initImages={initImages} />);
 
@@ -87,14 +87,14 @@ describe("ImageGallery", () => {
     });
     test("When clicked see more button, fetch 8 or less images, button is disabled", async () => {
       ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: "2", url: "https://placehold.jp/300x300.png" },
-        { id: "3", url: "https://placehold.jp/300x300.png" },
-        { id: "4", url: "https://placehold.jp/300x300.png" },
-        { id: "5", url: "https://placehold.jp/300x300.png" },
-        { id: "6", url: "https://placehold.jp/300x300.png" },
-        { id: "7", url: "https://placehold.jp/300x300.png" },
-        { id: "8", url: "https://placehold.jp/300x300.png" },
-        { id: "9", url: "https://placehold.jp/300x300.png" },
+        { id: "2", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "3", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "4", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "5", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "6", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "7", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "8", url: "https://placehold.jp/300x300.png", reported: false },
+        { id: "9", url: "https://placehold.jp/300x300.png", reported: false },
       ]);
       render(<ImageGallery initImages={initImages} />);
 
@@ -119,7 +119,7 @@ describe("ImageGallery", () => {
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       await userEvent.click(seeMoreButton);
 
-      const modalMessage = screen.getByText("Failed to get images.");
+      const modalMessage = screen.getByText("Failed to get images. Please try again later.");
       expect(modalMessage).toBeInTheDocument();
     });
     test("When copying to clipboard succeeds, it should show a success modal", async () => {
@@ -151,7 +151,7 @@ describe("ImageGallery", () => {
       const copyButton = screen.getAllByRole("button")[0];
       await userEvent.click(copyButton);
 
-      const modalMessage = screen.getByText("Failed to copy to clipboard.");
+      const modalMessage = screen.getByText("Failed to copy clipboard. Please try again later.");
       expect(modalMessage).toBeInTheDocument();
     });
     test("When press favorite button, it will be added to favorites", async () => {
@@ -172,6 +172,15 @@ describe("ImageGallery", () => {
       const favoriteButton = screen.getAllByRole("button")[1];
       await userEvent.click(favoriteButton);
       expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", "[]");
+    });
+    test("When press report button, it should show a report modal", async () => {
+      render(<ImageGallery initImages={initImages} />);
+      const reportButton = screen.getAllByRole("button")[2];
+      await userEvent.click(reportButton);
+      const reportModal = screen.getByText(
+        "Would you like to report an image that may be inappropriate or violate copyright/privacy?",
+      );
+      expect(reportModal).toBeInTheDocument();
     });
   });
 });
