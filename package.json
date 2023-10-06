@@ -26,7 +26,7 @@
     "delete:branch": "git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "copy-vercel-deploy-ignore": "mkdir -p ./storybook-static/shells && cp ./shells/vercel_ignore_build_step.sh ./storybook-static/shells/vercel_ignore_build_step.sh"
+    "copy-vercel-deploy-ignore": "mkdir -p ./storybook-static/shells && cp ./shells/vercel_ignore_build_step.sh ./storybook-static/shells/vercel_ignore_build_step.sh && cp ./.env.test ./storybook-static"
   },
   "dependencies": {
     "@prisma/client": "^5.3.1",
