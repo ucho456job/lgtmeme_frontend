@@ -53,6 +53,7 @@ export const Mini: Story = {
     image: {
       id: "1",
       url: "https://placehold.jp/200x200.png",
+      reported: false,
     },
     ...commonArgs,
   },
