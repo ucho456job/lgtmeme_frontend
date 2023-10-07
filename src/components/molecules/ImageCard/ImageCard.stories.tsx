@@ -20,6 +20,7 @@ export const Square: Story = {
     image: {
       id: "1",
       url: "https://placehold.jp/300x300.png",
+      reported: false,
     },
     ...commonArgs,
   },
@@ -30,6 +31,7 @@ export const Horizontal: Story = {
     image: {
       id: "1",
       url: "https://placehold.jp/350x250.png",
+      reported: false,
     },
     ...commonArgs,
   },
@@ -40,6 +42,7 @@ export const Vertical: Story = {
     image: {
       id: "1",
       url: "https://placehold.jp/250x350.png",
+      reported: false,
     },
     ...commonArgs,
   },
@@ -50,6 +53,7 @@ export const Mini: Story = {
     image: {
       id: "1",
       url: "https://placehold.jp/200x200.png",
+      reported: false,
     },
     ...commonArgs,
   },
