@@ -26,7 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env
 .env*.local
 
 # vercel
@@ -49,3 +48,7 @@ secret.txt
 **/public/sw.js.map
 **/public/workbox-*.js.map
 **/public/worker-*.js.map
+
+# Supabase
+/volumes/db/data
+/volumes/db/storage
