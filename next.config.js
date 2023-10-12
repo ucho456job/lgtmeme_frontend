@@ -9,6 +9,7 @@ module.exports = withPWA({
   output: "standalone",
   images: {
     domains: [
+      "localhost",
       "placehold.jp",
       "clilsxztvvlfnlqdwbsa.supabase.co",
       "vaznmnhnwfkbgorhmlbi.supabase.co",

@@ -10,3 +10,10 @@ CREATE TABLE "images" (
 
     CONSTRAINT "images_pkey" PRIMARY KEY ("id")
 );
+
+ALTER TABLE images ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Enable read and write access for all users" ON "public"."images"
+AS PERMISSIVE FOR ALL
+TO anon
+USING (true)
+WITH CHECK (true);
