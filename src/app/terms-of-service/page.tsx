@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PRIVACY_POLICY_ENDPOINT, TWITTER_LINK_ENDPOINT } from "@/constants/endpoints";
-import { containerCss, contentCss, h1Css, h2Css, linkCss } from "@/styles/legal";
+import { css } from "@@/styled-system/css";
 
 const TermsOfService = () => {
   return (
@@ -65,5 +65,14 @@ const TermsOfService = () => {
     </div>
   );
 };
+
+const containerCss = css({ display: "flex", justifyContent: "center", padding: "5" });
+const contentCss = css({ maxWidth: "1090px", padding: 5 });
+const h1Css = css({ fontSize: "2xl", fontWeight: "bold" });
+const h2Css = css({ fontSize: "xl", fontWeight: "bold", marginTop: "5" });
+const linkCss = css({
+  color: "LIGHT_BLUE",
+  _hover: { opacity: 0.8, borderBottom: "1px solid", borderColor: "LIGHT_BLUE" },
+});
 
 export default TermsOfService;
