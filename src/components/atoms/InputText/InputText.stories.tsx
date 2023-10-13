@@ -13,6 +13,6 @@ type Story = StoryObj<typeof meta>;
 export const WithIcon: Story = {
   args: {
     placeholder: "Placeholder",
-    icon: <Svg icon="search" size="lg" />,
+    icon: <Svg icon="search" size="md" />,
   },
 };
