@@ -37,6 +37,7 @@ next-env.d.ts
 
 # Secret file
 secret.txt
+secret.json
 
 # Storybook
 /storybook-static
