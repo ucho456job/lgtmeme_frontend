@@ -36,7 +36,7 @@ yarn-error.log*
 next-env.d.ts
 
 # Secret file
-secret.txt
+secret.json
 
 # Storybook
 /storybook-static
@@ -52,3 +52,9 @@ secret.txt
 # Supabase
 /volumes/db/data
 /volumes/db/storage
+
+# shells
+/shells/run_e2e.sh
+
+# screenshots
+/e2e/tests/**/screenshots/
