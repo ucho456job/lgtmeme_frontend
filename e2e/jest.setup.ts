@@ -19,10 +19,6 @@ beforeEach(async () => {
   await prisma.image.deleteMany();
 });
 
-afterEach(async () => {
-  await prisma.image.deleteMany();
-});
-
 afterAll(async () => {
   await prisma.$disconnect();
   await driver.quit();
