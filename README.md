@@ -15,9 +15,9 @@ Storybook: https://ucho456job.github.io/LGTMeme/
 - React v18.2.0
 - Node.js v18.17.1
 - Typescript v5.2.2
-- Prisma v5.3.1
+- Prisma v5.5.2
 - Supabase v2.36.0
-- Panda css v0.15.5
+- Panda css v0.17.5
 - Storybook v7.4.3
 - Jest v29.7.0
 - Selenium v4.14.0

@@ -31,7 +31,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@prisma/client": "^5.4.1",
+    "@prisma/client": "^5.5.2",
     "@supabase/supabase-js": "^2.36.0",
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
@@ -48,7 +48,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@pandacss/dev": "^0.15.5",
+    "@pandacss/dev": "^0.17.5",
     "@storybook/addon-essentials": "^7.4.3",
     "@storybook/addon-interactions": "^7.4.3",
     "@storybook/addon-links": "^7.4.3",
@@ -73,7 +73,7 @@
     "jest-mock-extended": "^3.0.5",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
-    "prisma": "^5.3.1",
+    "prisma": "^5.5.2",
     "selenium-webdriver": "^4.14.0",
     "storybook": "^7.4.3",
     "ts-jest": "^29.1.1"
