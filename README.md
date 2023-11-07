@@ -7,7 +7,7 @@ Production: https://lgtmeme.vercel.app/
 
 Preview: https://lgtmeme-git-dev-ucho456job.vercel.app/
 
-Storybook: https://ucho456job.github.io/LGTMeme/
+Component catalog in storybook: https://ucho456job.github.io/LGTMeme/
 
 ## Technologies
 
@@ -28,30 +28,29 @@ Storybook: https://ucho456job.github.io/LGTMeme/
 ```mermaid
 graph TD;
   subgraph "Local (Ubuntu on wsl2)"
-    Node[Node.js v18.17.1]
-    Supabase[(Supabase on docker)]
-    Selenium[Selenium on docker]
     Next.js[Next.js]
+    Node.js[Node.js v18.17.1]
+    subgraph "Docker"
+      SupaLocal[(<br>Supabase)]
+      Selenium[Selenium]
+    end
   end
   GitHub[GitHub]
   subgraph "Vercel"
     Prod[Next.js for production]
     Pre[Next.js for preview]
   end
-  subgraph "Supabase for production"
-    SupaProd[(Postgresql & Authentication & Storage)]
+  subgraph "Supabase"
+    SupaProd[(<br>Production<br>Postgresql, Authentication, Storage)]
+    SupaPre[(<br>Preview<br>Postgresql, Authentication, Storage)]
   end
-  subgraph "Supabase for preview"
-    SupaPre[(Postgresql & Authentication & Storage)]
-  end
-  User([User])
-  Next.js--Git push-->GitHub;
+  Next.js<-->SupaLocal;
+  Next.js--Push-->GitHub;
   GitHub--Deploy-->Prod;
   GitHub--Deploy-->Pre;
   Prod<-->SupaProd;
   Pre<-->SupaPre;
-  Selenium--Running e2e tests-->Pre;
-  User--Request-->Prod;
+  Selenium--Running e2e test-->Pre;
 ```
 
 ## Wiki
