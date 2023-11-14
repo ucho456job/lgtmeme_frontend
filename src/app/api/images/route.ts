@@ -3,7 +3,7 @@ import { decode } from "base64-arraybuffer";
 import { v4 as uuid } from "uuid";
 import { STORAGE_API_ENDPOINT } from "@/constants/endpoints";
 import { MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
-import prisma from "@/utils/client";
+import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
 
 export const GET = async (req: Request) => {
