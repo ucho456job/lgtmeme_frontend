@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
-import prisma from "@/utils/client";
 import { verifyAuth } from "@/utils/jwt";
+import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
 
 export const PATCH = async (req: Request) => {
