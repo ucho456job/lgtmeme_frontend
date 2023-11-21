@@ -1,4 +1,4 @@
-name: Release Storybook to GitHubPages
+name: Deploy storybook
 
 on:
   push:
@@ -9,20 +9,20 @@ env:
   cache-version: v1
 
 jobs:
-  release:
-    name: Project Build
+  deploy-storybook:
+    name: Project build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js 18.x
+      - name: Setup node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
 
-      - name: Install Node Dependencies
+      - name: Install dependencies
         run: npm install
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -34,7 +34,7 @@ jobs:
       - name: Copy vercel_ignore_build_step.sh
         run: mkdir -p ./storybook-static/shells && cp ./shells/vercel_ignore_build_step.sh ./storybook-static/shells/vercel_ignore_build_step.sh
 
-      - name: Deploy
+      - name: Deploy storybook
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
