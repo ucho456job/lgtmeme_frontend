@@ -1,4 +1,4 @@
-import prisma from "../../prisma";
+import prisma from "../../../src/utils/prisma";
 import { v4 as uuid } from "uuid";
 
 const createImages = (imageCount: number) => {
