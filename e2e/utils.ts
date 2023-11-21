@@ -16,9 +16,6 @@ export const takeSnapshot = async (driver: WebDriver, relativeFilepath: string) 
     fs.mkdirSync(directory, { recursive: true });
   }
 
-  const sleepTime = 1 * 1000;
-  await driver.sleep(sleepTime);
-
   const pageHeight = (await driver.executeScript("return document.body.scrollHeight")) as number;
   await driver.manage().window().setRect({
     width: 1100,
