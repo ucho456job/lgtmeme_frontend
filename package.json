@@ -1,6 +1,6 @@
 {
   "name": "lgtmeme",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "scripts": {
     "prepare": "panda codegen && npm run prisma:generate",
