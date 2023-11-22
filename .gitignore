@@ -52,6 +52,7 @@ secret.json
 # Supabase
 /volumes/db/data
 /volumes/db/storage
+/volumes/storage
 
 # shells
 /shells/run_e2e.sh
