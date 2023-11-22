@@ -2,6 +2,24 @@ export const MAX_IMAGES_FETCH_COUNT = 9;
 export const MAX_KEYWORD_LENGTH = 50;
 export const IMAGE_SIZE = 300;
 
+export const ACTIVE_TAB_ID: {
+  timeLine: ActiveTabIdTimeLine;
+  popular: ActiveTabIdPopular;
+  favorite: ActiveTabIdFavorite;
+} = {
+  timeLine: "timeLine",
+  popular: "popular",
+  favorite: "favorite",
+};
+
+export const CONFIRM: {
+  true: "true";
+  false: "false";
+} = {
+  true: "true",
+  false: "false",
+};
+
 export const FONT_FAMILY_OPTIONS = [
   { value: "Arial", label: "Arial" },
   { value: "Verdana", label: "Verdana" },
