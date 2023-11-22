@@ -31,11 +31,15 @@ graph TD;
     Next.js[Next.js]
     Node.js[Node.js v18.17.1]
     subgraph "Docker"
-      SupaLocal[(<br>Supabase)]
+      SupaLocal[(<br>Supabase for local<br>Postgresql, Authentication, Storage)]
       Selenium[Selenium]
     end
   end
-  GitHub[GitHub]
+  subgraph "Github"
+    main[main branch]
+    dev[dev branch]
+    feature[feature branch]
+  end
   subgraph "Vercel"
     Prod[Next.js for production]
     Pre[Next.js for preview]
@@ -44,13 +48,15 @@ graph TD;
     SupaProd[(<br>Production<br>Postgresql, Authentication, Storage)]
     SupaPre[(<br>Preview<br>Postgresql, Authentication, Storage)]
   end
-  Next.js<-->SupaLocal;
-  Next.js--Push-->GitHub;
-  GitHub--Deploy-->Prod;
-  GitHub--Deploy-->Pre;
-  Prod<-->SupaProd;
-  Pre<-->SupaPre;
-  Selenium--Running e2e test-->Pre;
+  Next.js<--connect-->SupaLocal;
+  Next.js--Push-->feature;
+  feature--Merge-->dev;
+  dev--Merge-->main;
+  main--Deploy-->Prod;
+  dev--Deploy-->Pre;
+  Selenium--Run e2e test-->Pre;
+  Prod<--connect-->SupaProd;
+  Pre<--connect-->SupaPre;
 ```
 
 ## Wiki
