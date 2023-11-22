@@ -55,6 +55,3 @@ secret.json
 
 # shells
 /shells/run_e2e.sh
-
-# screenshots
-/e2e/tests/**/screenshots/
