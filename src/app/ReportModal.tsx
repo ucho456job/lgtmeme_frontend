@@ -55,7 +55,7 @@ const ReportModal = ({ css, image, onClickClose }: Props) => {
                 Close
               </Button>
               <Button visual="text" size="sm" onClick={handleReport}>
-                Report
+                Send
               </Button>
             </div>
           </div>
