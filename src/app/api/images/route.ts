@@ -1,23 +1,54 @@
 import { NextResponse } from "next/server";
 import { decode } from "base64-arraybuffer";
-import { v4 as uuid } from "uuid";
 import { STORAGE_API_ENDPOINT } from "@/constants/endpoints";
-import { MAX_IMAGES_FETCH_COUNT } from "@/constants/image";
+import { OK_STATUS } from "@/constants/exceptions";
+import {
+  ACTIVE_TAB_ID_FAVORITE,
+  ACTIVE_TAB_ID_POPULAR,
+  ACTIVE_TAB_ID_TIME_LINE,
+  MAX_IMAGES_FETCH_COUNT,
+  MAX_KEYWORD_LENGTH,
+  VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID,
+  VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS,
+  VALIDATION_ERROR_MESAGE_KEYWORD,
+  VALIDATION_ERROR_MESAGE_PAGE,
+} from "@/constants/image";
+import { ValidationError, commonErrorHandler } from "@/utils/exceptions";
 import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
+import { generateRandomUuid, isUuid } from "@/utils/uuid";
+
+const validateGetQuery = (query: GetImagesQuery) => {
+  const { page, keyword, activeTabId, favoriteImageIds } = query;
+  if (!Number.isInteger(page) || page < 0) {
+    throw new ValidationError(VALIDATION_ERROR_MESAGE_PAGE);
+  }
+  if (keyword.length > MAX_KEYWORD_LENGTH) {
+    throw new ValidationError(VALIDATION_ERROR_MESAGE_KEYWORD);
+  }
+  if (
+    ![ACTIVE_TAB_ID_TIME_LINE, ACTIVE_TAB_ID_POPULAR, ACTIVE_TAB_ID_FAVORITE].includes(activeTabId)
+  ) {
+    throw new ValidationError(VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID);
+  }
+  if (!favoriteImageIds.every((id) => isUuid(id) || id === "")) {
+    throw new ValidationError(VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS);
+  }
+};
 
 export const GET = async (req: Request) => {
   try {
     await prisma.$connect();
     const { searchParams } = new URL(req.url);
-    const query: GetImageQuery = {
+    const query: GetImagesQuery = {
       page: Number(searchParams.get("page")),
       keyword: String(searchParams.get("keyword")),
       activeTabId: searchParams.get("activeTabId") as ActiveTabId,
       favoriteImageIds: (searchParams.get("favoriteImageIds") || "").split(","),
-      confirm: (searchParams.get("confirm") as "true") || "false",
+      isAuthCheck: searchParams.get("isAuthCheck") ? true : false,
     };
-    const { page, keyword, activeTabId, favoriteImageIds, confirm } = query;
+    validateGetQuery(query);
+    const { page, keyword, activeTabId, favoriteImageIds, isAuthCheck } = query;
     const skip = page * MAX_IMAGES_FETCH_COUNT;
 
     const images = await prisma.image.findMany({
@@ -25,21 +56,20 @@ export const GET = async (req: Request) => {
       skip,
       take: MAX_IMAGES_FETCH_COUNT,
       orderBy:
-        activeTabId === "popular"
+        activeTabId === ACTIVE_TAB_ID_POPULAR
           ? [{ usedCount: "desc" }, { createdAt: "desc" }]
           : { createdAt: "desc" },
       where: {
         keyword: { contains: keyword },
-        id: activeTabId === "favorite" ? { in: favoriteImageIds } : undefined,
-        confirmed: confirm === "true" ? false : undefined,
-        reported: confirm === "true" ? true : undefined,
+        id: activeTabId === ACTIVE_TAB_ID_FAVORITE ? { in: favoriteImageIds } : undefined,
+        confirmed: isAuthCheck ? false : undefined,
+        reported: isAuthCheck ? true : undefined,
       },
     });
-    const resBody: GetImageResBody = { images };
-    return NextResponse.json(resBody);
+    const resBody: GetImagesResponseBody = { images };
+    return NextResponse.json(resBody, { status: OK_STATUS });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "GET request failed";
-    return NextResponse.json({ errorMessage }, { status: 500 });
+    return commonErrorHandler(error);
   } finally {
     await prisma.$disconnect();
   }
@@ -50,7 +80,7 @@ export const POST = async (req: Request) => {
     await prisma.$connect();
     const reqBody: PostImageReqBody = await req.json();
     const base64 = reqBody.image.split(",")[1];
-    const id = uuid();
+    const id = generateRandomUuid();
 
     const { error } = await storage.upload(id, decode(base64), {
       contentType: "image/webp",

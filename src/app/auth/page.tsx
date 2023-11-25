@@ -6,7 +6,8 @@ import type { User } from "@supabase/supabase-js";
 import Button from "@/components/atoms/Button/Button";
 import InputText from "@/components/atoms/InputText/InputText";
 import Modal from "@/components/molecules/Modal/Modal";
-import { PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
+import { UNKNOWN_ERROR_MESSAGE } from "@/constants/exceptions";
+import { ACTIVE_TAB_ID_TIME_LINE, PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { auth } from "@/utils/supabase";
 import { css } from "@@/styled-system/css";
@@ -18,6 +19,9 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const handleChangePassword = (value: string) => setPassword(value);
 
+  const [modal, setModal] = useState({ message: "", show: false });
+  const handleClose = () => setModal({ message: "", show: false });
+
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState("");
   const [images, setImages] = useState<Image[]>([]);
@@ -27,15 +31,25 @@ const Auth = () => {
       setUser(data.user);
       setAccessToken(data.session?.access_token!);
       const service = new ImageService();
-      const images = await service.fetchImages({ confirm: "true" });
-      setImages(images);
-    } catch {
-      alert("Error");
+      const res = await service.getImages({
+        page: 0,
+        keyword: "",
+        activeTabId: ACTIVE_TAB_ID_TIME_LINE,
+        favoriteImageIds: [],
+        isAuthCheck: true,
+      });
+      if (!res.ok) {
+        setModal({ message: res.message, show: true });
+        return;
+      }
+      setImages(res.images);
+    } catch (error) {
+      setModal({
+        message: error instanceof Error ? error.message : UNKNOWN_ERROR_MESSAGE,
+        show: true,
+      });
     }
   };
-
-  const [modal, setModal] = useState({ message: "", show: false });
-  const handleClose = () => setModal({ message: "", show: false });
 
   const handleDelete = async (imageId: string) => {
     try {

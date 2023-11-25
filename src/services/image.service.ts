@@ -2,17 +2,20 @@ import { IMAGES_API_ENDPOINT } from "@/constants/endpoints";
 import { CommonService } from "@/services";
 
 export class ImageService extends CommonService {
-  async fetchImages(arg: GetImageArg) {
-    const query: GetImageQuery = {
-      page: arg.page || 0,
-      keyword: arg.keyword || "",
-      activeTabId: arg.activeTabId || "timeLine",
-      favoriteImageIds: arg.favoriteImageIds || [],
-      confirm: arg.confirm || "false",
-    };
-    const config = this.createConfig("GET");
-    const res = await this.sendRequest<{ images: Image[] }>(IMAGES_API_ENDPOINT, config, query);
-    return res.images;
+  async getImages(getImagesQuery: GetImagesQuery): Promise<GetImagesResponse> {
+    try {
+      const url = this.createUrl(IMAGES_API_ENDPOINT, getImagesQuery);
+      const config = this.createConfig("GET");
+      const res = await fetch(url, config);
+      if (!res.ok) {
+        const error: ErrorResponseBody = await res.json();
+        return { name: error.name, message: error.message, ok: false };
+      }
+      const body: GetImagesResponseBody = await res.json();
+      return { images: body.images, ok: true };
+    } catch (error) {
+      return this.returnUnknownError();
+    }
   }
 
   async postImage(body: PostImageReqBody) {

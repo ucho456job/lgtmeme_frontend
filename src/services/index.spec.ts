@@ -1,3 +1,4 @@
+import { UNKNOWN_ERROR_MESSAGE, UNKNOWN_ERROR_NAME } from "@/constants/exceptions";
 import { CommonService } from "@/services";
 
 jest.mock("node-fetch", () => {
@@ -12,13 +13,22 @@ describe("CommonService", () => {
   beforeAll(() => {
     commonService = new CommonService();
   });
-  test("The createConfig method returns the correct configuration object", () => {
-    const config: RequestConfig = commonService.createConfig(
-      "GET",
-      { key: "value" },
-      "accessToken",
+  test("Return url, when use createUrl.", () => {
+    const result = commonService.createUrl("/test", {
+      string: "string",
+      number: 0,
+      array: ["arr1", "arr2"],
+      boolean: true,
+      null: null,
+    });
+    expect(result).toBe(
+      process.env.NEXT_PUBLIC_APP_URL +
+        "/test?string=string&number=0&array=arr1%2Carr2&boolean=true&null=null",
     );
-    expect(config).toEqual({
+  });
+  test("Return config for fetch, when use createConfig.", () => {
+    const result = commonService.createConfig("GET", { key: "value" }, "accessToken");
+    expect(result).toEqual({
       method: "GET",
       cache: "no-store",
       headers: {
@@ -28,22 +38,12 @@ describe("CommonService", () => {
       body: '{"key":"value"}',
     });
   });
-  it("The sendRequest method retrieves the data correctly", async () => {
-    const mockResponseData = { message: "Hello world" };
-    const mockFetch = jest.fn().mockResolvedValue({
-      json: jest.fn(async () => {
-        return mockResponseData;
-      }),
+  test("Return unknown error, when use returnUnknownError.", () => {
+    const result = commonService.returnUnknownError();
+    expect(result).toEqual({
+      name: UNKNOWN_ERROR_NAME,
+      message: UNKNOWN_ERROR_MESSAGE,
+      ok: false,
     });
-    global.fetch = mockFetch;
-    const path = "/example";
-    const config: RequestConfig = commonService.createConfig("GET");
-    const query = { param1: "value1", param2: "value2" };
-    const result = await commonService.sendRequest<{ message: string }>(path, config, query);
-    expect(mockFetch).toHaveBeenCalledWith(
-      `${commonService.baseUrl}${path}?param1=value1&param2=value2`,
-      config,
-    );
-    expect(result).toEqual(mockResponseData);
   });
 });

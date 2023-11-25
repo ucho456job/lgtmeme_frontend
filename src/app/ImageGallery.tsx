@@ -9,9 +9,18 @@ import Svg from "@/components/atoms/Svg/Svg";
 import Tabs from "@/components/atoms/Tabs/Tabs";
 import ImageCard from "@/components/molecules/ImageCard/ImageCard";
 import Modal from "@/components/molecules/Modal/Modal";
-import { MAX_IMAGES_FETCH_COUNT, PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
+import { UNKNOWN_ERROR_MESSAGE } from "@/constants/exceptions";
+import {
+  ACTIVE_TAB_ID_FAVORITE,
+  ACTIVE_TAB_ID_POPULAR,
+  ACTIVE_TAB_ID_TIME_LINE,
+  MAX_IMAGES_FETCH_COUNT,
+  PATCH_IMAGE_REQUEST_TYPE_COPY,
+} from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
+
+export const LOCAL_STORAGE_KEY_FAVORITE_IMAGE_IDS = "favoriteImageIds";
 
 type Props = {
   css?: string;
@@ -20,10 +29,10 @@ type Props = {
 
 const ImageGallery = ({ css, initImages }: Props) => {
   const [images, setImages] = useState<Image[]>([]);
-  const [favoriteImageIds, setFavoriteImageIds] = useState<string[]>([]);
-  const [activeTabId, setActiveTabId] = useState("timeLine");
-  const [keyword, setKeyword] = useState("");
   const [page, setPage] = useState(0);
+  const [keyword, setKeyword] = useState("");
+  const [activeTabId, setActiveTabId] = useState<ActiveTabId>(ACTIVE_TAB_ID_TIME_LINE);
+  const [favoriteImageIds, setFavoriteImageIds] = useState<string[]>([]);
   const [isFull, setIsFull] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [modal, setModal] = useState({ message: "", show: false });
@@ -31,19 +40,19 @@ const ImageGallery = ({ css, initImages }: Props) => {
   useEffect(() => {
     setImages(initImages);
     const favoriteImageIds = JSON.parse(
-      localStorage.getItem("favoriteImageIds") || "[]",
+      localStorage.getItem(LOCAL_STORAGE_KEY_FAVORITE_IMAGE_IDS) || "[]",
     ) as string[];
     setFavoriteImageIds(favoriteImageIds);
     setIsLoading(false);
   }, [initImages]);
 
-  const tabs = [
-    { id: "timeLine", label: "Time line" },
-    { id: "popular", label: "Popular" },
-    { id: "favorite", label: "Favorite" },
+  const tabs: { id: ActiveTabId; label: string }[] = [
+    { id: ACTIVE_TAB_ID_TIME_LINE, label: "Time line" },
+    { id: ACTIVE_TAB_ID_POPULAR, label: "Popular" },
+    { id: ACTIVE_TAB_ID_FAVORITE, label: "Favorite" },
   ];
 
-  const handleFetchImages = async (
+  const handleGetImages = async (
     images: Image[],
     page: number,
     keyword: string,
@@ -55,18 +64,31 @@ const ImageGallery = ({ css, initImages }: Props) => {
       setPage(page);
       setActiveTabId(activeTabId);
       const service = new ImageService();
-      const resImages = await service.fetchImages({ page, keyword, activeTabId, favoriteImageIds });
+      const res = await service.getImages({
+        page,
+        keyword,
+        activeTabId,
+        favoriteImageIds,
+      });
+      if (!res.ok) {
+        setModal({ message: res.message, show: true });
+        return;
+      }
       if (page === 0) {
-        setImages(resImages);
+        setImages(res.images);
       } else {
+        /** I am using Map to avoid duplicate images. */
         const imageMap = new Map();
         images.forEach((image) => imageMap.set(image.id, image));
-        resImages.forEach((image) => imageMap.set(image.id, image));
+        res.images.forEach((image) => imageMap.set(image.id, image));
         setImages(Array.from(imageMap.values()));
       }
-      if (resImages.length < MAX_IMAGES_FETCH_COUNT) setIsFull(true);
+      if (res.images.length < MAX_IMAGES_FETCH_COUNT) setIsFull(true);
     } catch (error) {
-      setModal({ message: "Failed to get images. Please try again later.", show: true });
+      setModal({
+        message: error instanceof Error ? error.message : UNKNOWN_ERROR_MESSAGE,
+        show: true,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +97,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
   const handleClickTab = (id: string) => {
     setIsFull(false);
     setImages([]);
-    handleFetchImages(images, 0, keyword, id as ActiveTabId, favoriteImageIds);
+    handleGetImages(images, 0, keyword, id as ActiveTabId, favoriteImageIds);
   };
 
   const handleSetKeyword = (value: string) => setKeyword(value);
@@ -83,7 +105,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
   const handlePressEnter = () => {
     setIsFull(false);
     setImages([]);
-    handleFetchImages(images, 0, keyword, activeTabId as ActiveTabId, favoriteImageIds);
+    handleGetImages(images, 0, keyword, activeTabId as ActiveTabId, favoriteImageIds);
   };
 
   const handleCopyToClipboard = async (image: Image) => {
@@ -94,7 +116,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
       setModal({ message: "Failed to copy clipboard. Please try again later.", show: true });
     }
     const service = new ImageService();
-    service.patchImage(image.id, { requestType: PATCH_IMAGE_REQUEST_TYPE.copy });
+    service.patchImage(image.id, { requestType: PATCH_IMAGE_REQUEST_TYPE_COPY });
   };
 
   const handleToggleFavorite = (isFavorite: boolean, image: Image) => {
@@ -102,7 +124,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
     const newFavoriteImageIds = newIsFavorite
       ? [...favoriteImageIds, image.id]
       : favoriteImageIds.filter((id) => id !== image.id);
-    localStorage.setItem("favoriteImageIds", JSON.stringify(newFavoriteImageIds));
+    localStorage.setItem(LOCAL_STORAGE_KEY_FAVORITE_IMAGE_IDS, JSON.stringify(newFavoriteImageIds));
     setFavoriteImageIds(newFavoriteImageIds);
   };
 
@@ -143,15 +165,7 @@ const ImageGallery = ({ css, initImages }: Props) => {
           css={buttonCss}
           size="lg"
           disabled={isFull}
-          onClick={() =>
-            handleFetchImages(
-              images,
-              page + 1,
-              keyword,
-              activeTabId as ActiveTabId,
-              favoriteImageIds,
-            )
-          }
+          onClick={() => handleGetImages(images, page + 1, keyword, activeTabId, favoriteImageIds)}
         >
           See more
         </Button>

@@ -1,8 +1,24 @@
-/**
- * @jest-environment node
- */
+/** @jest-environment node */
 import { GET, POST } from "@/app/api/images/route";
+import {
+  INTERNAL_SERVER_ERROR_MESSAGE,
+  INTERNAL_SERVER_ERROR_NAME,
+  INTERNAL_SERVER_ERROR_STATUS,
+  OK_STATUS,
+  VALIDATION_ERROR_NAME,
+  VALIDATION_ERROR_STATUS,
+} from "@/constants/exceptions";
+import {
+  ACTIVE_TAB_ID_FAVORITE,
+  ACTIVE_TAB_ID_POPULAR,
+  ACTIVE_TAB_ID_TIME_LINE,
+  VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID,
+  VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS,
+  VALIDATION_ERROR_MESAGE_KEYWORD,
+  VALIDATION_ERROR_MESAGE_PAGE,
+} from "@/constants/image";
 import { storage } from "@/utils/supabase";
+import { generateStaticUUID } from "@/utils/uuid";
 import { prismaMock } from "@@/jest.setup";
 
 const imageId = "imageId";
@@ -17,45 +33,84 @@ jest.mock("uuid", () => ({
  */
 
 describe("Images API", () => {
-  const resImages = [{ id: "1", url: "https://placehold.jp/300x300.png", reported: false }];
+  const sampleImageUrl = "https://placehold.jp/300x300.png";
+  const imageId_1 = generateStaticUUID(1);
+  const imageId_2 = generateStaticUUID(2);
   describe("GET", () => {
-    test("Success: When called with initial query, it shoule return images.", async () => {
-      prismaMock.image.findMany.mockResolvedValue(resImages as any);
-      const req = {
-        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=",
-      } as Request;
-      const result = await GET(req);
-      const { images } = await result.json();
-      expect(images).toEqual(resImages);
+    let resImages: Image[];
+    beforeEach(() => {
+      resImages = [
+        { id: imageId_1, url: sampleImageUrl, reported: false },
+        { id: imageId_2, url: sampleImageUrl, reported: false },
+      ];
     });
-    test("Success: When called with page, keyword, and activeTagId set in the query, it should return images.", async () => {
-      prismaMock.image.findMany.mockResolvedValue(resImages as any);
-      const req = {
-        url: "http://localhost:3002/api/images?page=1&keyword=test&activeTabId=popular&favoriteImageIds=",
-      } as Request;
-      const result = await GET(req);
-      const { images } = await result.json();
-      expect(images).toEqual(resImages);
+    describe("Success patterns", () => {
+      test.each`
+        page | keyword           | activeTabId                | favoriteImageIds               | condition
+        ${0} | ${""}             | ${ACTIVE_TAB_ID_TIME_LINE} | ${""}                          | ${"basic query."}
+        ${1} | ${""}             | ${ACTIVE_TAB_ID_TIME_LINE} | ${""}                          | ${"page = 1."}
+        ${0} | ${"a".repeat(50)} | ${ACTIVE_TAB_ID_TIME_LINE} | ${""}                          | ${"keyword <= 50."}
+        ${0} | ${""}             | ${ACTIVE_TAB_ID_POPULAR}   | ${""}                          | ${"activeTabId = popular."}
+        ${0} | ${""}             | ${ACTIVE_TAB_ID_FAVORITE}  | ${""}                          | ${"activeTabId = favorite."}
+        ${0} | ${""}             | ${ACTIVE_TAB_ID_FAVORITE}  | ${imageId_1 + "," + imageId_2} | ${"activeTabId = favorite and set favoriteImageIds."}
+      `(
+        "200: Return images, when $condition",
+        async ({ page, keyword, activeTabId, favoriteImageIds }) => {
+          prismaMock.image.findMany.mockResolvedValue(resImages as any);
+          const req = {
+            url: `http://localhost:3002/api/images?page=${page}&keyword=${keyword}&activeTabId=${activeTabId}&favoriteImageIds=${favoriteImageIds}`,
+          } as Request;
+          const result = await GET(req);
+          const { images } = await result.json();
+          expect(images).toEqual(resImages);
+          expect(result.status).toBe(OK_STATUS);
+        },
+      );
+      test("200: Return images, when isAuthCheck = true.", async () => {
+        resImages[0].reported = true;
+        resImages[1].reported = true;
+        prismaMock.image.findMany.mockResolvedValue(resImages as any);
+        const req = {
+          url: `http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=&isAuthCheck=true`,
+        } as Request;
+        const result = await GET(req);
+        const { images } = await result.json();
+        expect(images).toEqual(resImages);
+        expect(result.status).toBe(OK_STATUS);
+      });
     });
-    test("Success: When called with favoriteImageIds set in the query, it should return images.", async () => {
-      prismaMock.image.findMany.mockResolvedValue(resImages as any);
-      const req = {
-        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=favorite&favoriteImageIds=1",
-      } as Request;
-      const result = await GET(req);
-      const { images } = await result.json();
-      expect(images).toEqual(resImages);
-    });
-    test("Failure: When an error occurs, return 500.", async () => {
-      prismaMock.image.findMany.mockRejectedValue(new Error("Internal server error"));
-      const req = {
-        url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=",
-      } as Request;
-      const result = await GET(req);
-      const { errorMessage } = await result.json();
-      const status = await result.status;
-      expect(errorMessage).toBe("Internal server error");
-      expect(status).toBe(500);
+    describe("Failure patterns", () => {
+      test.each`
+        page   | keyword           | activeTabId                | favoriteImageIds  | expectErrorMessage                            | condition
+        ${-1}  | ${""}             | ${ACTIVE_TAB_ID_TIME_LINE} | ${""}             | ${VALIDATION_ERROR_MESAGE_PAGE}               | ${"page is a negative number."}
+        ${1.5} | ${""}             | ${ACTIVE_TAB_ID_TIME_LINE} | ${""}             | ${VALIDATION_ERROR_MESAGE_PAGE}               | ${"page contains decimal point."}
+        ${0}   | ${"a".repeat(51)} | ${ACTIVE_TAB_ID_TIME_LINE} | ${""}             | ${VALIDATION_ERROR_MESAGE_KEYWORD}            | ${"keyword > 50"}
+        ${0}   | ${""}             | ${"invalid"}               | ${""}             | ${VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID}      | ${"activeTabId is invalid."}
+        ${0}   | ${""}             | ${ACTIVE_TAB_ID_TIME_LINE} | ${"invalid-uuid"} | ${VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS} | ${"favoriteImageIds contains invalid uuid."}
+      `(
+        "400: Return error, when $condition",
+        async ({ page, keyword, activeTabId, favoriteImageIds, expectErrorMessage }) => {
+          const req = {
+            url: `http://localhost:3002/api/images?page=${page}&keyword=${keyword}&activeTabId=${activeTabId}&favoriteImageIds=${favoriteImageIds}`,
+          } as Request;
+          const result = await GET(req);
+          const { name, message } = await result.json();
+          expect(name).toBe(VALIDATION_ERROR_NAME);
+          expect(message).toBe(expectErrorMessage);
+          expect(result.status).toBe(VALIDATION_ERROR_STATUS);
+        },
+      );
+      test("500: Return error, when internal server error occurs.", async () => {
+        prismaMock.image.findMany.mockRejectedValue(new Error("Internal server error"));
+        const req = {
+          url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=",
+        } as Request;
+        const result = await GET(req);
+        const { name, message } = await result.json();
+        expect(name).toBe(INTERNAL_SERVER_ERROR_NAME);
+        expect(message).toBe(INTERNAL_SERVER_ERROR_MESSAGE);
+        expect(result.status).toBe(INTERNAL_SERVER_ERROR_STATUS);
+      });
     });
   });
   describe("POST", () => {
