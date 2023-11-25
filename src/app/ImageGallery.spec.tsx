@@ -1,20 +1,25 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ImageGallery from "@/app/ImageGallery";
+import { UNKNOWN_ERROR_MESSAGE, VALIDATION_ERROR_NAME } from "@/constants/exceptions";
+import { VALIDATION_ERROR_MESAGE_KEYWORD } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
+import { generateStaticUUID } from "@/utils/uuid";
 
 describe("ImageGallery", () => {
-  const initImages = [{ id: "1", url: "https://placehold.jp/300x300.png", reported: false }];
+  const sampleImageUrl = "https://placehold.jp/300x300.png";
+  const imageId = generateStaticUUID(1);
+  const initImages = [{ id: imageId, url: sampleImageUrl, reported: false }];
   describe("Render tests", () => {
-    test("Renders with default props", () => {
+    test("Renders with default props.", () => {
       render(<ImageGallery initImages={initImages} />);
-      const tabsComp = screen.getByText("Time line");
-      const textBoxComp = screen.getByPlaceholderText("Keyword");
-      const imageCardComp = screen.getByAltText("LGTM");
+      const tabs = screen.getByText("Time line");
+      const textBox = screen.getByPlaceholderText("Keyword");
+      const imageCard = screen.getByAltText("LGTM");
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
-      expect(tabsComp).toBeInTheDocument();
-      expect(textBoxComp).toBeInTheDocument();
-      expect(imageCardComp).toBeInTheDocument();
+      expect(tabs).toBeInTheDocument();
+      expect(textBox).toBeInTheDocument();
+      expect(imageCard).toBeInTheDocument();
       expect(seeMoreButton).toBeInTheDocument();
     });
   });
@@ -27,102 +32,149 @@ describe("ImageGallery", () => {
       localStorageMock.getItem.mockClear();
       localStorageMock.setItem.mockClear();
     });
-    test("When popular tab is clicked, changes the active tab, fetch popular images", async () => {
-      ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: "1", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "2", url: "https://placehold.jp/300x300.png", reported: false },
-      ]);
+    test("Get popular images, when popular tab clicked.", async () => {
+      ImageService.prototype.getImages = jest.fn(async () => {
+        const res: GetImagesSuccessResponse = {
+          images: [
+            { id: generateStaticUUID(1), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
+          ],
+          ok: true,
+        };
+        return res;
+      });
       render(<ImageGallery initImages={initImages} />);
 
-      const beforeImageCardComps = screen.getAllByAltText("LGTM");
-      expect(beforeImageCardComps.length).toBe(1);
+      const beforeImageCards = screen.getAllByAltText("LGTM");
+      expect(beforeImageCards.length).toBe(1);
       const popularTab = screen.getByText("Popular");
       expect(popularTab).not.toHaveClass("font_bold");
       await userEvent.click(popularTab);
 
       expect(popularTab).toHaveClass("font_bold");
-      const imageCardComps = screen.getAllByAltText("LGTM");
-      expect(imageCardComps.length).toBe(2);
+      const afterImageCardComp = screen.getAllByAltText("LGTM");
+      expect(afterImageCardComp.length).toBe(2);
     });
-    test("When input keyword and press enter, fetch keyword images", async () => {
-      ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: "1", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "2", url: "https://placehold.jp/300x300.png", reported: false },
-      ]);
+    test("Get images matching keyword, when input keyword and press enter.", async () => {
+      ImageService.prototype.getImages = jest.fn(async () => {
+        const res: GetImagesSuccessResponse = {
+          images: [
+            { id: generateStaticUUID(1), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
+          ],
+          ok: true,
+        };
+        return res;
+      });
       render(<ImageGallery initImages={initImages} />);
 
-      const beforeImageCardComps = screen.getAllByAltText("LGTM");
-      expect(beforeImageCardComps.length).toBe(1);
+      const beforeImageCards = screen.getAllByAltText("LGTM");
+      expect(beforeImageCards.length).toBe(1);
       const textBox = screen.getByPlaceholderText("Keyword");
       await userEvent.type(textBox, "test");
       await userEvent.type(textBox, "{enter}");
 
-      const imageCardComps = screen.getAllByAltText("LGTM");
-      expect(imageCardComps.length).toBe(2);
+      const afterImageCardComps = screen.getAllByAltText("LGTM");
+      expect(afterImageCardComps.length).toBe(2);
     });
-    test("When clicked see more button, fetch 9 images, button is not disabled", async () => {
-      ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: "2", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "3", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "4", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "5", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "6", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "7", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "8", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "9", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "10", url: "https://placehold.jp/300x300.png", reported: false },
-      ]);
+    test("See more button is not disabled, when get 9 images.", async () => {
+      ImageService.prototype.getImages = jest.fn(async () => {
+        const res: GetImagesSuccessResponse = {
+          images: [
+            { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(3), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(4), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(5), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(6), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(7), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(8), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(9), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(10), url: sampleImageUrl, reported: false },
+          ],
+          ok: true,
+        };
+        return res;
+      });
       render(<ImageGallery initImages={initImages} />);
 
-      const beforeImageCardComps = screen.getAllByAltText("LGTM");
-      expect(beforeImageCardComps.length).toBe(1);
+      const beforeImageCards = screen.getAllByAltText("LGTM");
+      expect(beforeImageCards.length).toBe(1);
+      const beforeSeeMoreButton = screen.getByRole("button", { name: "See more" });
+      await userEvent.click(beforeSeeMoreButton);
 
-      const seeMoreButton = screen.getByRole("button", { name: "See more" });
-      await userEvent.click(seeMoreButton);
-
-      const afterImageCardComps = screen.getAllByAltText("LGTM");
-      expect(afterImageCardComps.length).toBe(10);
+      const afterImageCards = screen.getAllByAltText("LGTM");
+      expect(afterImageCards.length).toBe(10);
       const afterSeeMoreButton = screen.getByRole("button", { name: "See more" });
       expect(afterSeeMoreButton).not.toHaveAttribute("disabled");
     });
-    test("When clicked see more button, fetch 8 or less images, button is disabled", async () => {
-      ImageService.prototype.fetchImages = jest.fn(async () => [
-        { id: "2", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "3", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "4", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "5", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "6", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "7", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "8", url: "https://placehold.jp/300x300.png", reported: false },
-        { id: "9", url: "https://placehold.jp/300x300.png", reported: false },
-      ]);
+    test("See more button is disabled, when get 8 or less images.", async () => {
+      ImageService.prototype.getImages = jest.fn(async () => {
+        const res: GetImagesSuccessResponse = {
+          images: [
+            { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(3), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(4), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(5), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(6), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(7), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(8), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(9), url: sampleImageUrl, reported: false },
+          ],
+          ok: true,
+        };
+        return res;
+      });
       render(<ImageGallery initImages={initImages} />);
 
-      const beforeImageCardComps = screen.getAllByAltText("LGTM");
-      expect(beforeImageCardComps.length).toBe(1);
+      const beforeImageCards = screen.getAllByAltText("LGTM");
+      expect(beforeImageCards.length).toBe(1);
+      const beforeSeeMoreButton = screen.getByRole("button", { name: "See more" });
+      await userEvent.click(beforeSeeMoreButton);
 
-      const seeMoreButton = screen.getByRole("button", { name: "See more" });
-      await userEvent.click(seeMoreButton);
-
-      const afterImageCardComps = screen.getAllByAltText("LGTM");
-      expect(afterImageCardComps.length).toBe(9);
+      const afterImageCards = screen.getAllByAltText("LGTM");
+      expect(afterImageCards.length).toBe(9);
       const afterSeeMoreButton = screen.getByRole("button", { name: "See more" });
       expect(afterSeeMoreButton).toHaveAttribute("disabled");
     });
-    test("When failed to get images, it should show a failure modal", async () => {
-      ImageService.prototype.fetchImages = jest.fn().mockRejectedValue(new Error());
+    test("Show a failure modal, when a validation error occurs.", async () => {
+      ImageService.prototype.getImages = jest.fn(async () => {
+        const res: GetImagesErrorResponse = {
+          name: VALIDATION_ERROR_NAME,
+          message: VALIDATION_ERROR_MESAGE_KEYWORD,
+          ok: false,
+        };
+        return res;
+      });
       render(<ImageGallery initImages={initImages} />);
-
-      const beforeImageCardComps = screen.getAllByAltText("LGTM");
-      expect(beforeImageCardComps.length).toBe(1);
 
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       await userEvent.click(seeMoreButton);
 
-      const modalMessage = screen.getByText("Failed to get images. Please try again later.");
+      const modalMessage = screen.getByText(VALIDATION_ERROR_MESAGE_KEYWORD);
       expect(modalMessage).toBeInTheDocument();
     });
-    test("When copying to clipboard succeeds, it should show a success modal", async () => {
+    test("Show a failure modal, when failed to get images.", async () => {
+      const errorMessage = "Test error.";
+      ImageService.prototype.getImages = jest.fn().mockRejectedValue(new Error(errorMessage));
+      render(<ImageGallery initImages={initImages} />);
+
+      const seeMoreButton = screen.getByRole("button", { name: "See more" });
+      await userEvent.click(seeMoreButton);
+
+      const modalMessage = screen.getByText(errorMessage);
+      expect(modalMessage).toBeInTheDocument();
+    });
+    test("Show a failure modal, when an unknown error occurs.", async () => {
+      ImageService.prototype.getImages = jest.fn().mockRejectedValue({});
+      render(<ImageGallery initImages={initImages} />);
+
+      const seeMoreButton = screen.getByRole("button", { name: "See more" });
+      await userEvent.click(seeMoreButton);
+
+      const modalMessage = screen.getByText(UNKNOWN_ERROR_MESSAGE);
+      expect(modalMessage).toBeInTheDocument();
+    });
+    test("Show a success modal, when copying to clipboard.", async () => {
       const clipboardWriteTextMock = jest.fn();
       ImageService.prototype.patchImage = jest.fn(async () => {});
       Object.assign(navigator, {
@@ -139,7 +191,7 @@ describe("ImageGallery", () => {
       const modalMessage = screen.getByText("Copied to clipboard!");
       expect(modalMessage).toBeInTheDocument();
     });
-    test("When copying to clipboard fails, it should show a failure modal", async () => {
+    test("Show a failure modal, when copying to clipboard fails.", async () => {
       ImageService.prototype.patchImage = jest.fn(async () => {});
       Object.assign(navigator, {
         clipboard: {
@@ -154,26 +206,26 @@ describe("ImageGallery", () => {
       const modalMessage = screen.getByText("Failed to copy clipboard. Please try again later.");
       expect(modalMessage).toBeInTheDocument();
     });
-    test("When press favorite button, it will be added to favorites", async () => {
+    test("ImageId is set to localstorage, when press favorite button for an unregistered image.", async () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
       render(<ImageGallery initImages={initImages} />);
       const favoriteButton = screen.getAllByRole("button")[1];
       await userEvent.click(favoriteButton);
-      expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", '["1"]');
+      expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", `["${imageId}"]`);
     });
-    test("When press favorite button when it's already a favorite, it will be removed from favorites", async () => {
+    test("ImageId is removed from localstorage, When press favorite button for a registered image.", async () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
-      localStorageMock.getItem.mockReturnValue('["1"]');
+      localStorageMock.getItem.mockReturnValue(`["${imageId}"]`);
       render(<ImageGallery initImages={initImages} />);
       const favoriteButton = screen.getAllByRole("button")[1];
       await userEvent.click(favoriteButton);
       expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", "[]");
     });
-    test("When press report button, it should show a report modal", async () => {
+    test("Show a report modal, when press report button.", async () => {
       render(<ImageGallery initImages={initImages} />);
       const reportButton = screen.getAllByRole("button")[2];
       await userEvent.click(reportButton);

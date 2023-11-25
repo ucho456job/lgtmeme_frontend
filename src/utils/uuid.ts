@@ -1,6 +1,10 @@
 import { createHash } from "crypto";
 import { v4 as uuid } from "uuid";
 
+export const isUuid = (id: string): boolean => {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+};
+
 export const generateRandomUuid = () => uuid();
 
 const generateSha256Hash = (arg: number | string, start: number, stop?: number): string => {
@@ -10,7 +14,7 @@ const generateSha256Hash = (arg: number | string, start: number, stop?: number):
     .slice(start, stop);
 };
 
-export const generateStaticUUID = (arg: number | string): string => {
+export const generateStaticUUID = (arg: number): string => {
   return (
     generateSha256Hash(arg, 0, 8) +
     "-" +
@@ -24,8 +28,4 @@ export const generateStaticUUID = (arg: number | string): string => {
     "-" +
     generateSha256Hash(arg, -12)
   );
-};
-
-export const isUuid = (id: string): boolean => {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
 };
