@@ -26,11 +26,11 @@ describe("ReportModal", () => {
         "Would you like to report an image that may be inappropriate or violate copyright/privacy?",
       );
       const closeButton = screen.getByRole("button", { name: "Close" });
-      const reportButton = screen.getByRole("button", { name: "Report" });
+      const sendButton = screen.getByRole("button", { name: "Send" });
       expect(image).toBeInTheDocument();
       expect(message).toBeInTheDocument();
       expect(closeButton).toBeInTheDocument();
-      expect(reportButton).toBeInTheDocument();
+      expect(sendButton).toBeInTheDocument();
     });
   });
   describe("Event tests", () => {
@@ -43,8 +43,8 @@ describe("ReportModal", () => {
     test("A success message will be displayed when the report is successful.", async () => {
       ImageService.prototype.patchImage = jest.fn(async () => {});
       render(<ReportModal image={mockImage} onClickClose={onClickCloseMock} />);
-      const reportButton = screen.getByRole("button", { name: "Report" });
-      await userEvent.click(reportButton);
+      const sendButton = screen.getByRole("button", { name: "Send" });
+      await userEvent.click(sendButton);
       const modalMessage = screen.getByText(
         "The report was successful! Please wait a moment for the operator to confirm.",
       );
@@ -53,8 +53,8 @@ describe("ReportModal", () => {
     test("A failure message is displayed when the report fails.", async () => {
       ImageService.prototype.patchImage = jest.fn().mockRejectedValue(new Error());
       render(<ReportModal image={mockImage} onClickClose={onClickCloseMock} />);
-      const reportButton = screen.getByRole("button", { name: "Report" });
-      await userEvent.click(reportButton);
+      const sendButton = screen.getByRole("button", { name: "Send" });
+      await userEvent.click(sendButton);
       const modalMessage = screen.getByText("Report failed. Please try again later.");
       expect(modalMessage).toBeInTheDocument();
     });

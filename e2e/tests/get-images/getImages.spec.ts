@@ -1,13 +1,13 @@
 import { driver } from "../../jest.setup";
 import { homeUrl, takeSnapshot, waitTime } from "../../utils";
-import { prepareData } from "./fetchImages.data";
+import { prepareData } from "./getImages.data";
 import * as path from "path";
 import { By, Key } from "selenium-webdriver";
 
 const currentDirectory = path.dirname(__filename);
 const screenshotsPath = currentDirectory + "/screenshots";
 
-describe("Fetch images", () => {
+describe("Get images", () => {
   test("case1: The maximum number of images to be acquired initially is 9.", async () => {
     await prepareData.case1();
     await driver.get(homeUrl);
@@ -140,9 +140,7 @@ describe("Fetch images", () => {
     await takeSnapshot(driver, `${screenshotsPath}/case7/before.png`);
 
     await driver.findElement(By.xpath("//button[text()='Report']")).click();
-    await driver
-      .findElement(By.xpath("/html/body/main/div/div[5]/div/div/div[2]/div[2]/button"))
-      .click();
+    await driver.findElement(By.xpath("//button[text()='Send']")).click();
     await driver.wait(async () => {
       const dialog = await driver.findElements(
         By.xpath(
