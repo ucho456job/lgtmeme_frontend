@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import Footer from "@/components/organisms/Footer/Footer";
 import {
-  HOME_PAGE_ENDPOINT,
+  HOME_ENDPOINT,
   PRIVACY_POLICY_ENDPOINT,
   TERMS_OF_SERVICE_ENDPOINT,
 } from "@/constants/endpoints";
@@ -19,7 +19,7 @@ describe("Footer", () => {
       const privacyPolicyLink = privacyPolicyButton.closest("a");
       const copyrightText = screen.getByText(`©2023 LGTMeme version ${packageJson.version}`);
       expect(homeButton).toBeInTheDocument();
-      expect(homeLink).toHaveAttribute("href", HOME_PAGE_ENDPOINT);
+      expect(homeLink).toHaveAttribute("href", HOME_ENDPOINT);
       expect(termsOfServiceButton).toBeInTheDocument();
       expect(termsOfServiceLink).toHaveAttribute("href", TERMS_OF_SERVICE_ENDPOINT);
       expect(privacyPolicyButton).toBeInTheDocument();

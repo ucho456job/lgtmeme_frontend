@@ -178,12 +178,19 @@ const ImageEditor = ({ css }: Props) => {
 
       const image = canvas.toDataURL("image/webp");
       const service = new ImageService();
-      const imageUrl = await service.postImage({ image, keyword });
+      const res = await service.postImage({ image, keyword });
+      if (!res.ok) {
+        setModal({ message: res.message, show: true });
+        return;
+      }
       try {
-        await navigator.clipboard.writeText(`![LGTM](${imageUrl})`);
+        await navigator.clipboard.writeText(`![LGTM](${res.imageUrl})`);
         setModal({ message: "Created an image and copied it to the clipboard!", show: true });
       } catch {
-        setModal({ message: "Created an image!", show: true });
+        setModal({
+          message: `Created an image!\nPlease copy markdown below:\n\n![LGTM](${res.imageUrl})`,
+          show: true,
+        });
       }
     } catch {
       setModal({ message: "Failed to create image. Please try again later.", show: true });

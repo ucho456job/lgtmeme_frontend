@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import Header from "@/components/organisms/Header/Header";
-import { HOME_PAGE_ENDPOINT } from "@/constants/endpoints";
+import { HOME_ENDPOINT } from "@/constants/endpoints";
 
 describe("Header", () => {
   describe("Render tests", () => {
@@ -9,7 +9,7 @@ describe("Header", () => {
       const h1 = screen.getByRole("heading", { name: "LGTMeme" });
       const link = screen.getByText("LGTMeme");
       expect(h1).toBeInTheDocument();
-      expect(link).toHaveAttribute("href", HOME_PAGE_ENDPOINT);
+      expect(link).toHaveAttribute("href", HOME_ENDPOINT);
     });
   });
 });

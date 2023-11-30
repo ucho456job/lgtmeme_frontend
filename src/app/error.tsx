@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Button from "@/components/atoms/Button/Button";
-import { HOME_PAGE_ENDPOINT } from "@/constants/endpoints";
+import { HOME_ENDPOINT } from "@/constants/endpoints";
 import { css } from "@@/styled-system/css";
 
 type Props = {
@@ -14,7 +14,7 @@ const Error = ({ error }: Props) => {
     <div className={containerCss}>
       <h1 className={h1Css}>Oops! An error occurred.</h1>
       <p>{error.message}</p>
-      <Link href={HOME_PAGE_ENDPOINT}>
+      <Link href={HOME_ENDPOINT}>
         <Button css={buttonCss}>Back to home</Button>
       </Link>
     </div>

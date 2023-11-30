@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { HOME_PAGE_ENDPOINT } from "@/constants/endpoints";
+import { HOME_ENDPOINT } from "@/constants/endpoints";
 import { css } from "@@/styled-system/css";
 
 const Header = () => {
   return (
     <header className={headerCss}>
       <h1 className={h1Css}>
-        <Link className={linkCss} href={HOME_PAGE_ENDPOINT}>
+        <Link className={linkCss} href={HOME_ENDPOINT}>
           LGTMeme
         </Link>
       </h1>

@@ -138,7 +138,7 @@ describe("ImageGallery", () => {
     });
     test("Show a failure modal, when a validation error occurs.", async () => {
       ImageService.prototype.getImages = jest.fn(async () => {
-        const res: GetImagesErrorResponse = {
+        const res: ErrorResponse = {
           name: VALIDATION_ERROR_NAME,
           message: VALIDATION_ERROR_MESAGE_KEYWORD,
           ok: false,
@@ -154,24 +154,13 @@ describe("ImageGallery", () => {
       expect(modalMessage).toBeInTheDocument();
     });
     test("Show a failure modal, when failed to get images.", async () => {
-      const errorMessage = "Test error.";
-      ImageService.prototype.getImages = jest.fn().mockRejectedValue(new Error(errorMessage));
+      ImageService.prototype.getImages = jest.fn().mockRejectedValue(new Error());
       render(<ImageGallery initImages={initImages} />);
 
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       await userEvent.click(seeMoreButton);
 
-      const modalMessage = screen.getByText(errorMessage);
-      expect(modalMessage).toBeInTheDocument();
-    });
-    test("Show a failure modal, when an unknown error occurs.", async () => {
-      ImageService.prototype.getImages = jest.fn().mockRejectedValue({});
-      render(<ImageGallery initImages={initImages} />);
-
-      const seeMoreButton = screen.getByRole("button", { name: "See more" });
-      await userEvent.click(seeMoreButton);
-
-      const modalMessage = screen.getByText(UNKNOWN_ERROR_MESSAGE);
+      const modalMessage = screen.getByText("Failed to get images. Please try again later.");
       expect(modalMessage).toBeInTheDocument();
     });
     test("Show a success modal, when copying to clipboard.", async () => {

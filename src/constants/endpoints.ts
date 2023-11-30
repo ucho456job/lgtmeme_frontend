@@ -1,5 +1,5 @@
 /** Page endpoints */
-export const HOME_PAGE_ENDPOINT = "/";
+export const HOME_ENDPOINT = "/";
 export const CREATE_IMAGE_ENDPOINT = "/create-image";
 export const PRIVACY_POLICY_ENDPOINT = "/privacy-policy";
 export const TERMS_OF_SERVICE_ENDPOINT = "/terms-of-service";

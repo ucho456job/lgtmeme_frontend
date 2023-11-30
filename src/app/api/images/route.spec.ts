@@ -1,8 +1,9 @@
 /** @jest-environment node */
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { FileObject, StorageError } from "@supabase/storage-js";
 import { GET, POST } from "@/app/api/images/route";
 import {
-  INTERNAL_SERVER_ERROR_MESSAGE,
-  INTERNAL_SERVER_ERROR_NAME,
+  CREATED_STATUS,
   INTERNAL_SERVER_ERROR_STATUS,
   OK_STATUS,
   VALIDATION_ERROR_NAME,
@@ -14,6 +15,7 @@ import {
   ACTIVE_TAB_ID_TIME_LINE,
   VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID,
   VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS,
+  VALIDATION_ERROR_MESAGE_IMAGE,
   VALIDATION_ERROR_MESAGE_KEYWORD,
   VALIDATION_ERROR_MESAGE_PAGE,
 } from "@/constants/image";
@@ -21,10 +23,20 @@ import { storage } from "@/utils/supabase";
 import { generateStaticUUID } from "@/utils/uuid";
 import { prismaMock } from "@@/jest.setup";
 
-const imageId = "imageId";
+const IMAGE_ID = "imageId";
 jest.mock("uuid", () => ({
-  v4: () => imageId,
+  v4: () => IMAGE_ID,
 }));
+
+const PRISMA_ERROR_NAME = "PrismaClientKnownRequestError";
+const PRISMA_ERROR_MESSAGE = "Some prisma error occurs.";
+const PRISMA_CLIENT_ERROR = new PrismaClientKnownRequestError(PRISMA_ERROR_MESSAGE, {
+  code: "Pxxxx",
+  clientVersion: "any version",
+});
+
+const STORAGE_ERROR_NAME = "StorageError";
+const STORAGE_ERROR_MESSAGE = "Some storage error occurs.";
 
 /**
  * You can't just pass the type of the selected column to mockResolvedValue,
@@ -88,7 +100,7 @@ describe("Images API", () => {
         ${0}   | ${""}             | ${"invalid"}               | ${""}             | ${VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID}      | ${"activeTabId is invalid."}
         ${0}   | ${""}             | ${ACTIVE_TAB_ID_TIME_LINE} | ${"invalid-uuid"} | ${VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS} | ${"favoriteImageIds contains invalid uuid."}
       `(
-        "400: Return error, when $condition",
+        "400: Return validation error, when $condition",
         async ({ page, keyword, activeTabId, favoriteImageIds, expectErrorMessage }) => {
           const req = {
             url: `http://localhost:3002/api/images?page=${page}&keyword=${keyword}&activeTabId=${activeTabId}&favoriteImageIds=${favoriteImageIds}`,
@@ -100,57 +112,123 @@ describe("Images API", () => {
           expect(result.status).toBe(VALIDATION_ERROR_STATUS);
         },
       );
-      test("500: Return error, when internal server error occurs.", async () => {
-        prismaMock.image.findMany.mockRejectedValue(new Error("Internal server error"));
+      test("500: Return prisma error, when prisma error occurs.", async () => {
+        prismaMock.image.findMany.mockRejectedValue(PRISMA_CLIENT_ERROR);
         const req = {
           url: "http://localhost:3002/api/images?page=0&keyword=&activeTabId=timeLine&favoriteImageIds=",
         } as Request;
         const result = await GET(req);
         const { name, message } = await result.json();
-        expect(name).toBe(INTERNAL_SERVER_ERROR_NAME);
-        expect(message).toBe(INTERNAL_SERVER_ERROR_MESSAGE);
+        expect(name).toBe(PRISMA_ERROR_NAME);
+        expect(message).toBe(PRISMA_ERROR_MESSAGE);
         expect(result.status).toBe(INTERNAL_SERVER_ERROR_STATUS);
       });
     });
   });
   describe("POST", () => {
-    const req = {
-      json: async () => {
-        return { image: "data:image/webp;base64,iVBORw0KGgoA", keyword: "keyword" };
-      },
-    } as Request;
-    test("Success: Image upload succeeds and returns 200 status.", async () => {
-      jest.spyOn(storage, "upload").mockImplementation(async () => {
-        return { data: { path: imageId }, error: null };
+    const webpImage = "data:image/webp;base64,iVBORw0KGgoA";
+    describe("Success patterns", () => {
+      test.each`
+        image        | keyword           | condition
+        ${webpImage} | ${""}             | ${"basic body."}
+        ${webpImage} | ${"a".repeat(50)} | ${"keyword <= 50."}
+      `("201: Return image url, when $condition", async ({ image, keyword }) => {
+        const req = {
+          json: async () => {
+            return { image, keyword };
+          },
+        } as Request;
+        jest.spyOn(storage, "upload").mockImplementation(async () => {
+          return { data: { path: IMAGE_ID }, error: null };
+        });
+        const expectUrl = "Expect image url";
+        prismaMock.image.create.mockResolvedValue({ url: expectUrl } as any);
+        const result = await POST(req);
+        const { imageUrl } = await result.json();
+        const status = await result.status;
+        expect(imageUrl).toBe(expectUrl);
+        expect(status).toBe(CREATED_STATUS);
       });
-      const url = "Test image url";
-      prismaMock.image.create.mockResolvedValue({ url } as any);
-      const result = await POST(req);
-      const { imageUrl } = await result.json();
-      const status = await result.status;
-      expect(imageUrl).toBe(url);
-      expect(status).toBe(200);
     });
-    test("Failure: Image upload failed and returns 500 status.", async () => {
-      jest.spyOn(storage, "upload").mockImplementation(async () => {
-        return { data: null, error: "happened error" as any };
+    describe("Failure patterns", () => {
+      const pngImage = "data:image/png;base64,iVBORw0KGgoA";
+      test.each`
+        image        | keyword           | expectErrorMessage                 | condition
+        ${0}         | ${""}             | ${VALIDATION_ERROR_MESAGE_IMAGE}   | ${"image isn't string."}
+        ${pngImage}  | ${""}             | ${VALIDATION_ERROR_MESAGE_IMAGE}   | ${"image isn't webp."}
+        ${webpImage} | ${0}              | ${VALIDATION_ERROR_MESAGE_KEYWORD} | ${"keyword is't string."}
+        ${webpImage} | ${"a".repeat(51)} | ${VALIDATION_ERROR_MESAGE_KEYWORD} | ${"keyword > 50."}
+      `(
+        "400: Return validation error, when $condition",
+        async ({ image, keyword, expectErrorMessage }) => {
+          const req = {
+            json: async () => {
+              return { image, keyword };
+            },
+          } as Request;
+          const result = await POST(req);
+          const { name, message } = await result.json();
+          expect(name).toBe(VALIDATION_ERROR_NAME);
+          expect(message).toBe(expectErrorMessage);
+          expect(result.status).toBe(VALIDATION_ERROR_STATUS);
+        },
+      );
+      test("500: Return storage error, when an error occurs in storage.upload.", async () => {
+        const req = {
+          json: async () => {
+            return { image: webpImage, keyword: "" };
+          },
+        } as Request;
+        jest.spyOn(storage, "upload").mockImplementation(async () => {
+          const storageError = new StorageError(STORAGE_ERROR_MESSAGE);
+          return { data: null, error: storageError };
+        });
+        const result = await POST(req);
+        const { name, message } = await result.json();
+        expect(name).toBe(STORAGE_ERROR_NAME);
+        expect(message).toBe(STORAGE_ERROR_MESSAGE);
+        expect(result.status).toBe(INTERNAL_SERVER_ERROR_STATUS);
       });
-      const result = await POST(req);
-      const { errorMessage } = await result.json();
-      const status = await result.status;
-      expect(errorMessage).toBe("Image upload failed");
-      expect(status).toBe(500);
-    });
-    test("Failure: Image create failed and returns 500 status.", async () => {
-      jest.spyOn(storage, "upload").mockImplementation(async () => {
-        return { data: { path: imageId }, error: null };
+      test("500: Return prisma error, when timeout error occurs.", async () => {
+        const req = {
+          json: async () => {
+            return { image: webpImage, keyword: "" };
+          },
+        } as Request;
+        jest.spyOn(storage, "upload").mockImplementation(async () => {
+          return { data: { path: IMAGE_ID }, error: null };
+        });
+        prismaMock.image.create.mockRejectedValue(PRISMA_CLIENT_ERROR);
+        jest.spyOn(storage, "remove").mockImplementation(async () => {
+          const fileObjects = [] as FileObject[];
+          return { data: fileObjects, error: null };
+        });
+        const result = await POST(req);
+        const { name, message } = await result.json();
+        expect(name).toBe(PRISMA_ERROR_NAME);
+        expect(message).toBe(PRISMA_ERROR_MESSAGE);
+        expect(result.status).toBe(INTERNAL_SERVER_ERROR_STATUS);
       });
-      prismaMock.image.create.mockRejectedValue(new Error("Internal server error"));
-      const result = await POST(req);
-      const { errorMessage } = await result.json();
-      const status = await result.status;
-      expect(errorMessage).toBe("Internal server error");
-      expect(status).toBe(500);
+      test("500: Return storage error, when an error occurs in storage.remove.", async () => {
+        const req = {
+          json: async () => {
+            return { image: webpImage, keyword: "" };
+          },
+        } as Request;
+        jest.spyOn(storage, "upload").mockImplementation(async () => {
+          return { data: { path: IMAGE_ID }, error: null };
+        });
+        prismaMock.image.create.mockRejectedValue(PRISMA_CLIENT_ERROR);
+        jest.spyOn(storage, "remove").mockImplementation(async () => {
+          const storageError = new StorageError(STORAGE_ERROR_MESSAGE);
+          return { data: null, error: storageError };
+        });
+        const result = await POST(req);
+        const { name, message } = await result.json();
+        expect(name).toBe(STORAGE_ERROR_NAME);
+        expect(message).toBe(STORAGE_ERROR_MESSAGE);
+        expect(result.status).toBe(INTERNAL_SERVER_ERROR_STATUS);
+      });
     });
   });
 });

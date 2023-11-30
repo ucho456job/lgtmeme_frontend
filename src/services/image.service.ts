@@ -2,26 +2,36 @@ import { IMAGES_API_ENDPOINT } from "@/constants/endpoints";
 import { CommonService } from "@/services";
 
 export class ImageService extends CommonService {
-  async getImages(getImagesQuery: GetImagesQuery): Promise<GetImagesResponse> {
+  async getImages(query: GetImagesQuery): Promise<GetImagesResponse> {
     try {
-      const url = this.createUrl(IMAGES_API_ENDPOINT, getImagesQuery);
+      const url = this.createUrl(IMAGES_API_ENDPOINT, query);
       const config = this.createConfig("GET");
       const res = await fetch(url, config);
       if (!res.ok) {
         const error: ErrorResponseBody = await res.json();
-        return { name: error.name, message: error.message, ok: false };
+        return { ...error, ok: false };
       }
       const body: GetImagesResponseBody = await res.json();
-      return { images: body.images, ok: true };
+      return { ...body, ok: true };
     } catch (error) {
       return this.returnUnknownError();
     }
   }
 
-  async postImage(body: PostImageReqBody) {
-    const config = this.createConfig("POST", body);
-    const res = await this.sendRequest<{ imageUrl: string }>(IMAGES_API_ENDPOINT, config);
-    return res.imageUrl;
+  async postImage(body: PostImageRequestBody): Promise<PostImageResponse> {
+    try {
+      const url = this.createUrl(IMAGES_API_ENDPOINT);
+      const config = this.createConfig("POST", body);
+      const res = await fetch(url, config);
+      if (!res.ok) {
+        const error: ErrorResponseBody = await res.json();
+        return { ...error, ok: false };
+      }
+      const resBody: PostImageResponseBody = await res.json();
+      return { ...resBody, ok: true };
+    } catch (error) {
+      return this.returnUnknownError();
+    }
   }
 
   async patchImage(id: string, body: PatchImageReqBody) {

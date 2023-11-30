@@ -23,18 +23,19 @@ export class ValidationError extends Error {
 }
 
 export const commonErrorHandler = (error: unknown) => {
+  let name: string, message: string, status: number;
   if (error instanceof ValidationError) {
-    return NextResponse.json(
-      { name: error.name, message: error.message },
-      { status: error.status },
-    );
+    name = error.name;
+    message = error.message;
+    status = error.status;
+  } else if (error instanceof Error) {
+    name = error.name;
+    message = error.message;
+    status = INTERNAL_SERVER_ERROR_STATUS;
   } else {
-    return NextResponse.json(
-      {
-        name: INTERNAL_SERVER_ERROR_NAME,
-        message: INTERNAL_SERVER_ERROR_MESSAGE,
-      },
-      { status: INTERNAL_SERVER_ERROR_STATUS },
-    );
+    name = INTERNAL_SERVER_ERROR_NAME;
+    message = INTERNAL_SERVER_ERROR_MESSAGE;
+    status = INTERNAL_SERVER_ERROR_STATUS;
   }
+  return NextResponse.json({ name, message }, { status });
 };
