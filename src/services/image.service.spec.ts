@@ -17,13 +17,13 @@ describe("ImageService", () => {
   });
   describe("getImages", () => {
     let resImages: Image[];
-    let getImagesQuery: GetImagesQuery;
+    let query: GetImagesQuery;
     beforeEach(() => {
       resImages = [
         { id: generateStaticUUID(1), url: sampleImageUrl, reported: false },
         { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
       ];
-      getImagesQuery = {
+      query = {
         page: 0,
         keyword: "keyword",
         activeTabId: ACTIVE_TAB_ID_TIME_LINE,
@@ -32,50 +32,49 @@ describe("ImageService", () => {
     });
     describe("Success patterns", () => {
       test("200: Return images, when basic query.", async () => {
+        const mockResponse = { images: resImages };
         const mockFetch = jest.fn().mockResolvedValue({
           ok: true,
-          json: async () => ({ images: resImages }),
+          json: async () => mockResponse,
         });
         global.fetch = mockFetch;
-        const result = await imageService.getImages(getImagesQuery);
-        expect(result).toEqual({ images: resImages, ok: true });
+        const result = await imageService.getImages(query);
+        expect(result).toEqual({ ...mockResponse, ok: true });
       });
       test("200: Return images, when set isAuthCheck in query.", async () => {
-        getImagesQuery.isAuthCheck = true;
+        query.isAuthCheck = true;
         resImages[0].reported = true;
         resImages[1].reported = true;
+        const mockResponse = { images: resImages };
         const mockFetch = jest.fn().mockResolvedValue({
           ok: true,
-          json: async () => ({ images: resImages }),
+          json: async () => mockResponse,
         });
         global.fetch = mockFetch;
-        const result = await imageService.getImages(getImagesQuery);
-        expect(result).toEqual({ images: resImages, ok: true });
+        const result = await imageService.getImages(query);
+        expect(result).toEqual({ ...mockResponse, ok: true });
       });
     });
     describe("Failure patterns", () => {
       test("400: Return error, when validation error.", async () => {
+        const mockResponse = {
+          name: VALIDATION_ERROR_NAME,
+          message: VALIDATION_ERROR_MESAGE_KEYWORD,
+        };
         const mockFetch = jest.fn().mockResolvedValue({
           ok: false,
           status: VALIDATION_ERROR_STATUS,
-          json: async () => ({
-            name: VALIDATION_ERROR_NAME,
-            message: VALIDATION_ERROR_MESAGE_KEYWORD,
-          }),
+          json: async () => mockResponse,
         });
         global.fetch = mockFetch;
-        getImagesQuery.keyword = "a".repeat(51);
-        const result = await imageService.getImages(getImagesQuery);
-        expect(result).toEqual({
-          name: VALIDATION_ERROR_NAME,
-          message: VALIDATION_ERROR_MESAGE_KEYWORD,
-          ok: false,
-        });
+        query.keyword = "a".repeat(51);
+        const result = await imageService.getImages(query);
+        expect(result).toEqual({ ...mockResponse, ok: false });
       });
       test("500: Return error, when unknown error.", async () => {
         const mockFetch = jest.fn().mockRejectedValue(new Error());
         global.fetch = mockFetch;
-        const result = await imageService.getImages(getImagesQuery);
+        const result = await imageService.getImages(query);
         expect(result).toEqual({
           name: UNKNOWN_ERROR_NAME,
           message: UNKNOWN_ERROR_MESSAGE,
@@ -84,26 +83,52 @@ describe("ImageService", () => {
       });
     });
   });
-  test("The postImage method posts data correctly", async () => {
-    const mockResponse = { imageUrl: "uploaded-image.jpg" };
-    const mockFetch = jest.fn().mockResolvedValue({
-      json: async () => mockResponse,
+  describe("postImage", () => {
+    let body: PostImageRequestBody;
+    beforeEach(() => {
+      body = {
+        image: "data:image/png;base64,iVBORw0KGgoA",
+        keyword: "keyword",
+      };
     });
-    global.fetch = mockFetch;
-
-    const body: PostImageReqBody = { image: "base64encodedimage", keyword: "keyword" };
-    const imageUrl = await imageService.postImage(body);
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      `${imageService.baseUrl}${IMAGES_API_ENDPOINT}`,
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify(body),
-      }),
-    );
-    expect(imageUrl).toEqual(mockResponse.imageUrl);
+    describe("Success patterns", () => {
+      test("200: Return imageUrl, when basic body.", async () => {
+        const mockResponse = { imageUrl: sampleImageUrl };
+        const mockFetch = jest.fn().mockResolvedValue({
+          ok: true,
+          json: async () => mockResponse,
+        });
+        global.fetch = mockFetch;
+        const result = await imageService.postImage(body);
+        expect(result).toEqual({ ...mockResponse, ok: true });
+      });
+    });
+    describe("Failure patterns", () => {
+      test("400: Return error, when validtaion error.", async () => {
+        const mockResponse = {
+          name: VALIDATION_ERROR_NAME,
+          message: VALIDATION_ERROR_MESAGE_KEYWORD,
+        };
+        const mockFetch = jest.fn().mockResolvedValue({
+          ok: false,
+          json: async () => mockResponse,
+        });
+        global.fetch = mockFetch;
+        const result = await imageService.postImage(body);
+        expect(result).toEqual({ ...mockResponse, ok: false });
+      });
+      test("500: Return error, when unknown error.", async () => {
+        const mockFetch = jest.fn().mockRejectedValue(new Error());
+        global.fetch = mockFetch;
+        const result = await imageService.postImage(body);
+        expect(result).toEqual({
+          name: UNKNOWN_ERROR_NAME,
+          message: UNKNOWN_ERROR_MESSAGE,
+          ok: false,
+        });
+      });
+    });
   });
-
   test("The patchImage method updates data correctly", async () => {
     const imageId = "123";
     const mockFetch = jest.fn().mockResolvedValue({
@@ -120,7 +145,6 @@ describe("ImageService", () => {
       }),
     );
   });
-
   test("The deleteImage method delete data correctly", async () => {
     const imageId = "123";
     const mockFetch = jest.fn().mockResolvedValue({

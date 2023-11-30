@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { decode } from "base64-arraybuffer";
 import { STORAGE_API_ENDPOINT } from "@/constants/endpoints";
-import { OK_STATUS } from "@/constants/exceptions";
+import { CREATED_STATUS, OK_STATUS } from "@/constants/exceptions";
 import {
   ACTIVE_TAB_ID_FAVORITE,
   ACTIVE_TAB_ID_POPULAR,
@@ -10,6 +10,7 @@ import {
   MAX_KEYWORD_LENGTH,
   VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID,
   VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS,
+  VALIDATION_ERROR_MESAGE_IMAGE,
   VALIDATION_ERROR_MESAGE_KEYWORD,
   VALIDATION_ERROR_MESAGE_PAGE,
 } from "@/constants/image";
@@ -75,31 +76,47 @@ export const GET = async (req: Request) => {
   }
 };
 
+const validatePostRequestBody = (reqBody: PostImageRequestBody) => {
+  const { image, keyword } = reqBody;
+  if (typeof image !== "string" || !image.startsWith("data:image/webp;base64")) {
+    throw new ValidationError(VALIDATION_ERROR_MESAGE_IMAGE);
+  }
+  if (typeof keyword !== "string" || keyword.length > MAX_KEYWORD_LENGTH) {
+    throw new ValidationError(VALIDATION_ERROR_MESAGE_KEYWORD);
+  }
+};
+
 export const POST = async (req: Request) => {
   try {
     await prisma.$connect();
-    const reqBody: PostImageReqBody = await req.json();
+    const reqBody: PostImageRequestBody = await req.json();
+    validatePostRequestBody(reqBody);
     const base64 = reqBody.image.split(",")[1];
     const id = generateRandomUuid();
 
-    const { error } = await storage.upload(id, decode(base64), {
+    const { error: storageError } = await storage.upload(id, decode(base64), {
       contentType: "image/webp",
     });
-    if (error) throw new Error("Image upload failed");
+    if (storageError) return commonErrorHandler(storageError);
 
-    const image = await prisma.image.create({
-      select: { url: true },
-      data: {
-        id,
-        url: process.env.NEXT_PUBLIC_SUPABASE_URL + STORAGE_API_ENDPOINT + "/" + id,
-        keyword: reqBody.keyword,
-      },
-    });
-    const resBody: PostImageResBody = { imageUrl: image.url };
-    return NextResponse.json(resBody);
+    try {
+      const image = await prisma.image.create({
+        select: { url: true },
+        data: {
+          id,
+          url: process.env.NEXT_PUBLIC_SUPABASE_URL + STORAGE_API_ENDPOINT + "/" + id,
+          keyword: reqBody.keyword,
+        },
+      });
+      const resBody: PostImageResponseBody = { imageUrl: image.url };
+      return NextResponse.json(resBody, { status: CREATED_STATUS });
+    } catch (prismaError) {
+      const { error: storageError } = await storage.remove([`${id}`]);
+      if (storageError) return commonErrorHandler(storageError);
+      return commonErrorHandler(prismaError);
+    }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "POST request failed";
-    return NextResponse.json({ errorMessage }, { status: 500 });
+    return commonErrorHandler(error);
   } finally {
     await prisma.$disconnect();
   }

@@ -18,3 +18,9 @@ type ErrorResponseBody = {
   name: string;
   message: string;
 };
+
+type ErrorResponse = {
+  name: string;
+  message: string;
+  ok: false;
+};

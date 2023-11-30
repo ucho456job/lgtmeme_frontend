@@ -42,7 +42,7 @@ const backgroundCss = css({
 });
 const modalCss = css({
   width: "300px",
-  height: "120px",
+  minHeight: "120px",
   borderRadius: "lg",
   bgColor: "WHITE",
   boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
@@ -53,7 +53,8 @@ const modalCss = css({
 });
 const messageCss = css({
   width: "250px",
-  height: "68px",
+  minHeight: "68px",
+  whiteSpace: "pre-wrap",
 });
 const buttonCss = css({ marginX: "auto" });
 

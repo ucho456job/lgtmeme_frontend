@@ -11,6 +11,7 @@ export const VALIDATION_ERROR_MESAGE_KEYWORD =
   "Keyword must be a string and less than 50 characters.";
 export const VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID = "Invalid activeTabId.";
 export const VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS = "Invalid uuid in favoriteImageIds.";
+export const VALIDATION_ERROR_MESAGE_IMAGE = "Image is not a base64 encoded webp format string.";
 
 export const FONT_FAMILY_OPTIONS = [
   { value: "Arial", label: "Arial" },

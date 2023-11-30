@@ -9,7 +9,6 @@ import Svg from "@/components/atoms/Svg/Svg";
 import Tabs from "@/components/atoms/Tabs/Tabs";
 import ImageCard from "@/components/molecules/ImageCard/ImageCard";
 import Modal from "@/components/molecules/Modal/Modal";
-import { UNKNOWN_ERROR_MESSAGE } from "@/constants/exceptions";
 import {
   ACTIVE_TAB_ID_FAVORITE,
   ACTIVE_TAB_ID_POPULAR,
@@ -84,9 +83,9 @@ const ImageGallery = ({ css, initImages }: Props) => {
         setImages(Array.from(imageMap.values()));
       }
       if (res.images.length < MAX_IMAGES_FETCH_COUNT) setIsFull(true);
-    } catch (error) {
+    } catch {
       setModal({
-        message: error instanceof Error ? error.message : UNKNOWN_ERROR_MESSAGE,
+        message: "Failed to get images. Please try again later.",
         show: true,
       });
     } finally {

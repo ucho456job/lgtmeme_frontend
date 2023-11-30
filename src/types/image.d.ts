@@ -23,13 +23,23 @@ type GetImagesSuccessResponse = {
   ok: true;
 };
 
-type GetImagesErrorResponse = {
-  name: string;
-  message: string;
-  ok: false;
+type GetImagesResponse = GetImagesSuccessResponse | ErrorResponse;
+
+type PostImageRequestBody = {
+  image: string;
+  keyword: string;
 };
 
-type GetImagesResponse = GetImagesSuccessResponse | GetImagesErrorResponse;
+type PostImageResponseBody = {
+  imageUrl: string;
+};
+
+type PostImageSuccessResponse = {
+  imageUrl: string;
+  ok: true;
+};
+
+type PostImageResponse = PostImageSuccessResponse | ErrorResponse;
 
 type TextStyle = {
   left: number;
@@ -56,15 +66,6 @@ type SizeMap = Map<
     diff: number;
   }
 >;
-
-type PostImageReqBody = {
-  image: string;
-  keyword: string;
-};
-
-type PostImageResBody = {
-  imageUrl: string;
-};
 
 type PatchRequestTypeCopy = "copy";
 type PatchRequestTypeReport = "report";

@@ -29,11 +29,7 @@ export class CommonService {
     };
   }
 
-  returnUnknownError(): {
-    name: string;
-    message: string;
-    ok: false;
-  } {
+  returnUnknownError(): ErrorResponse {
     return {
       name: UNKNOWN_ERROR_NAME,
       message: UNKNOWN_ERROR_MESSAGE,

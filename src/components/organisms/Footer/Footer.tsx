@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Button from "@/components/atoms/Button/Button";
 import {
-  HOME_PAGE_ENDPOINT,
+  HOME_ENDPOINT,
   PRIVACY_POLICY_ENDPOINT,
   TERMS_OF_SERVICE_ENDPOINT,
 } from "@/constants/endpoints";
@@ -12,7 +12,7 @@ const Footer = () => {
   return (
     <footer className={footerCss}>
       <div className={buttonsCss}>
-        <Link href={HOME_PAGE_ENDPOINT}>
+        <Link href={HOME_ENDPOINT}>
           <Button visual="text">Home</Button>
         </Link>
         <Link href={TERMS_OF_SERVICE_ENDPOINT}>
