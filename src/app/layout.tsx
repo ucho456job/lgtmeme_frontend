@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "LGTMeme",
   description:
-    "LGTMemeはシンプルなLGTM（Looks Good To Me）画像作成サービスです。お気に入りの画像に素早くLGTMの文字を挿入してMarkdownをコピーできます。単調なコードレビューや承認プロセスにユーモアのあるLGTM画像を使って、華やかにしましょう。",
+    "LGTMemeはシンプルなLGTM（Looks Good To Me）画像作成サービスです。お気に入りの画像に素早くLGTMの文字を挿入してMarkdownをクリップボードにコピーできます。単調なコードレビューや承認プロセスを、ユーモアのあるLGTM画像で華やかにしましょう。",
   manifest: "/manifest.webmanifest",
   icons: [{ rel: "icon", url: Favicon.src }],
   themeColor: "#292524",
