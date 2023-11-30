@@ -1,13 +1,13 @@
 # LGTMeme
-LGTMeme is a simple LGTM (Looks Good To Me) image creation service. You can quickly insert LGTM characters into your favorite images and copy markdown to the clipboard. Brighten up the monotonous code review and approval process with humorous LGTM images.
+LGTMeme is a simple LGTM (Looks Good To Me) image creation service. You can quickly insert LGTM characters into your favorite image and copy markdown to the clipboard. Brighten up the monotonous code review and approval process with humorous LGTM image.
 
 ## URL
 
-Production: https://lgtmeme.vercel.app/
+Production: https://lgtmeme.vercel.app
 
-Preview: https://lgtmeme-git-dev-ucho456job.vercel.app/
+Preview: https://lgtmeme-git-dev-ucho456job.vercel.app
 
-Component catalog in storybook: https://ucho456job.github.io/LGTMeme/
+Storybook: https://ucho456job.github.io/LGTMeme
 
 ## Technologies
 
@@ -61,8 +61,12 @@ graph TD;
 
 ## Wiki
 
-[Getting start](https://github.com/ucho456job/LGTMeme/wiki/Getting-start)
+[Quick start](https://github.com/ucho456job/LGTMeme/wiki/Quick-start)
 
-[Running tests](https://github.com/ucho456job/LGTMeme/wiki/Running-tests)
+[Storybook](https://github.com/ucho456job/LGTMeme/wiki/Storybook)
 
-[Reference the component catalog in Storybook](https://github.com/ucho456job/LGTMeme/wiki/Reference-the-component-catalog-in-Storybook)
+[Unit test](https://github.com/ucho456job/LGTMeme/wiki/Unit-test)
+
+[E2E test](https://github.com/ucho456job/LGTMeme/wiki/E2E-test)
+
+[Why I chose it](https://github.com/ucho456job/LGTMeme/wiki/Why-I-chose-it)
