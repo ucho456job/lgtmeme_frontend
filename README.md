@@ -1,5 +1,5 @@
 # LGTMeme
-LGTMeme is a simple service for creating LGTM images. You can quickly insert the letters "LGTM" into your favorite images and copy the Markdown. Use humorous LGTM images to brighten up monotonous code reviews and approval processes.
+LGTMeme is a simple LGTM (Looks Good To Me) image creation service. You can quickly insert LGTM characters into your favorite images and copy markdown to the clipboard. Brighten up the monotonous code review and approval process with humorous LGTM images.
 
 ## URL
 
