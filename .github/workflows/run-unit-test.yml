@@ -7,7 +7,7 @@ on:
       - dev
 
 jobs:
-  run-unit-tests:
+  run-unit-test:
     runs-on: ubuntu-latest
 
     steps:
