@@ -34,7 +34,7 @@ export class NotFoundError extends Error {
   }
 }
 
-export const createErrorResponse = (error: unknown) => {
+export const adjustErrorResponse = (error: unknown) => {
   let name: string, message: string, status: number;
   if (error instanceof ValidationError || error instanceof NotFoundError) {
     name = error.name;

@@ -11,13 +11,13 @@ import {
   VALIDATION_ERROR_STATUS,
 } from "@/constants/exceptions";
 import { VALIDATION_ERROR_MESAGE_KEYWORD } from "@/constants/image";
-import { createErrorResponse, NotFoundError, ValidationError } from "@/utils/exceptions";
+import { adjustErrorResponse, NotFoundError, ValidationError } from "@/utils/exceptions";
 
 describe("exceptions", () => {
-  describe("createErrorResponse", () => {
+  describe("adjustErrorResponse", () => {
     test("Return validation error, when error type is ValidationError.", async () => {
       const error = new ValidationError(VALIDATION_ERROR_MESAGE_KEYWORD);
-      const result = createErrorResponse(error);
+      const result = adjustErrorResponse(error);
       expect(result).toEqual({
         name: VALIDATION_ERROR_NAME,
         message: VALIDATION_ERROR_MESAGE_KEYWORD,
@@ -26,7 +26,7 @@ describe("exceptions", () => {
     });
     test("Return not found error, when error type is NotFoundError.", async () => {
       const error = new NotFoundError();
-      const result = createErrorResponse(error);
+      const result = adjustErrorResponse(error);
       expect(result).toEqual({
         name: NOT_FOUND_ERROR_NAME,
         message: NOT_FOUND_ERROR_MESSAGE,
@@ -36,7 +36,7 @@ describe("exceptions", () => {
     test("Return error when known error types.", async () => {
       const errorMessage = "Some error occurs.";
       const error = new Error(errorMessage);
-      const result = createErrorResponse(error);
+      const result = adjustErrorResponse(error);
       expect(result).toEqual({
         name: "Error",
         message: errorMessage,
@@ -50,7 +50,7 @@ describe("exceptions", () => {
         code: "Pxxxx",
         clientVersion: "any version",
       });
-      const result = createErrorResponse(error);
+      const result = adjustErrorResponse(error);
       expect(result).toEqual({
         name: prismaErrorName,
         message: prismaErrorMessage,
@@ -59,7 +59,7 @@ describe("exceptions", () => {
     });
     test("Return internal server error when unknown error types.", async () => {
       const error = { someError: "someError" };
-      const result = createErrorResponse(error);
+      const result = adjustErrorResponse(error);
       expect(result).toEqual({
         name: INTERNAL_SERVER_ERROR_NAME,
         message: INTERNAL_SERVER_ERROR_MESSAGE,
