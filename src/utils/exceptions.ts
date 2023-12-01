@@ -34,10 +34,9 @@ export class NotFoundError extends Error {
   }
 }
 
-export const commonErrorHandler = (error: unknown) => {
+export const adjustErrorResponse = (error: unknown) => {
   let name: string, message: string, status: number;
-  const isCustomError = error instanceof ValidationError || error instanceof NotFoundError;
-  if (isCustomError) {
+  if (error instanceof ValidationError || error instanceof NotFoundError) {
     name = error.name;
     message = error.message;
     status = error.status;
@@ -50,5 +49,5 @@ export const commonErrorHandler = (error: unknown) => {
     message = INTERNAL_SERVER_ERROR_MESSAGE;
     status = INTERNAL_SERVER_ERROR_STATUS;
   }
-  return NextResponse.json({ name, message }, { status });
+  return { name, message, status };
 };

@@ -6,12 +6,12 @@ import {
   PATCH_IMAGE_REQUEST_TYPE_REPORT,
   VALIDATION_ERROR_MESAGE_REQUEST_TYPE,
 } from "@/constants/image";
-import { NotFoundError, ValidationError, commonErrorHandler } from "@/utils/exceptions";
+import { NotFoundError, ValidationError, adjustErrorResponse } from "@/utils/exceptions";
 import { verifyAuth } from "@/utils/jwt";
 import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
 
-const validatePatchRequestBody = (reqBody: PatchImageRequestBody) => {
+const validatePatchRequestBody = (reqBody: PatchImageRequestBody): string | null => {
   const { requestType } = reqBody;
   const requestTypes = [
     PATCH_IMAGE_REQUEST_TYPE_COPY,
@@ -19,15 +19,17 @@ const validatePatchRequestBody = (reqBody: PatchImageRequestBody) => {
     PATCH_IMAGE_REQUEST_TYPE_AUTH_CHECK,
   ];
   if (!requestTypes.includes(requestType)) {
-    throw new ValidationError(VALIDATION_ERROR_MESAGE_REQUEST_TYPE);
+    return VALIDATION_ERROR_MESAGE_REQUEST_TYPE;
   }
+  return null;
 };
 
 export const PATCH = async (req: Request) => {
   try {
     await prisma.$connect();
     const reqBody: PatchImageRequestBody = await req.json();
-    validatePatchRequestBody(reqBody);
+    const validateMessage = validatePatchRequestBody(reqBody);
+    if (validateMessage) throw new ValidationError(validateMessage);
     const id = req.url.split("/images/")[1];
     const image = await prisma.image.findUnique({ select: { usedCount: true }, where: { id } });
     if (!image) throw new NotFoundError();
@@ -46,7 +48,8 @@ export const PATCH = async (req: Request) => {
     await prisma.image.update({ where: { id }, data: updateData });
     return NextResponse.json({}, { status: OK_STATUS });
   } catch (error) {
-    return commonErrorHandler(error);
+    const { name, message, status } = adjustErrorResponse(error);
+    return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();
   }

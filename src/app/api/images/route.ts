@@ -14,27 +14,28 @@ import {
   VALIDATION_ERROR_MESAGE_KEYWORD,
   VALIDATION_ERROR_MESAGE_PAGE,
 } from "@/constants/image";
-import { ValidationError, commonErrorHandler } from "@/utils/exceptions";
+import { ValidationError, adjustErrorResponse } from "@/utils/exceptions";
 import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
 import { generateRandomUuid, isUuid } from "@/utils/uuid";
 
-const validateGetQuery = (query: GetImagesQuery) => {
+const validateGetQuery = (query: GetImagesQuery): string | null => {
   const { page, keyword, activeTabId, favoriteImageIds } = query;
   if (!Number.isInteger(page) || page < 0) {
-    throw new ValidationError(VALIDATION_ERROR_MESAGE_PAGE);
+    return VALIDATION_ERROR_MESAGE_PAGE;
   }
   if (keyword.length > MAX_KEYWORD_LENGTH) {
-    throw new ValidationError(VALIDATION_ERROR_MESAGE_KEYWORD);
+    return VALIDATION_ERROR_MESAGE_KEYWORD;
   }
   if (
     ![ACTIVE_TAB_ID_TIME_LINE, ACTIVE_TAB_ID_POPULAR, ACTIVE_TAB_ID_FAVORITE].includes(activeTabId)
   ) {
-    throw new ValidationError(VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID);
+    return VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID;
   }
   if (!favoriteImageIds.every((id) => isUuid(id) || id === "")) {
-    throw new ValidationError(VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS);
+    return VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS;
   }
+  return null;
 };
 
 export const GET = async (req: Request) => {
@@ -48,7 +49,8 @@ export const GET = async (req: Request) => {
       favoriteImageIds: (searchParams.get("favoriteImageIds") || "").split(","),
       isAuthCheck: searchParams.get("isAuthCheck") ? true : false,
     };
-    validateGetQuery(query);
+    const validateMessage = validateGetQuery(query);
+    if (validateMessage) throw new ValidationError(validateMessage);
     const { page, keyword, activeTabId, favoriteImageIds, isAuthCheck } = query;
     const skip = page * MAX_IMAGES_FETCH_COUNT;
 
@@ -70,34 +72,40 @@ export const GET = async (req: Request) => {
     const resBody: GetImagesResponseBody = { images };
     return NextResponse.json(resBody, { status: OK_STATUS });
   } catch (error) {
-    return commonErrorHandler(error);
+    const { name, message, status } = adjustErrorResponse(error);
+    return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();
   }
 };
 
-const validatePostRequestBody = (reqBody: PostImageRequestBody) => {
+const validatePostRequestBody = (reqBody: PostImageRequestBody): string | null => {
   const { image, keyword } = reqBody;
   if (typeof image !== "string" || !image.startsWith("data:image/webp;base64")) {
-    throw new ValidationError(VALIDATION_ERROR_MESAGE_IMAGE);
+    return VALIDATION_ERROR_MESAGE_IMAGE;
   }
   if (typeof keyword !== "string" || keyword.length > MAX_KEYWORD_LENGTH) {
-    throw new ValidationError(VALIDATION_ERROR_MESAGE_KEYWORD);
+    return VALIDATION_ERROR_MESAGE_KEYWORD;
   }
+  return null;
 };
 
 export const POST = async (req: Request) => {
   try {
     await prisma.$connect();
     const reqBody: PostImageRequestBody = await req.json();
-    validatePostRequestBody(reqBody);
+    const validateMessage = validatePostRequestBody(reqBody);
+    if (validateMessage) throw new ValidationError(validateMessage);
     const base64 = reqBody.image.split(",")[1];
     const id = generateRandomUuid();
 
     const { error: storageError } = await storage.upload(id, decode(base64), {
       contentType: "image/webp",
     });
-    if (storageError) return commonErrorHandler(storageError);
+    if (storageError) {
+      const { name, message, status } = adjustErrorResponse(storageError);
+      return NextResponse.json({ name, message }, { status });
+    }
 
     try {
       const image = await prisma.image.create({
@@ -112,11 +120,12 @@ export const POST = async (req: Request) => {
       return NextResponse.json(resBody, { status: CREATED_STATUS });
     } catch (prismaError) {
       const { error: storageError } = await storage.remove([`${id}`]);
-      if (storageError) return commonErrorHandler(storageError);
-      return commonErrorHandler(prismaError);
+      const { name, message, status } = adjustErrorResponse(storageError || prismaError);
+      return NextResponse.json({ name, message }, { status });
     }
   } catch (error) {
-    return commonErrorHandler(error);
+    const { name, message, status } = adjustErrorResponse(error);
+    return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();
   }
