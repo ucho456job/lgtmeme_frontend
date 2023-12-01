@@ -13,7 +13,7 @@ export class ImageService extends CommonService {
       }
       const body: GetImagesResponseBody = await res.json();
       return { ...body, ok: true };
-    } catch (error) {
+    } catch {
       return this.returnUnknownError();
     }
   }
@@ -29,14 +29,24 @@ export class ImageService extends CommonService {
       }
       const resBody: PostImageResponseBody = await res.json();
       return { ...resBody, ok: true };
-    } catch (error) {
+    } catch {
       return this.returnUnknownError();
     }
   }
 
-  async patchImage(id: string, body: PatchImageReqBody) {
-    const config = this.createConfig("PATCH", body);
-    await this.sendRequest(IMAGES_API_ENDPOINT + "/" + id, config);
+  async patchImage(id: string, body: PatchImageRequestBody): Promise<PatchImageResponse> {
+    try {
+      const url = this.createUrl(IMAGES_API_ENDPOINT + "/" + id);
+      const config = this.createConfig("PATCH", body);
+      const res = await fetch(url, config);
+      if (!res.ok) {
+        const error: ErrorResponseBody = await res.json();
+        return { ...error, ok: false };
+      }
+      return { ok: true };
+    } catch {
+      return this.returnUnknownError();
+    }
   }
 
   async deleteImage(id: string, accessToken: string) {

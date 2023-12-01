@@ -3,6 +3,9 @@ import {
   INTERNAL_SERVER_ERROR_MESSAGE,
   INTERNAL_SERVER_ERROR_NAME,
   INTERNAL_SERVER_ERROR_STATUS,
+  NOT_FOUND_ERROR_MESSAGE,
+  NOT_FOUND_ERROR_NAME,
+  NOT_FOUND_ERROR_STATUS,
   VALIDATION_ERROR_NAME,
   VALIDATION_ERROR_STATUS,
 } from "@/constants/exceptions";
@@ -22,9 +25,19 @@ export class ValidationError extends Error {
   }
 }
 
+export class NotFoundError extends Error {
+  status: number;
+  constructor() {
+    super(NOT_FOUND_ERROR_MESSAGE);
+    this.name = NOT_FOUND_ERROR_NAME;
+    this.status = NOT_FOUND_ERROR_STATUS;
+  }
+}
+
 export const commonErrorHandler = (error: unknown) => {
   let name: string, message: string, status: number;
-  if (error instanceof ValidationError) {
+  const isCustomError = error instanceof ValidationError || error instanceof NotFoundError;
+  if (isCustomError) {
     name = error.name;
     message = error.message;
     status = error.status;

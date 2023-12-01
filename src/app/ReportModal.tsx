@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/atoms/Button/Button";
 import Modal from "@/components/molecules/Modal/Modal";
-import { IMAGE_SIZE, PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
+import { IMAGE_SIZE, PATCH_IMAGE_REQUEST_TYPE_REPORT } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { css } from "@@/styled-system/css";
 
@@ -20,14 +20,16 @@ const ReportModal = ({ css, image, onClickClose }: Props) => {
   const [modal, setModal] = useState({ message: "", show: false });
 
   const handleReport = async () => {
-    if (!image) return;
     try {
+      if (!image) return;
       const service = new ImageService();
-      await service.patchImage(image.id, { requestType: PATCH_IMAGE_REQUEST_TYPE.report });
-      setModal({
-        message: "The report was successful! Please wait a moment for the operator to confirm.",
-        show: true,
+      const res = await service.patchImage(image.id, {
+        requestType: PATCH_IMAGE_REQUEST_TYPE_REPORT,
       });
+      const message = res.ok
+        ? "The report was successful! Please wait a moment for the operator to confirm."
+        : res.message;
+      setModal({ message, show: true });
     } catch {
       setModal({ message: "Report failed. Please try again later.", show: true });
     }

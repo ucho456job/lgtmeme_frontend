@@ -2,10 +2,12 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ReportModal from "@/app/ReportModal";
+import { INTERNAL_SERVER_ERROR_MESSAGE, INTERNAL_SERVER_ERROR_NAME } from "@/constants/exceptions";
 import { ImageService } from "@/services/image.service";
+import { generateStaticUUID } from "@/utils/uuid";
 
 const mockImage = {
-  id: "1",
+  id: generateStaticUUID(1),
   url: "https://placehold.jp/300x300.png",
   reported: false,
 };
@@ -19,7 +21,7 @@ describe("ReportModal", () => {
     onClickCloseMock.mockReset();
   });
   describe("Render tests", () => {
-    test("Renders with default props", () => {
+    test("Renders with default props.", () => {
       render(<ReportModal image={mockImage} onClickClose={onClickCloseMock} />);
       const image = screen.getByAltText("LGTM");
       const message = screen.getByText(
@@ -34,14 +36,17 @@ describe("ReportModal", () => {
     });
   });
   describe("Event tests", () => {
-    test("When press close button, calls onClick", async () => {
+    test("Calls onClick, when press close button.", async () => {
       render(<ReportModal image={mockImage} onClickClose={onClickCloseMock} />);
       const closeButton = screen.getByRole("button", { name: "Close" });
       await userEvent.click(closeButton);
       expect(onClickCloseMock).toBeCalledTimes(1);
     });
-    test("A success message will be displayed when the report is successful.", async () => {
-      ImageService.prototype.patchImage = jest.fn(async () => {});
+    test("Show success dialog, when the report is successful.", async () => {
+      ImageService.prototype.patchImage = jest.fn(async () => {
+        const response: PatchImageSuccessResponse = { ok: true };
+        return response;
+      });
       render(<ReportModal image={mockImage} onClickClose={onClickCloseMock} />);
       const sendButton = screen.getByRole("button", { name: "Send" });
       await userEvent.click(sendButton);
@@ -50,7 +55,22 @@ describe("ReportModal", () => {
       );
       expect(modalMessage).toBeInTheDocument();
     });
-    test("A failure message is displayed when the report fails.", async () => {
+    test("Show failure dialog, when the report fails.", async () => {
+      ImageService.prototype.patchImage = jest.fn(async () => {
+        const response: ErrorResponse = {
+          name: INTERNAL_SERVER_ERROR_NAME,
+          message: INTERNAL_SERVER_ERROR_MESSAGE,
+          ok: false,
+        };
+        return response;
+      });
+      render(<ReportModal image={mockImage} onClickClose={onClickCloseMock} />);
+      const sendButton = screen.getByRole("button", { name: "Send" });
+      await userEvent.click(sendButton);
+      const modalMessage = screen.getByText(INTERNAL_SERVER_ERROR_MESSAGE);
+      expect(modalMessage).toBeInTheDocument();
+    });
+    test("Show failure dialog, when unknown error.", async () => {
       ImageService.prototype.patchImage = jest.fn().mockRejectedValue(new Error());
       render(<ReportModal image={mockImage} onClickClose={onClickCloseMock} />);
       const sendButton = screen.getByRole("button", { name: "Send" });

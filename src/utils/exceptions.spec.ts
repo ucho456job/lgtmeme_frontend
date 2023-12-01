@@ -4,11 +4,14 @@ import {
   INTERNAL_SERVER_ERROR_MESSAGE,
   INTERNAL_SERVER_ERROR_NAME,
   INTERNAL_SERVER_ERROR_STATUS,
+  NOT_FOUND_ERROR_MESSAGE,
+  NOT_FOUND_ERROR_NAME,
+  NOT_FOUND_ERROR_STATUS,
   VALIDATION_ERROR_NAME,
   VALIDATION_ERROR_STATUS,
 } from "@/constants/exceptions";
 import { VALIDATION_ERROR_MESAGE_KEYWORD } from "@/constants/image";
-import { commonErrorHandler, ValidationError } from "@/utils/exceptions";
+import { commonErrorHandler, NotFoundError, ValidationError } from "@/utils/exceptions";
 
 describe("exceptions", () => {
   describe("commonErrorHandler", () => {
@@ -21,6 +24,16 @@ describe("exceptions", () => {
         message: VALIDATION_ERROR_MESAGE_KEYWORD,
       });
       expect(result.status).toBe(VALIDATION_ERROR_STATUS);
+    });
+    test("Return not found error, when error type is NotFoundError.", async () => {
+      const error = new NotFoundError();
+      const result = commonErrorHandler(error);
+      const body = await result.json();
+      expect(body).toEqual({
+        name: NOT_FOUND_ERROR_NAME,
+        message: NOT_FOUND_ERROR_MESSAGE,
+      });
+      expect(result.status).toBe(NOT_FOUND_ERROR_STATUS);
     });
     test("Return error when known error types.", async () => {
       const errorMessage = "Some error occurs.";

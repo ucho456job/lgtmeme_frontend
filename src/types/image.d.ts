@@ -4,8 +4,8 @@ type Image = {
   reported: boolean;
 };
 
+/** GET */
 type ActiveTabId = "timeLine" | "popular" | "favorite";
-
 type GetImagesQuery = {
   page: number;
   keyword: string;
@@ -13,33 +13,36 @@ type GetImagesQuery = {
   favoriteImageIds: string[];
   isAuthCheck?: boolean | null;
 };
-
 type GetImagesResponseBody = {
   images: Image[];
 };
-
 type GetImagesSuccessResponse = {
   images: Image[];
   ok: true;
 };
-
 type GetImagesResponse = GetImagesSuccessResponse | ErrorResponse;
 
+/** POST */
 type PostImageRequestBody = {
   image: string;
   keyword: string;
 };
-
 type PostImageResponseBody = {
   imageUrl: string;
 };
-
 type PostImageSuccessResponse = {
   imageUrl: string;
   ok: true;
 };
-
 type PostImageResponse = PostImageSuccessResponse | ErrorResponse;
+
+/** PATCH */
+type PatchRequestType = "copy" | "report" | "authCheck";
+type PatchImageRequestBody = {
+  requestType: PatchRequestType;
+};
+type PatchImageSuccessResponse = { ok: true };
+type PatchImageResponse = PatchImageSuccessResponse | ErrorResponse;
 
 type TextStyle = {
   left: number;
@@ -66,12 +69,3 @@ type SizeMap = Map<
     diff: number;
   }
 >;
-
-type PatchRequestTypeCopy = "copy";
-type PatchRequestTypeReport = "report";
-type PatchRequestTypeConfirm = "confirm";
-type PatchRequestType = PatchRequestTypeCopy | PatchRequestTypeReport | PatchRequestTypeConfirm;
-
-type PatchImageReqBody = {
-  requestType: PatchRequestType;
-};

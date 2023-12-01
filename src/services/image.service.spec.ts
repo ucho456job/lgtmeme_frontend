@@ -5,7 +5,11 @@ import {
   VALIDATION_ERROR_NAME,
   VALIDATION_ERROR_STATUS,
 } from "@/constants/exceptions";
-import { ACTIVE_TAB_ID_TIME_LINE, VALIDATION_ERROR_MESAGE_KEYWORD } from "@/constants/image";
+import {
+  ACTIVE_TAB_ID_TIME_LINE,
+  PATCH_IMAGE_REQUEST_TYPE_COPY,
+  VALIDATION_ERROR_MESAGE_KEYWORD,
+} from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { generateStaticUUID } from "@/utils/uuid";
 
@@ -56,7 +60,7 @@ describe("ImageService", () => {
       });
     });
     describe("Failure patterns", () => {
-      test("400: Return error, when validation error.", async () => {
+      test("400: Return error, when validation error occurs.", async () => {
         const mockResponse = {
           name: VALIDATION_ERROR_NAME,
           message: VALIDATION_ERROR_MESAGE_KEYWORD,
@@ -71,7 +75,7 @@ describe("ImageService", () => {
         const result = await imageService.getImages(query);
         expect(result).toEqual({ ...mockResponse, ok: false });
       });
-      test("500: Return error, when unknown error.", async () => {
+      test("500: Return error, when unknown error occurs.", async () => {
         const mockFetch = jest.fn().mockRejectedValue(new Error());
         global.fetch = mockFetch;
         const result = await imageService.getImages(query);
@@ -104,7 +108,7 @@ describe("ImageService", () => {
       });
     });
     describe("Failure patterns", () => {
-      test("400: Return error, when validtaion error.", async () => {
+      test("400: Return error, when validtaion error occurs.", async () => {
         const mockResponse = {
           name: VALIDATION_ERROR_NAME,
           message: VALIDATION_ERROR_MESAGE_KEYWORD,
@@ -117,7 +121,7 @@ describe("ImageService", () => {
         const result = await imageService.postImage(body);
         expect(result).toEqual({ ...mockResponse, ok: false });
       });
-      test("500: Return error, when unknown error.", async () => {
+      test("500: Return error, when unknown error occurs.", async () => {
         const mockFetch = jest.fn().mockRejectedValue(new Error());
         global.fetch = mockFetch;
         const result = await imageService.postImage(body);
@@ -129,21 +133,49 @@ describe("ImageService", () => {
       });
     });
   });
-  test("The patchImage method updates data correctly", async () => {
-    const imageId = "123";
-    const mockFetch = jest.fn().mockResolvedValue({
-      json: async () => {},
+  describe("patchImage", () => {
+    let id: string;
+    let body: PatchImageRequestBody;
+    beforeEach(() => {
+      id = generateStaticUUID(1);
+      body = { requestType: PATCH_IMAGE_REQUEST_TYPE_COPY };
     });
-    global.fetch = mockFetch;
-
-    await imageService.patchImage(imageId, { requestType: "copy" });
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      `${imageService.baseUrl}${IMAGES_API_ENDPOINT}/${imageId}`,
-      expect.objectContaining({
-        method: "PATCH",
-      }),
-    );
+    describe("Success patterns", () => {
+      test("200: Return ok, when basic body.", async () => {
+        const mockFetch = jest.fn().mockResolvedValue({
+          ok: true,
+          json: async () => {},
+        });
+        global.fetch = mockFetch;
+        const result = await imageService.patchImage(id, body);
+        expect(result).toEqual({ ok: true });
+      });
+    });
+    describe("Failure patterns", () => {
+      test("400: Return error, when validation error occurs.", async () => {
+        const mockResponse = {
+          name: VALIDATION_ERROR_NAME,
+          message: VALIDATION_ERROR_MESAGE_KEYWORD,
+        };
+        const mockFetch = jest.fn().mockResolvedValue({
+          ok: false,
+          json: async () => mockResponse,
+        });
+        global.fetch = mockFetch;
+        const result = await imageService.patchImage(id, body);
+        expect(result).toEqual({ ...mockResponse, ok: false });
+      });
+      test("500: Return error, when unknown error occurs.", async () => {
+        const mockFetch = jest.fn().mockRejectedValue(new Error());
+        global.fetch = mockFetch;
+        const result = await imageService.patchImage(id, body);
+        expect(result).toEqual({
+          name: UNKNOWN_ERROR_NAME,
+          message: UNKNOWN_ERROR_MESSAGE,
+          ok: false,
+        });
+      });
+    });
   });
   test("The deleteImage method delete data correctly", async () => {
     const imageId = "123";
