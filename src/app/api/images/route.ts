@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { StorageError } from "@supabase/storage-js";
 import { decode } from "base64-arraybuffer";
 import { STORAGE_API_ENDPOINT } from "@/constants/endpoints";
 import { CREATED_STATUS, OK_STATUS } from "@/constants/exceptions";
@@ -15,6 +16,7 @@ import {
   VALIDATION_ERROR_MESAGE_PAGE,
 } from "@/constants/image";
 import { ValidationError, adjustErrorResponse } from "@/utils/exceptions";
+import { handleErrorLogging } from "@/utils/logger";
 import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
 import { generateRandomUuid, isUuid } from "@/utils/uuid";
@@ -73,6 +75,7 @@ export const GET = async (req: Request) => {
     return NextResponse.json(resBody, { status: OK_STATUS });
   } catch (error) {
     const { name, message, status } = adjustErrorResponse(error);
+    handleErrorLogging(status, error);
     return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();
@@ -104,6 +107,7 @@ export const POST = async (req: Request) => {
     });
     if (storageError) {
       const { name, message, status } = adjustErrorResponse(storageError);
+      handleErrorLogging(status, storageError);
       return NextResponse.json({ name, message }, { status });
     }
 
@@ -121,10 +125,12 @@ export const POST = async (req: Request) => {
     } catch (prismaError) {
       const { error: storageError } = await storage.remove([`${id}`]);
       const { name, message, status } = adjustErrorResponse(storageError || prismaError);
+      handleErrorLogging(status, storageError || prismaError);
       return NextResponse.json({ name, message }, { status });
     }
   } catch (error) {
     const { name, message, status } = adjustErrorResponse(error);
+    handleErrorLogging(status, error);
     return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();
