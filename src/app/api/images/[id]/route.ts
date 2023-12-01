@@ -1,33 +1,52 @@
 import { NextResponse } from "next/server";
-import { PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
+import { OK_STATUS } from "@/constants/exceptions";
+import {
+  PATCH_IMAGE_REQUEST_TYPE_AUTH_CHECK,
+  PATCH_IMAGE_REQUEST_TYPE_COPY,
+  PATCH_IMAGE_REQUEST_TYPE_REPORT,
+  VALIDATION_ERROR_MESAGE_REQUEST_TYPE,
+} from "@/constants/image";
+import { NotFoundError, ValidationError, commonErrorHandler } from "@/utils/exceptions";
 import { verifyAuth } from "@/utils/jwt";
 import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
 
+const validatePatchRequestBody = (reqBody: PatchImageRequestBody) => {
+  const { requestType } = reqBody;
+  const requestTypes = [
+    PATCH_IMAGE_REQUEST_TYPE_COPY,
+    PATCH_IMAGE_REQUEST_TYPE_REPORT,
+    PATCH_IMAGE_REQUEST_TYPE_AUTH_CHECK,
+  ];
+  if (!requestTypes.includes(requestType)) {
+    throw new ValidationError(VALIDATION_ERROR_MESAGE_REQUEST_TYPE);
+  }
+};
+
 export const PATCH = async (req: Request) => {
   try {
-    const id = req.url.split("/images/")[1];
     await prisma.$connect();
-    const reqBody: PatchImageReqBody = await req.json();
-    let updateData: { usedCount: number } | { reported: true } | { confirmed: true } | undefined;
+    const reqBody: PatchImageRequestBody = await req.json();
+    validatePatchRequestBody(reqBody);
+    const id = req.url.split("/images/")[1];
+    const image = await prisma.image.findUnique({ select: { usedCount: true }, where: { id } });
+    if (!image) throw new NotFoundError();
+    let updateData: { usedCount: number } | { reported: true } | { confirmed: true };
     switch (reqBody.requestType) {
-      case PATCH_IMAGE_REQUEST_TYPE.copy:
-        const image = await prisma.image.findUnique({ select: { usedCount: true }, where: { id } });
-        updateData = image ? { usedCount: image.usedCount + 1 } : undefined;
+      case PATCH_IMAGE_REQUEST_TYPE_COPY:
+        updateData = { usedCount: image.usedCount + 1 };
         break;
-      case PATCH_IMAGE_REQUEST_TYPE.report:
+      case PATCH_IMAGE_REQUEST_TYPE_REPORT:
         updateData = { reported: true };
         break;
-      case PATCH_IMAGE_REQUEST_TYPE.confirm:
+      case PATCH_IMAGE_REQUEST_TYPE_AUTH_CHECK:
         updateData = { confirmed: true };
         break;
     }
-    if (!updateData) throw new Error("Bad request");
     await prisma.image.update({ where: { id }, data: updateData });
-    return NextResponse.json({});
+    return NextResponse.json({}, { status: OK_STATUS });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "PATCH request failed";
-    return NextResponse.json({ errorMessage }, { status: 500 });
+    return commonErrorHandler(error);
   } finally {
     await prisma.$disconnect();
   }

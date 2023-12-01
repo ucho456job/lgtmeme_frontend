@@ -1,18 +1,19 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ImageGallery from "@/app/ImageGallery";
-import { UNKNOWN_ERROR_MESSAGE, VALIDATION_ERROR_NAME } from "@/constants/exceptions";
+import { VALIDATION_ERROR_NAME } from "@/constants/exceptions";
 import { VALIDATION_ERROR_MESAGE_KEYWORD } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { generateStaticUUID } from "@/utils/uuid";
 
+const SAMPLE_IMAGE_URL = "https://placehold.jp/300x300.png";
+const IMAGE_ID = generateStaticUUID(1);
+const INTI_IMAGES = [{ id: IMAGE_ID, url: SAMPLE_IMAGE_URL, reported: false }];
+
 describe("ImageGallery", () => {
-  const sampleImageUrl = "https://placehold.jp/300x300.png";
-  const imageId = generateStaticUUID(1);
-  const initImages = [{ id: imageId, url: sampleImageUrl, reported: false }];
   describe("Render tests", () => {
     test("Renders with default props.", () => {
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
       const tabs = screen.getByText("Time line");
       const textBox = screen.getByPlaceholderText("Keyword");
       const imageCard = screen.getByAltText("LGTM");
@@ -28,22 +29,18 @@ describe("ImageGallery", () => {
       getItem: jest.fn(),
       setItem: jest.fn(),
     };
-    afterEach(() => {
-      localStorageMock.getItem.mockClear();
-      localStorageMock.setItem.mockClear();
-    });
     test("Get popular images, when popular tab clicked.", async () => {
       ImageService.prototype.getImages = jest.fn(async () => {
         const res: GetImagesSuccessResponse = {
           images: [
-            { id: generateStaticUUID(1), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(1), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(2), url: SAMPLE_IMAGE_URL, reported: false },
           ],
           ok: true,
         };
         return res;
       });
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
 
       const beforeImageCards = screen.getAllByAltText("LGTM");
       expect(beforeImageCards.length).toBe(1);
@@ -59,14 +56,14 @@ describe("ImageGallery", () => {
       ImageService.prototype.getImages = jest.fn(async () => {
         const res: GetImagesSuccessResponse = {
           images: [
-            { id: generateStaticUUID(1), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(1), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(2), url: SAMPLE_IMAGE_URL, reported: false },
           ],
           ok: true,
         };
         return res;
       });
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
 
       const beforeImageCards = screen.getAllByAltText("LGTM");
       expect(beforeImageCards.length).toBe(1);
@@ -81,21 +78,21 @@ describe("ImageGallery", () => {
       ImageService.prototype.getImages = jest.fn(async () => {
         const res: GetImagesSuccessResponse = {
           images: [
-            { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(3), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(4), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(5), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(6), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(7), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(8), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(9), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(10), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(2), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(3), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(4), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(5), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(6), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(7), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(8), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(9), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(10), url: SAMPLE_IMAGE_URL, reported: false },
           ],
           ok: true,
         };
         return res;
       });
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
 
       const beforeImageCards = screen.getAllByAltText("LGTM");
       expect(beforeImageCards.length).toBe(1);
@@ -111,20 +108,20 @@ describe("ImageGallery", () => {
       ImageService.prototype.getImages = jest.fn(async () => {
         const res: GetImagesSuccessResponse = {
           images: [
-            { id: generateStaticUUID(2), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(3), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(4), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(5), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(6), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(7), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(8), url: sampleImageUrl, reported: false },
-            { id: generateStaticUUID(9), url: sampleImageUrl, reported: false },
+            { id: generateStaticUUID(2), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(3), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(4), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(5), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(6), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(7), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(8), url: SAMPLE_IMAGE_URL, reported: false },
+            { id: generateStaticUUID(9), url: SAMPLE_IMAGE_URL, reported: false },
           ],
           ok: true,
         };
         return res;
       });
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
 
       const beforeImageCards = screen.getAllByAltText("LGTM");
       expect(beforeImageCards.length).toBe(1);
@@ -145,7 +142,7 @@ describe("ImageGallery", () => {
         };
         return res;
       });
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
 
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       await userEvent.click(seeMoreButton);
@@ -155,7 +152,7 @@ describe("ImageGallery", () => {
     });
     test("Show a failure modal, when failed to get images.", async () => {
       ImageService.prototype.getImages = jest.fn().mockRejectedValue(new Error());
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
 
       const seeMoreButton = screen.getByRole("button", { name: "See more" });
       await userEvent.click(seeMoreButton);
@@ -165,29 +162,35 @@ describe("ImageGallery", () => {
     });
     test("Show a success modal, when copying to clipboard.", async () => {
       const clipboardWriteTextMock = jest.fn();
-      ImageService.prototype.patchImage = jest.fn(async () => {});
+      ImageService.prototype.patchImage = jest.fn(async () => {
+        const response: PatchImageSuccessResponse = { ok: true };
+        return response;
+      });
       Object.assign(navigator, {
         clipboard: {
           writeText: clipboardWriteTextMock,
         },
       });
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
 
       const copyButton = screen.getAllByRole("button")[0];
       await userEvent.click(copyButton);
 
-      expect(clipboardWriteTextMock).toHaveBeenCalledWith(`![LGTM](${initImages[0].url})`);
+      expect(clipboardWriteTextMock).toHaveBeenCalledWith(`![LGTM](${INTI_IMAGES[0].url})`);
       const modalMessage = screen.getByText("Copied to clipboard!");
       expect(modalMessage).toBeInTheDocument();
     });
     test("Show a failure modal, when copying to clipboard fails.", async () => {
-      ImageService.prototype.patchImage = jest.fn(async () => {});
+      ImageService.prototype.patchImage = jest.fn(async () => {
+        const response: PatchImageSuccessResponse = { ok: true };
+        return response;
+      });
       Object.assign(navigator, {
         clipboard: {
           writeText: jest.fn(() => Promise.reject(new Error("Failed to copy"))),
         },
       });
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
 
       const copyButton = screen.getAllByRole("button")[0];
       await userEvent.click(copyButton);
@@ -199,23 +202,23 @@ describe("ImageGallery", () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
       const favoriteButton = screen.getAllByRole("button")[1];
       await userEvent.click(favoriteButton);
-      expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", `["${imageId}"]`);
+      expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", `["${IMAGE_ID}"]`);
     });
     test("ImageId is removed from localstorage, When press favorite button for a registered image.", async () => {
       Object.defineProperty(window, "localStorage", {
         value: localStorageMock,
       });
-      localStorageMock.getItem.mockReturnValue(`["${imageId}"]`);
-      render(<ImageGallery initImages={initImages} />);
+      localStorageMock.getItem.mockReturnValue(`["${IMAGE_ID}"]`);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
       const favoriteButton = screen.getAllByRole("button")[1];
       await userEvent.click(favoriteButton);
       expect(localStorageMock.setItem).toBeCalledWith("favoriteImageIds", "[]");
     });
     test("Show a report modal, when press report button.", async () => {
-      render(<ImageGallery initImages={initImages} />);
+      render(<ImageGallery initImages={INTI_IMAGES} />);
       const reportButton = screen.getAllByRole("button")[2];
       await userEvent.click(reportButton);
       const reportModal = screen.getByText(

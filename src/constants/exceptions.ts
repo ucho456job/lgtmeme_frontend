@@ -11,6 +11,11 @@ export const NO_CONTENT_STATUS = 204;
 export const VALIDATION_ERROR_NAME = "ValidationError";
 export const VALIDATION_ERROR_STATUS = 400;
 
+/** 404 Not Found error */
+export const NOT_FOUND_ERROR_NAME = "NotFound";
+export const NOT_FOUND_ERROR_MESSAGE = "Resource not found.";
+export const NOT_FOUND_ERROR_STATUS = 404;
+
 /** 500 Internal server error */
 export const INTERNAL_SERVER_ERROR_NAME = "InternalServerError";
 export const INTERNAL_SERVER_ERROR_MESSAGE =

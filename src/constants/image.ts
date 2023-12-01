@@ -12,6 +12,7 @@ export const VALIDATION_ERROR_MESAGE_KEYWORD =
 export const VALIDATION_ERROR_MESAGE_ACTIVE_TAB_ID = "Invalid activeTabId.";
 export const VALIDATION_ERROR_MESAGE_FAVORITE_IMAGE_IDS = "Invalid uuid in favoriteImageIds.";
 export const VALIDATION_ERROR_MESAGE_IMAGE = "Image is not a base64 encoded webp format string.";
+export const VALIDATION_ERROR_MESAGE_REQUEST_TYPE = "Request type is invalid.";
 
 export const FONT_FAMILY_OPTIONS = [
   { value: "Arial", label: "Arial" },
@@ -38,13 +39,3 @@ export const SIZE_MAP: SizeMap = new Map([
 export const PATCH_IMAGE_REQUEST_TYPE_COPY = "copy";
 export const PATCH_IMAGE_REQUEST_TYPE_REPORT = "report";
 export const PATCH_IMAGE_REQUEST_TYPE_AUTH_CHECK = "authCheck";
-
-export const PATCH_IMAGE_REQUEST_TYPE: {
-  copy: PatchRequestTypeCopy;
-  report: PatchRequestTypeReport;
-  confirm: PatchRequestTypeConfirm;
-} = {
-  copy: "copy",
-  report: "report",
-  confirm: "confirm",
-};

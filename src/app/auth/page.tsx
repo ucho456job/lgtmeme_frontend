@@ -7,7 +7,7 @@ import Button from "@/components/atoms/Button/Button";
 import InputText from "@/components/atoms/InputText/InputText";
 import Modal from "@/components/molecules/Modal/Modal";
 import { UNKNOWN_ERROR_MESSAGE } from "@/constants/exceptions";
-import { ACTIVE_TAB_ID_TIME_LINE, PATCH_IMAGE_REQUEST_TYPE } from "@/constants/image";
+import { ACTIVE_TAB_ID_TIME_LINE, PATCH_IMAGE_REQUEST_TYPE_AUTH_CHECK } from "@/constants/image";
 import { ImageService } from "@/services/image.service";
 import { auth } from "@/utils/supabase";
 import { css } from "@@/styled-system/css";
@@ -65,11 +65,14 @@ const Auth = () => {
   const handleConfirm = async (imageId: string) => {
     try {
       const service = new ImageService();
-      await service.patchImage(imageId, { requestType: PATCH_IMAGE_REQUEST_TYPE.confirm });
-      setImages((prevImages) => prevImages.filter((pi) => pi.id !== imageId));
-      setModal({ message: "Confirmed an image.", show: true });
+      const res = await service.patchImage(imageId, {
+        requestType: PATCH_IMAGE_REQUEST_TYPE_AUTH_CHECK,
+      });
+      if (res.ok) setImages((prevImages) => prevImages.filter((pi) => pi.id !== imageId));
+      const message = res.ok ? "Confirmed an image." : res.message;
+      setModal({ message, show: true });
     } catch {
-      setModal({ message: "Failed to confirm image.", show: true });
+      setModal({ message: "Failed to update image. Please try again later.", show: true });
     }
   };
 
