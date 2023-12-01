@@ -8,6 +8,7 @@ import {
 } from "@/constants/image";
 import { NotFoundError, ValidationError, adjustErrorResponse } from "@/utils/exceptions";
 import { verifyAuth } from "@/utils/jwt";
+import { handleErrorLogging } from "@/utils/logger";
 import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
 
@@ -49,6 +50,7 @@ export const PATCH = async (req: Request) => {
     return NextResponse.json({}, { status: OK_STATUS });
   } catch (error) {
     const { name, message, status } = adjustErrorResponse(error);
+    handleErrorLogging(status, error);
     return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();

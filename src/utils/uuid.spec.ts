@@ -1,5 +1,5 @@
 /** @jest-environment node */
-import { generateRandomUuid, generateStaticUUID, isUuid } from "./uuid";
+import { generateRandomUuid, generateStaticUUID, isUuid } from "@/utils/uuid";
 
 describe("uuid", () => {
   describe("isUuid", () => {
