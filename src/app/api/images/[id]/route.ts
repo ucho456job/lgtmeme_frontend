@@ -6,7 +6,7 @@ import {
   PATCH_IMAGE_REQUEST_TYPE_REPORT,
   VALIDATION_ERROR_MESAGE_REQUEST_TYPE,
 } from "@/constants/image";
-import { NotFoundError, ValidationError, commonErrorHandler } from "@/utils/exceptions";
+import { NotFoundError, ValidationError, createErrorResponse } from "@/utils/exceptions";
 import { verifyAuth } from "@/utils/jwt";
 import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
@@ -46,7 +46,8 @@ export const PATCH = async (req: Request) => {
     await prisma.image.update({ where: { id }, data: updateData });
     return NextResponse.json({}, { status: OK_STATUS });
   } catch (error) {
-    return commonErrorHandler(error);
+    const { name, message, status } = createErrorResponse(error);
+    return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();
   }

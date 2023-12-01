@@ -14,7 +14,7 @@ import {
   VALIDATION_ERROR_MESAGE_KEYWORD,
   VALIDATION_ERROR_MESAGE_PAGE,
 } from "@/constants/image";
-import { ValidationError, commonErrorHandler } from "@/utils/exceptions";
+import { NotFoundError, ValidationError, createErrorResponse } from "@/utils/exceptions";
 import prisma from "@/utils/prisma";
 import { storage } from "@/utils/supabase";
 import { generateRandomUuid, isUuid } from "@/utils/uuid";
@@ -70,7 +70,8 @@ export const GET = async (req: Request) => {
     const resBody: GetImagesResponseBody = { images };
     return NextResponse.json(resBody, { status: OK_STATUS });
   } catch (error) {
-    return commonErrorHandler(error);
+    const { name, message, status } = createErrorResponse(error);
+    return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();
   }
@@ -97,7 +98,10 @@ export const POST = async (req: Request) => {
     const { error: storageError } = await storage.upload(id, decode(base64), {
       contentType: "image/webp",
     });
-    if (storageError) return commonErrorHandler(storageError);
+    if (storageError) {
+      const { name, message, status } = createErrorResponse(storageError);
+      return NextResponse.json({ name, message }, { status });
+    }
 
     try {
       const image = await prisma.image.create({
@@ -112,11 +116,12 @@ export const POST = async (req: Request) => {
       return NextResponse.json(resBody, { status: CREATED_STATUS });
     } catch (prismaError) {
       const { error: storageError } = await storage.remove([`${id}`]);
-      if (storageError) return commonErrorHandler(storageError);
-      return commonErrorHandler(prismaError);
+      const { name, message, status } = createErrorResponse(storageError || prismaError);
+      return NextResponse.json({ name, message }, { status });
     }
   } catch (error) {
-    return commonErrorHandler(error);
+    const { name, message, status } = createErrorResponse(error);
+    return NextResponse.json({ name, message }, { status });
   } finally {
     await prisma.$disconnect();
   }
